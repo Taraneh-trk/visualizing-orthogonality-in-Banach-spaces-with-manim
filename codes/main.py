@@ -12,7 +12,65 @@ def StyleSetter_BasedOnTextType(text_type:str):
 config.background_color = WHITE
 
 class TitleScene(Scene):
+
+    topics = {
+        0 : "Banach Spaces",
+        1 : "others",
+    }
+    
     def construct(self):
+
+        self.scene1()
+
+        current_topic = self.topics[0]
+        title = self.scene2(current_topic)
+        self.play(FadeOut(title))
+
+        current_topic = self.topics[1]
+        title = self.scene2(current_topic)
+
+
+    
+    def scene2(self,current_topic):
+        #  scene 2
+        # ------------------------------ 
+        # 2-1 : show items
+
+        title = Tex("Topics We Discussed In this Video ...", arg_separator=" ", should_center=True, color=BLACK).to_edge(UP).set_font_size(60)
+        
+        self.play(Write(title))
+
+        self.wait(0.1)
+
+        items_list = ["Banach Spaces","others"]
+        blist = BulletedList(*items_list).set_color(BLACK).scale(1.25).to_edge(LEFT).shift(1.75*UP)
+
+        self.play(Write(blist))
+
+        self.wait(1)
+
+        current_item_mob = blist[items_list.index(current_topic)]
+        target_scale = 1.5
+        target_shift = 1.5 * RIGHT
+
+        self.play(
+            current_item_mob.animate.set_color(GREEN_E).scale(target_scale).shift(target_shift),
+            run_time=1.0 
+        )
+        
+        self.wait(1)
+
+        selected_title = Tex(current_topic, arg_separator=" ").set_color(BLACK).set_font_size(80).move_to(title.get_center())
+        self.play(
+            Transform(title, selected_title),
+            FadeOut(blist)
+        )
+
+        self.wait(1)
+
+        return title
+
+    def scene1(self):
         # add scence 1
         # ------------------------------ 
         # 1-1 : title
@@ -45,11 +103,29 @@ class TitleScene(Scene):
         self.play(
             Write(title_up),
             Write(title_down),
+        )
+
+        self.wait(0.1)  
+
+        self.play(
             FadeIn(axes),
             FadeIn(graph1),
             FadeIn(graph2)
-            )
+        )
 
         self.wait(1)
 
-        
+        self.play(
+            FadeOut(axes),
+            FadeOut(graph1),
+            FadeOut(graph2)
+        )
+
+        self.wait(0.1)  
+
+        self.play(
+            Unwrite(title_up),
+            Unwrite(title_down),
+        )
+        self.remove(star1)
+        self.remove(star2)
