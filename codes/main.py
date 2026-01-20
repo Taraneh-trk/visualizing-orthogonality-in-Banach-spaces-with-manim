@@ -53,6 +53,7 @@ class TitleScene(Scene):
     def scene4(self, def_banach, title):
         """scene 4: definition of complete"""
 
+        # 4-1 : definition
         line1 = MathTex("X", "\\text{ is complete }").set_color(BLACK)
         line2 = MathTex(
             "\\text{if every }", 
@@ -70,7 +71,169 @@ class TitleScene(Scene):
         
         def_complete.next_to(title.get_center() + DOWN * 2, DOWN)
         
-        self.show_definition(def_complete, title)
+        # 4-2 : shape
+        group,box = self.show_definition(def_complete, title)
+        
+        zoom = 2
+
+        shape_center = box.get_center() + DOWN*0.25 + RIGHT*1.5
+        group_box_group = VGroup(box, group)
+
+        circle = Circle(
+            radius=3.3,
+            color="#5E913B",
+            fill_color="#5D913B66",
+            fill_opacity=0.2
+        ).move_to(shape_center)
+
+        self.play(FadeTransform(group_box_group, circle))
+        self.wait(0.5)
+
+        angles = np.linspace(0, 2*PI, 8, endpoint=False)
+        radii = [1.72, 1.7, 1.0, 1.6, 1.9, 1.85, 1.2, 1.8]
+        radii = [r * zoom for r in radii]
+
+        points = [
+            shape_center + np.array([
+                radii[i] * np.cos(angles[i]),
+                radii[i] * np.sin(angles[i]),
+                0
+            ])
+            for i in range(len(angles))
+        ]
+
+        smooth_shape = VMobject(color="#5E913B", fill_color="#5D913B66", fill_opacity=0.2)
+        smooth_shape.set_points_smoothly(points + [points[0]])
+        smooth_shape.close_path()
+
+        self.play(FadeTransform(circle, smooth_shape), run_time=2)
+        self.wait(1)
+
+        num_points = 5
+        distances = [11.0, 6.0, 3.0, 0.65, 0]
+        # distances = [d * zoom for d in distances]
+
+        # start_pos = shape_center + np.array([0.5, 0.7, 0]) * zoom
+        # end_pos   = shape_center + np.array([-0.7, -0.5, 0]) * zoom
+
+        start_pos = shape_center + np.array([0.8, -0.4, 0])
+        end_pos   = shape_center + np.array([-1.7, -1.5, 0])
+
+        all_positions = []
+        for i in range(num_points):
+            t = i / (num_points - 1)
+            base_pos = start_pos + t * (end_pos - start_pos)
+
+            direction = end_pos - start_pos
+            perpendicular = np.array([-direction[1], direction[0], 0])
+            if np.linalg.norm(perpendicular) > 0:
+                perpendicular /= np.linalg.norm(perpendicular)
+
+            offset = perpendicular * distances[i] * 0.5
+            position = base_pos + offset
+            all_positions.append(position)
+
+        colors = [
+            "#7A3D7B12", "#7A3D7B2B", "#7A3D7B40", "#7A3D7B55",
+            "#7A3D7B6A", "#7A3D7B7F", "#7A3D7B94", "#7A3D7BA9",
+            "#7A3D7BBE", "#7A3D7BD3"
+        ]
+
+        dots = []
+        all_position = []
+        for i, pos in enumerate(all_positions):
+            dot = Dot(
+                point=pos,
+                color=colors[i],
+                radius=0.1,
+                fill_opacity=0.9 - (0.7 * i/(num_points-1))
+            ).shift(3*UP).shift(LEFT)
+            dots.append(dot)
+            all_position.append(dot.get_center())
+            self.play(FadeIn(dot), run_time=0.1)
+            self.wait(0.1)
+        all_positions = all_position.copy()
+        
+        self.wait(1)
+
+        lines = VGroup()
+        for i in range(num_points-1):
+            line = Line(
+                start=all_positions[i],
+                end=all_positions[i+1],
+                color="#7597BE",
+                stroke_width=1,
+            )
+            lines.add(line)
+
+        self.play(Create(lines), run_time=2)
+        self.wait(0.5)
+        self.play(FadeOut(lines), run_time=0.5)
+
+        arrow_start = title.get_center() + 3*DOWN + 2*LEFT
+        arrow_end = all_positions[-1]
+
+        arrow = Arrow(
+            start=arrow_start,
+            end=arrow_end,
+            color=BLACK,
+            stroke_width=6,
+            tip_length=0.3,
+            max_tip_length_to_length_ratio=0.25,
+            buff=0.1
+        )
+
+        limit_text = Text("limit", font_size=24, color=BLACK, weight=BOLD)
+        limit_text.next_to(arrow, UP, buff=0.3)
+
+        final_dot = Dot(
+            point=arrow_end,
+            color=BLACK,
+            radius=0.12,
+            fill_opacity=1
+        )
+
+        self.play(
+            GrowArrow(arrow),
+            Write(limit_text),
+            Transform(dots[-1], final_dot),
+        )
+
+        for _ in range(2):
+            self.play(
+                final_dot.animate.scale(1.5).set_color("#9A0000"),
+                rate_func=there_and_back,
+            )
+
+        self.wait(2)
+
+        # 4-3 : fade out every thing
+        self.play(
+            FadeOut(arrow),
+            FadeOut(limit_text),
+            FadeOut(final_dot),
+        )
+        for dot in dots+[smooth_shape]:
+            self.play(
+                FadeOut(dot)
+            )
+
+        self.wait(0.5)
+        
+        # 4-4 : set changes to start with normed space definition
+        self.play(
+            def_banach[1].animate.set_color(BLACK).scale(1/1.4),
+            def_banach[2].animate.set_opacity(1).scale(1/0.8),
+            run_time=1.0
+        )
+
+        self.wait(0.5)
+
+        self.play(
+            def_banach[2].animate.set_color("#7597BE").scale(1.4),
+            def_banach[1].animate.set_opacity(0.03).scale(0.8),
+            run_time=1.0
+        )
 
     def show_warning(self, body: MathTex):
         """Show warning message with box"""
