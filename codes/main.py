@@ -39,16 +39,226 @@ class TitleScene(Scene):
         self.wait(0.5)
         
         self.play(title.animate.set_opacity(1).scale(1/1.02))
+
         def_banach = self.scene3(title)
 
         self.scene4(def_banach, title)
 
         self.wait(1)
+
+        self.scene5(def_banach,title)
         
         self.play(FadeOut(title))
         
         # current_topic = self.topics[1]
         # title = self.scene2(current_topic)
+
+    def ask_question(self,body, return_notShow=False):
+        """Show message with box to ask a question. """
+
+        title_text = Text("Question", color="#9C1568", font_size=36)
+
+        group = VGroup(title_text, body).arrange(DOWN, buff=0.3)
+
+        box = RoundedRectangle(
+            corner_radius=0.3,
+            color="#9C1568",
+            fill_color="#9C15686F",
+            fill_opacity=0.2,
+            width=group.width + 1,
+            height=group.height + 0.8
+        )
+        
+
+        box.move_to(group.get_center())
+
+        if return_notShow :
+            return group, box
+
+        self.play(Create(box), Write(group))
+        self.wait(2)
+        self.play(FadeOut(group), FadeOut(box))
+
+    def scene5_subScene1(self,group,box,title):
+        "scene5 : subScene1 : norm definition"
+
+        # self.play(
+        #     group.animate.set_opacity(0.003),
+        #     box.animate.set_opacity(0.003),
+        #     run_time=1.0
+        # )
+        
+        question_tex = MathTex("\\text{ What is NORM ? }").set_color(BLACK)
+        question_group,question_box = self.ask_question(question_tex,True)
+
+        group_GroupBoxTotal = VGroup(group,box)
+        group_GroupBoxQuetion = VGroup(question_group,question_box)
+
+        self.play(
+            TransformMatchingShapes(group_GroupBoxTotal, group_GroupBoxQuetion)
+        )
+        self.wait(2)
+
+        def_norm_line1 = MathTex("\\|\\cdot\\| : X \\to \\mathbb{R} \\quad \\text{is a function }").set_color(BLACK)
+        def_norm_line2 = MathTex(" \\text{ satisfying } "," \\forall x,y \\in X, \\ \\forall \\lambda \\in \\{\\mathbb{R}, \\mathbb{C}\\} ").set_color(BLACK).scale(0.85)
+        def_norm_line3 = MathTex(
+            r"\begin{aligned}"
+            r"1.& \quad \|x\| = 0 \iff x = 0 \\"
+            r"2.& \quad \|\lambda x\| = |\lambda| \, \|x\| \\"
+            r"3.& \quad \|x + y\| \le \|x\| + \|y\|"
+            r"\end{aligned}"
+            ).set_color(BLACK).scale(0.85)
+
+        def_norm = VGroup(def_norm_line1, def_norm_line2, def_norm_line3).arrange(DOWN, buff=0.5).scale(0.9)
+
+        def_norm.next_to(title.get_center() + DOWN, DOWN)
+
+        self.play(
+            group_GroupBoxQuetion.animate.shift(4*LEFT + 1.75*UP),
+            run_time=0.5
+        )
+
+        norm_group, norm_box = self.show_definition(def_norm, title,True)
+        norm_group.shift(2*RIGHT)
+        norm_box.move_to(norm_group.get_center())
+        self.play(Create(norm_box), Write(norm_group))
+        self.wait(2)
+        self.play(
+            Uncreate(norm_box),
+            FadeOut(norm_group)
+        )
+
+        return norm_group, norm_box, question_group, question_box
+
+    def scene5_subScene2(self, question_group, question_box, title):
+        # draw number plane as background
+        plane = NumberPlane(
+            y_range=[0, 5, 0.5],
+            x_range=[0, 7, 0.5],
+            background_line_style={"stroke_color": "#D3D3D3", "stroke_opacity": 0.5},
+            y_length=3,
+            x_length=8,
+        ).move_to([1, -1.5, 0])
+        self.play(Create(plane))
+        self.wait(0.5)
+
+        # draw axes on top
+        axes = Axes(  # NumberLine
+            y_range=[0, 5, 0.5],
+            y_length=3.6,
+            x_range=[0, 7, 0.5],
+            x_length=8,
+            axis_config={"color": "#7597BE", "include_ticks": False, "tip_length":0.25, "tip_shape":StealthTip} # "tip_shape":ArrowTip.TIP_STYLE_ROUND
+        ).move_to([1, -1.5, 0])
+        self.play(Create(axes))
+        self.wait(0.5)
+
+        # dot at tip of vector
+        tip = Dot(axes.c2p(6,4), color="#9A0000", radius=0.07)
+        self.play(FadeIn(tip))
+
+        # draw vector in (0,0)
+        vector = Arrow(
+            start=axes.c2p(0,0),
+            end=axes.c2p(6,4),
+            buff=0,
+            stroke_width=6,
+            color="#5E913B",
+            tip_length=0.25,
+            tip_shape=StealthTip
+        )
+        self.play(GrowArrow(vector, run_time=1.2, rate_func=rush_from))
+        self.wait(0.5)
+
+        # draw brace
+        brace = BraceBetweenPoints(vector.get_start()+ UP*0.2, vector.get_end() + UP*0.2, rotate_vector(vector.get_unit_vector(), PI/2) ).set_color("#000000")
+        self.play(GrowFromCenter(brace, run_time=0.8))
+        self.wait(0.5)
+
+        # add norm text
+        norm_text = brace.get_text("Norm").set_color("#000000")
+        self.play(FadeIn(norm_text, shift=UP*0.2))
+        self.wait(0.5)
+
+        # add "= Vector Length" and "= distance to the origin"
+        vector_dis_text = MathTex(" \\text{ distance to the origin } = ").set_color("#000000")
+        vector_dis_text.next_to(norm_text, LEFT, buff=0.3)
+        self.play(FadeIn(vector_dis_text))  #  norm_text.animate.shift(UP*0.2), 
+        self.wait(1)
+
+        vector_length_text = MathTex(" \\text{Vector Length} = ").set_color("#000000")
+        vector_length_text.next_to(norm_text, LEFT, buff=0.3)
+        self.play(TransformMatchingTex(vector_dis_text, vector_length_text))
+        self.wait(1)
+
+        # group texts
+        norm_text_group = VGroup(norm_text, vector_length_text)
+
+        # blink effect
+        for _ in range(2):
+            self.play(
+                norm_text_group.animate.scale(1.5).set_color("#9A0000"),
+                brace.animate.set_color("#9A0000"),
+                rate_func=there_and_back,
+                run_time=0.5
+            )
+
+        self.wait(1)
+
+        return VGroup(plane, axes, tip, vector, brace, norm_text_group)
+
+    def scene5(self,def_banach,title):
+        """ scene 5 : normed space definition """
+        # noremed space definition
+
+        def_norm_space_part1 = MathTex("\\text{Assume } "," \\|\\cdot\\| ", "\\text{ is a } ", "\\text{norm on } X.").set_color(BLACK)
+        def_norm_space_part1.set_color_by_tex(" \\|\\cdot\\| ","#9A0000")
+        def_norm_space_part1.set_color_by_tex("\\text{norm on } X.","#9A0000")
+
+        def_norm_space_part2 = MathTex("\\text{ Then } ", "(X, \\|\\cdot\\|) ","\\text{ is called a }", "\\textbf{normed vector space}.}").set_color(BLACK)
+        def_norm_space_part2.set_color_by_tex("(X, \\|\\cdot\\|) ","#9A0000")
+        def_norm_space_part2.set_color_by_tex("\\textbf{normed vector space}.}","#9A0000")
+
+        def_norm_space = VGroup(def_norm_space_part1, def_norm_space_part2).arrange(DOWN, buff=0.5)
+
+        def_norm_space.next_to(title.get_center() + DOWN * 2, DOWN)
+
+        group,box = self.show_definition(def_norm_space, title)
+
+        # norm definition
+        norm_group, norm_box, question_group, question_box = self.scene5_subScene1(group, box, title)
+
+        # shapes for norm definition
+        shape_group = self.scene5_subScene2(question_group, question_box, title)
+
+        # add a note
+
+        self.play(
+            FadeOut(question_group),
+            FadeOut(question_box),
+            shape_group.animate.set_opacity(0.003),
+            run_time=1.0
+        )
+
+        note_line1 = MathTex(
+            "\\text{X } ", "\\rightarrow", 
+            "\\text{ vector space (addition } ", "[+]", "\\text{ } \\& \\text{ scalar multiplication } ", "[.] ", "\\text{  } )"
+        )
+        note_line1.set_color(BLACK)
+        note_line1.set_color_by_tex("\\text{X }","#9A0000")  # X
+        note_line1.set_color_by_tex("[+]","#9A0000")  # +
+        note_line1.set_color_by_tex("[.]","#9A0000")  # .
+
+        note_line2 = MathTex("\\|\\cdot\\| \\text{  }", "\\rightarrow", "\\text{ size and distance }")
+        note_line2.set_color(BLACK)
+        note_line2.set_color_by_tex("\\|\\cdot\\|","#9A0000")  # ||.||
+        note_line2.set_color_by_tex("\\text{ size and distance }","#9A0000")  # distance
+
+        note = VGroup(note_line1, note_line2).arrange(DOWN, buff=0.5).scale(0.9)
+
+        note.next_to(title.get_center() + DOWN * 2, DOWN)
+    
+        self.show_warning(note)
 
     def scene4(self, def_banach, title):
         """scene 4: definition of complete"""
@@ -285,10 +495,10 @@ class TitleScene(Scene):
         
         return mobject
 
-    def show_definition(self, definition: MathTex, total_title):
+    def show_definition(self, definition: MathTex, total_title, retrun_notShow=False, what_is_defined=""):
         """Show definition with box"""
 
-        title_text = Text("Definition", color="#5E913B", font_size=36)
+        title_text = Text(f"Definition {what_is_defined}", color="#5E913B", font_size=36)
 
         group = VGroup(title_text, definition).arrange(DOWN, buff=0.3)
         
@@ -311,7 +521,9 @@ class TitleScene(Scene):
         if box.is_off_screen():
             self.auto_adjust_position(box)
         
-
+        if retrun_notShow :
+            return group,box
+        
         self.play(Create(box), Write(group))
         self.wait(2)
         return group, box
