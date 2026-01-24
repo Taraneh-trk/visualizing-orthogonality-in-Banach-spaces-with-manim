@@ -356,7 +356,7 @@ class TitleScene(Scene):
             tip_shape=StealthTip
         )
 
-        text_x = MathTex("\\text{ x }").set_color(BLACK).next_to(vector_rule3_1, 0.15*UP, 0.1)
+        text_x = MathTex("\\text{ x }").set_color(BLACK).move_to(vector_rule3_1.get_center()+0.4*UP)
 
         vector_rule3_2 = Arrow(
             start=axes.c2p(0,0),
@@ -416,7 +416,7 @@ class TitleScene(Scene):
             tip_length=0.25,
             tip_shape=StealthTip
         )
-        text_x_plus_y = MathTex("\\text{ x + y }").set_color(BLACK).next_to(vector_rule3_3, 0.05*UP, 0.1)
+        text_x_plus_y = MathTex("\\text{ x + y }").set_color(BLACK).move_to(vector_rule3_3.get_center()+0.4*UP)
         self.play(
             GrowArrow(vector_rule3_3, run_time=1.0, rate_func=rush_from),
             Write(text_x_plus_y),
@@ -424,8 +424,36 @@ class TitleScene(Scene):
 
         self.wait(2)
 
-        return VGroup(plane, axes, rule3_text, vector_rule3_1, vector_rule3_2, 
-                      vector_rule3_3, dot_arrow_1, dot_arrow_2, text_x_plus_y, text_x, text_y, VECTOR_COPY, tip)
+        self.play(
+            FadeOut(plane),
+            FadeOut(axes),
+            FadeOut(dot_arrow_1),
+            FadeOut(dot_arrow_2),
+            FadeOut(text_x_plus_y),
+            FadeOut(text_x),
+            FadeOut(text_y),
+            FadeOut(tip),
+        )
+
+        vectors_for_transform = VGroup(vector_rule3_1, vector_rule3_2)
+        vector_merged = vector.copy().set_color("#9A0000")
+        vector_merged.shift(0.5*UP+0.1*LEFT).scale(( vector_rule3_1.get_length() + vector_rule3_2.get_length() )/( vector.get_length() ))
+
+        text_1 = MathTex(" \|x + y\| ").set_color(BLACK).move_to(vector.get_center()+0.7*DOWN)
+        text_2 = MathTex(" \|x\| + \|y\| ").set_color(BLACK).move_to(vector_merged.get_center()+0.7*UP)
+
+        self.wait(0.7)
+
+        self.play(
+            FadeTransform(vectors_for_transform, vector_merged),
+            FadeIn(text_1),
+            FadeIn(text_2),
+        )
+
+        self.wait(1)
+
+        return VGroup(rule3_text, text_2, text_1 ,
+                      vector_rule3_3, vector, vector_merged)
 
     def scene5(self,def_banach,title):
         """ scene 5 : normed space definition """
@@ -819,7 +847,7 @@ class TitleScene(Scene):
         self.wait(1)
         return def_banach
 
-    def scene2(self, current_topic):
+    def scene2(self, current_topic,first_time=False):
         """scene 2: show topics list"""
 
         title = Tex(
@@ -834,7 +862,7 @@ class TitleScene(Scene):
         blist = BulletedList(*items_list).set_color(BLACK).scale(1.25).to_edge(LEFT).shift(1*UP)
 
         self.play(Create(blist))
-        self.wait(1)
+        self.wait(2)
 
         current_item_index = items_list.index(current_topic)
 
@@ -906,7 +934,7 @@ class TitleScene(Scene):
         #     FadeIn(graph2)
         # )
 
-        self.wait(1)
+        self.wait(2)
 
         # self.play(
         #     FadeOut(axes),
