@@ -13,7 +13,8 @@ def style_setter_based_on_text_type(text_type: str):
 class TitleScene(Scene):
     topics = {
         0: "Banach Spaces",
-        1: "others",
+        1: "Prerequisite Notes",
+        2: "Orthogonality",
     }
     
     def construct(self):
@@ -47,11 +48,37 @@ class TitleScene(Scene):
         self.wait(1)
 
         self.scene5(def_banach,title)
+
+        self.scene6(def_banach,title)
         
         self.play(FadeOut(title))
         
-        # current_topic = self.topics[1]
-        # title = self.scene2(current_topic)
+        current_topic = self.topics[1]
+        title = self.scene2(current_topic)
+
+    def scene6(self,def_banach,title):
+        banach_final_def_line1 = MathTex("\\text{Let } ","\\textbf{ X }", "\\text{ be a }","\\textbf{ normed vector space. }").set_color(BLACK)
+        banach_final_def_line2 = MathTex("\\text{ If } X ","\\text{ is } \\textbf{ complete} ").set_color(BLACK)
+        banach_final_def_line3 = MathTex("\\text{ with respect to the } \\textbf{ metric induced by the norm} \\textbf{, then } ").set_color(BLACK)
+        banach_final_def_line4 = MathTex("(X,\\lVert \\cdot \\rVert) \\text{ is called a} \\textbf{ Banach space.}").set_color(BLACK)
+
+        def_banach_space = VGroup(banach_final_def_line1, banach_final_def_line2, banach_final_def_line3, banach_final_def_line4).arrange(DOWN, buff=0.5).scale(0.9)
+
+        def_banach_space.next_to(title.get_center() + DOWN * 2, DOWN)
+        
+        text_group, box = self.show_definition(def_banach_space, title, True)
+
+        final_def = VGroup(text_group, box)
+
+        self.play(
+            TransformMatchingShapes(def_banach, final_def)
+        )
+        
+        self.wait(1)
+
+        self.play(
+            FadeOut(final_def),
+        )
 
     def ask_question(self,body, return_notShow=False):
         """Show message with box to ask a question. """
@@ -64,6 +91,32 @@ class TitleScene(Scene):
             corner_radius=0.3,
             color="#9C1568",
             fill_color="#9C15686F",
+            fill_opacity=0.2,
+            width=group.width + 1,
+            height=group.height + 0.8
+        )
+        
+
+        box.move_to(group.get_center())
+
+        if return_notShow :
+            return group, box
+
+        self.play(Create(box), Write(group))
+        self.wait(2)
+        self.play(FadeOut(group), FadeOut(box))
+
+    def show_minorPoint(self,body,return_notShow):
+        """Show message with box to ask a question. """
+
+        title_text = Text("Point", color="#336699", font_size=36)
+
+        group = VGroup(title_text, body).arrange(DOWN, buff=0.3)
+
+        box = RoundedRectangle(
+            corner_radius=0.3,
+            color="#336699",
+            fill_color="#33669962",
             fill_opacity=0.2,
             width=group.width + 1,
             height=group.height + 0.8
@@ -136,7 +189,7 @@ class TitleScene(Scene):
             y_range=[0, 5, 0.5],
             x_range=[0, 7, 0.5],
             background_line_style={"stroke_color": "#D3D3D3", "stroke_opacity": 0.5},
-            y_length=3,
+            y_length=3.6,
             x_length=8,
         ).move_to([1, -1.5, 0])
         self.play(Create(plane))
@@ -204,8 +257,175 @@ class TitleScene(Scene):
             )
 
         self.wait(1)
+        
+        vecor_name = MathTex("\\text{ x }").set_color(BLACK).move_to(norm_text.get_center())
 
-        return VGroup(plane, axes, tip, vector, brace, norm_text_group)
+        self.play(
+            TransformMatchingTex(norm_text_group,vecor_name)
+        )
+        self.wait(2)
+
+        rule1_text = MathTex("\quad \|x\| = 0 \iff x = 0").set_color(BLACK).scale(0.8)
+        rule2_text = MathTex("\quad \|\lambda x\| = |\lambda| \, \|x\|").set_color(BLACK).scale(0.8)
+        rule3_text = MathTex("\quad \|x + y\| \le \|x\| + \|y\|").set_color(BLACK).scale(0.8)
+
+        rule1_text.move_to(plane.get_top() + 1*RIGHT + UP)
+        rule2_text.move_to(plane.get_top() + 1*RIGHT + UP)
+        rule3_text.move_to(plane.get_top() + 1*RIGHT + UP)
+
+        # RULE 1
+        self.play(
+            Write(rule1_text),
+            FadeOut(brace),
+            FadeOut(vecor_name),
+            FadeOut(vector),
+            tip.animate.move_to(axes.c2p(0,0)),
+            run_time=1.0
+        )
+
+        self.wait(2)
+
+        # RULE 2
+        self.play(
+            TransformMatchingTex(rule1_text, rule2_text),
+            tip.animate.move_to(axes.c2p(6,4)),
+            GrowArrow(vector, run_time=1.0, rate_func=rush_from),
+            run_time=1.0
+        )
+        self.wait(1)
+
+        # | lambda | < 1
+
+        vector_lower = Arrow(
+            start=axes.c2p(0,0),
+            end=axes.c2p(3,2),
+            buff=0,
+            stroke_width=6,
+            color="#5E913B",
+            tip_length=0.25,
+            tip_shape=StealthTip
+        )
+
+        VECTOR_COPY = vector.copy()
+
+        self.play(
+            Transform(vector, vector_lower)
+        )
+
+        self.wait(1)
+
+        self.play(
+            Transform(vector, VECTOR_COPY)
+        )
+
+        self.wait(1)
+
+        # | lambda | > 1
+
+        vector_higher = Arrow(
+            start=axes.c2p(0,0),
+            end=axes.c2p(7.5,5),
+            buff=0,
+            stroke_width=6,
+            color="#5E913B",
+            tip_length=0.25,
+            tip_shape=StealthTip
+        )
+
+        self.play(
+            Transform(vector, vector_higher)
+        )
+
+        self.wait(1)
+
+        self.play(
+            Transform(vector, VECTOR_COPY)
+        )
+
+        self.wait(1)
+
+        # RULE 3
+
+        vector_rule3_1 = Arrow(
+            start=axes.c2p(0,0),
+            end=axes.c2p(2,3),
+            buff=0,
+            stroke_width=6,
+            color="#9A0000",
+            tip_length=0.25,
+            tip_shape=StealthTip
+        )
+
+        text_x = MathTex("\\text{ x }").set_color(BLACK).next_to(vector_rule3_1, 0.15*UP, 0.1)
+
+        vector_rule3_2 = Arrow(
+            start=axes.c2p(0,0),
+            end=axes.c2p(4,1),
+            buff=0,
+            stroke_width=6,
+            color="#5E913B",
+            tip_length=0.25,
+            tip_shape=StealthTip
+        )
+
+        text_y = MathTex("\\text{ y }").set_color(BLACK).next_to(vector_rule3_2, 0.35*DOWN, 0.1)
+
+        self.play(
+            TransformMatchingTex(rule2_text, rule3_text),
+            FadeOut(tip),
+            FadeOut(vector),
+            # FadeOut(vector_lower),
+            # FadeOut(vector_higher),
+            GrowArrow(vector_rule3_1, run_time=1.0, rate_func=rush_from),
+            Write(text_x),
+            GrowArrow(vector_rule3_2, run_time=1.0, rate_func=rush_from),
+            Write(text_y),
+            # run_time=1.0
+        )
+        self.wait(2)
+
+        dot_arrow_1 =  DashedLine(
+            start=axes.c2p(2,3),
+            end=axes.c2p(6,4), 
+            dash_length=0.2, 
+            dashed_ratio=0.5, 
+            color="#5E913B",
+        )
+
+        dot_arrow_2 =  DashedLine(
+            start=axes.c2p(4,1),
+            end=axes.c2p(6,4), 
+            dash_length=0.2, 
+            dashed_ratio=0.5, 
+            color="#9A0000",
+        )
+
+        self.play(
+            Create(dot_arrow_1),
+            Create(dot_arrow_2),
+            FadeIn(tip)
+        )
+        self.wait(2)
+
+        vector_rule3_3 = Arrow(
+            start=axes.c2p(0,0),
+            end=axes.c2p(6,4),
+            buff=0,
+            stroke_width=6,
+            color=BLACK,
+            tip_length=0.25,
+            tip_shape=StealthTip
+        )
+        text_x_plus_y = MathTex("\\text{ x + y }").set_color(BLACK).next_to(vector_rule3_3, 0.05*UP, 0.1)
+        self.play(
+            GrowArrow(vector_rule3_3, run_time=1.0, rate_func=rush_from),
+            Write(text_x_plus_y),
+        )
+
+        self.wait(2)
+
+        return VGroup(plane, axes, rule3_text, vector_rule3_1, vector_rule3_2, 
+                      vector_rule3_3, dot_arrow_1, dot_arrow_2, text_x_plus_y, text_x, text_y, VECTOR_COPY, tip)
 
     def scene5(self,def_banach,title):
         """ scene 5 : normed space definition """
@@ -236,7 +456,7 @@ class TitleScene(Scene):
         self.play(
             FadeOut(question_group),
             FadeOut(question_box),
-            shape_group.animate.set_opacity(0.003),
+            FadeOut(shape_group),
             run_time=1.0
         )
 
@@ -260,6 +480,14 @@ class TitleScene(Scene):
     
         self.show_warning(note)
 
+        self.play(
+            def_banach[2].animate.set_color(BLACK).scale(1/1.4),
+            def_banach[1].animate.set_opacity(1).scale(1/0.8),
+            run_time=1.0
+        )
+
+        self.wait(0.5)
+
     def scene4(self, def_banach, title):
         """scene 4: definition of complete"""
 
@@ -280,14 +508,42 @@ class TitleScene(Scene):
         def_complete = VGroup(line1, line2, line3).arrange(DOWN, buff=0.5)
         
         def_complete.next_to(title.get_center() + DOWN * 2, DOWN)
-        
+
         # 4-2 : shape
         group,box = self.show_definition(def_complete, title)
+        group_box_group = VGroup(box, group)
         
+        # Cauchy sequence definition
+        cauchy_sequence_def_title = MathTex(r"(x_n) \text{ is a Cauchy sequence} ").set_color(BLACK)
+        cauchy_sequence_def = MathTex(r"\forall \varepsilon > 0, \ \exists N \in \mathbb{N}, ",
+                                      r"\text{   such that   } m,n \ge N \implies d(x_n , x_m) < \varepsilon").set_color(BLACK)
+
+        cauchy_sequence = VGroup(cauchy_sequence_def_title, cauchy_sequence_def).arrange(DOWN, buff=0.5)
+
+        cauchy_group,cauchy_box = self.show_minorPoint(cauchy_sequence,True)
+
+        cauchy_group.shift(DOWN)
+        cauchy_box.move_to(cauchy_group.get_center())
+
+        self.play(
+            group_box_group.animate.shift(20*LEFT),
+            Create(cauchy_box), Write(cauchy_group),
+            run_time=1.0
+        )
+
+        self.wait(2)
+
+        self.play(
+            Uncreate(cauchy_box), FadeOut(cauchy_group),
+            group_box_group.animate.shift(20*RIGHT),
+            run_time=1.0
+        )
+
+        self.wait(0.5)
+
         zoom = 2
 
         shape_center = box.get_center() + DOWN*0.25 + RIGHT*1.5
-        group_box_group = VGroup(box, group)
 
         circle = Circle(
             radius=3.3,
@@ -574,8 +830,8 @@ class TitleScene(Scene):
         self.play(Write(title))
         self.wait(0.5)
 
-        items_list = ["Banach Spaces", "others"]
-        blist = BulletedList(*items_list).set_color(BLACK).scale(1.25).to_edge(LEFT).shift(1.75*UP)
+        items_list = ["Banach Spaces", "Prerequisite Notes", "Orthogonality"]
+        blist = BulletedList(*items_list).set_color(BLACK).scale(1.25).to_edge(LEFT).shift(1*UP)
 
         self.play(Create(blist))
         self.wait(1)
