@@ -216,15 +216,316 @@ class Part1_Scene(Scene):
     
     def construct(self):
 
-        self.scene1()
+        # self.scene1()
 
-        self.scene2()
+        # self.scene2()
 
         topic_number = 0
         title = self.scene3(topic_number)
 
         # norm
         self.scene4(title)
+
+    def scene4_subScene0(self,title):
+        self.play(
+            FadeOut(title),
+        )
+        # length
+
+        # draw number plane as background
+        plane = NumberPlane(
+            y_range=[-6, 7, 0.5],
+            x_range=[-8, 8, 0.5],
+            background_line_style={"stroke_color": axes_background_color, "stroke_opacity": 0.5},
+            y_length=8,
+            x_length=13,
+        ).move_to([0, 0, 0]+DOWN)
+        self.play(Create(plane))
+        self.wait(0.5)
+
+        # draw axes on top
+        axes = Axes(  # NumberLine
+            y_range=[-6, 7, 0.5],
+            y_length=8,
+            x_range=[-8, 8, 0.5],
+            x_length=13,
+            axis_config={"color": dark_blue, "include_ticks": False, "tip_length":0.25, "tip_shape":StealthTip} # "tip_shape":ArrowTip.TIP_STYLE_ROUND
+        ).move_to([0, 0, 0]+DOWN)
+        self.play(Create(axes))
+        self.wait(0.5)
+
+        # dot at tip of vector
+        tip = Dot(axes.c2p(6,4), color=dark_red, radius=0.07)
+        self.play(FadeIn(tip))
+        self.wait(1)
+        tip_text = MathTex("(x,y)",color=BLACK).next_to(tip,UP)
+        self.play(
+            Write(tip_text),
+        )
+        self.wait(1)
+
+        norm2_2d = MathTex(
+            r"\text{length }",r"= ",r"\sqrt{x^2 + y^2}",color=BLACK
+        ).move_to(axes.get_center()+1*DOWN)
+        # draw vector in (0,0)
+        vector = Arrow(
+            start=axes.c2p(0,0),
+            end=axes.c2p(6,4),
+            buff=0,
+            stroke_width=6,
+            color=dark_green,
+            tip_length=0.25,
+            tip_shape=StealthTip
+        )
+        self.play(
+            Write(norm2_2d[0]),
+            GrowArrow(vector, run_time=1.2, rate_func=rush_from),
+        )
+        self.wait(1)
+        self.play(
+            Write(norm2_2d[1]),
+            Write(norm2_2d[2]),
+        )
+        self.wait(3)
+
+
+        # properties of length
+        # 1
+        text_1 = MathTex(r"\text{Always non-negative}",color=dark_pink
+        ).scale(1.3).to_edge(LEFT).shift(0.5*RIGHT+UP)
+        self.play(
+            Write(text_1),
+        )
+        self.wait(2)
+        text_1_part2 = MathTex(r"\ge 0",color=dark_pink
+        ).scale(1.3).next_to(norm2_2d,RIGHT)
+        self.play(
+            Write(text_1_part2),
+        )
+        self.wait(2)
+        self.play(
+            FadeOut(text_1_part2),
+        )
+
+        # 2
+        text_2 = MathTex(r"\text{vector = }",r"\vec{0}=(0,0)\\",r"\text{length = }",r"0",color=dark_pink
+        ).scale(1.3).to_edge(LEFT).shift(RIGHT+UP)
+        text_2[2:].shift(1*LEFT)
+        arrow_0_0_down = CurvedArrow(
+            start_point=text_2.get_corner(UR)+0.1*DOWN+0.6*RIGHT,
+            end_point=text_2.get_corner(DR)+0.1*UP+0.6*RIGHT,
+            angle=-PI/2,
+            color=light_pink,
+        )
+        self.play(
+            FadeTransform(text_1,text_2[0:2]),
+        )
+        self.play(
+            FadeOut(vector),
+            tip.animate.move_to(axes.c2p(0,0)),
+            run_time=3
+        )
+        text_2_formula_1 = MathTex(r"= \sqrt{0^2 + 0^2}",color=BLACK
+        ).next_to(norm2_2d,DOWN)
+        text_2_formula_1.set_color_by_tex("0", dark_pink)
+        self.play(
+            TransformFromCopy(norm2_2d[1:],text_2_formula_1),
+        )
+        self.wait(1)
+        text_2_formula_2 = MathTex(r" = 0",color=dark_pink
+        ).next_to(text_2_formula_1,RIGHT)
+        text_2_formula_2.set_color_by_tex("0", dark_pink)
+        self.play(
+            Write(text_2_formula_2),
+        )
+        self.wait(1)
+        self.play(
+            Write(text_2[2:]),
+        )
+        self.wait(1)
+        self.play(
+            Create(arrow_0_0_down),
+        )
+        self.wait(2)
+        arrow_0_0_up = CurvedArrow(
+            start_point=text_2.get_corner(DL)+0.1*UP+0.6*LEFT,
+            end_point=text_2.get_corner(UL)+0.1*DOWN+0.6*LEFT,
+            angle=-PI/2,
+            color=light_pink,
+        )
+        self.play(
+            Create(arrow_0_0_up),
+        )
+        self.wait(3)
+
+        self.play(
+            FadeOut(arrow_0_0_up),
+            FadeOut(arrow_0_0_down),
+            FadeOut(text_2),
+            FadeOut(text_2_formula_1),
+            FadeOut(text_2_formula_2),
+            FadeIn(vector),
+            tip.animate.move_to(axes.c2p(6,4)),
+            run_time=1
+        )
+        self.wait(1)
+
+        # 3
+
+        text_3_part1 = MathTex(r"t \cdot ",r"\text{vector}\\",r"t \cdot (x,y) = (t \times x , t \times y )",color=dark_pink
+        ).scale(1.3).to_edge(LEFT).shift(UP)
+        text_3_part1[2].set_color(light_purple)
+        text_3_part2 = MathTex(r"t \cdot ",r"\text{length}",color=dark_pink
+        ).scale(1.3).to_edge(LEFT).shift(RIGHT+0.6*DOWN)
+        self.play(
+            Write(text_3_part1[:2]),
+        )
+        self.wait(1)
+        self.play(
+            Write(text_3_part1[2]),
+        )
+        self.wait(1)
+        
+        text_3_formula_1 = MathTex(r"= \sqrt{(t \times x)^2 + (t \times y)^2}",color=dark_pink
+        ).next_to(norm2_2d,DOWN)
+        self.play(
+            TransformFromCopy(norm2_2d[1:],text_3_formula_1),
+        )
+        self.wait(1)
+        text_3_formula_1_2 = MathTex(r"= \sqrt{t^2 \times x^2 + t^2 \times y^2}",color=dark_pink
+        ).next_to(norm2_2d,DOWN)
+        self.play(
+            FadeTransform(text_3_formula_1,text_3_formula_1_2),
+        )
+        self.wait(1)
+        text_3_formula_1_3 = MathTex(r"= \sqrt{t^2 \times (x^2 + y^2)}",color=dark_pink
+        ).next_to(norm2_2d,DOWN)
+        self.play(
+            FadeTransform(text_3_formula_1_2,text_3_formula_1_3),
+        )
+        self.wait(1)
+        text_3_formula_2 = MathTex(r" = |t| ",r"\times \sqrt{x^2 + y^2}",color=dark_pink
+        ).next_to(text_3_formula_1,RIGHT)
+        self.play(
+            Write(text_3_formula_2),
+        )
+        self.wait(1)
+        text_3_formula_2_2 = MathTex(r"\text{length}",color=light_orange
+        ).move_to(text_3_formula_2[1].get_center()+0.3*LEFT)
+        text_3_formula_2[1].set_color(light_orange)
+        self.play(
+            FadeTransform(text_3_formula_2[1],text_3_formula_2_2),
+        )
+        self.wait(1)
+
+        arrow_0_0_up = CurvedArrow(
+            start_point=text_3_part1.get_corner(DR)+0.1*UP+0.6*RIGHT,
+            end_point=text_3_part2.get_corner(UR)+0.1*DOWN+0.6*RIGHT,
+            angle=-PI/2,
+            color=light_pink,
+        )
+        self.play(
+            Create(arrow_0_0_up),
+        )
+        self.play(
+            Write(text_3_part2),
+        )
+        text_3_part2_2 = MathTex(r"|t| \cdot ",r"\text{length}",color=dark_pink
+        ).scale(1.3).to_edge(LEFT).shift(RIGHT+0.6*DOWN)
+        self.play(
+            FadeTransform(text_3_part2,text_3_part2_2),
+        )
+        self.wait(2)
+
+        self.play(
+            FadeOut(text_3_formula_1_3),
+            FadeOut(text_3_formula_2_2),
+        )
+
+        lambda_text = MathTex("|t| < 1",color=BLACK).scale(1.6).move_to(text_3_part2.get_center()+3.5*DOWN+LEFT)
+        self.play(
+            Write(lambda_text)
+        )
+        vector_lower = Arrow(
+            start=axes.c2p(0,0),
+            end=axes.c2p(3,2),
+            buff=0,
+            stroke_width=6,
+            color=dark_green,
+            tip_length=0.25,
+            tip_shape=StealthTip
+        )
+
+        VECTOR_COPY = vector.copy()
+
+        self.play(
+            Transform(vector, vector_lower)
+        )
+
+        self.wait(1)
+
+        self.play(
+            Transform(vector, VECTOR_COPY)
+        )
+
+        self.wait(1)
+
+        # | lambda | > 1
+
+        lambda_text_2 = MathTex("|t| > 1",color=BLACK).scale(1.6).move_to(text_3_part2.get_center()+3.5*DOWN+LEFT)
+        self.play(
+            Unwrite(lambda_text),
+            Write(lambda_text_2)
+        )
+        vector_higher = Arrow(
+            start=axes.c2p(0,0),
+            end=axes.c2p(7.5,5),
+            buff=0,
+            stroke_width=6,
+            color=dark_green,
+            tip_length=0.25,
+            tip_shape=StealthTip
+        )
+
+        self.play(
+            Transform(vector, vector_higher)
+        )
+
+        self.wait(1)
+
+        self.play(
+            Transform(vector, VECTOR_COPY)
+        )
+
+        self.wait(1)
+
+        # lambda < 0 (negative)
+
+        lambda_text_3 = MathTex("t < 0",color=BLACK).scale(1.6).move_to(text_3_part2.get_center()+3.5*DOWN+LEFT)
+        self.play(
+            Unwrite(lambda_text_2),
+            Write(lambda_text_3)
+        )
+
+        vector_higher = Arrow(
+            start=axes.c2p(0,0),
+            end=axes.c2p(-3,-2),
+            buff=0,
+            stroke_width=6,
+            color=dark_green,
+            tip_length=0.25,
+            tip_shape=StealthTip
+        )
+
+        self.play(
+            Transform(vector, vector_higher)
+        )
+
+        self.wait(2)
+        
+        # 4
+
+
 
     def scene4_subScene1(self,title):
         "scene4 : subScene1 : norm definition"
@@ -801,17 +1102,20 @@ class Part1_Scene(Scene):
 
     def scene4(self,title):
         """scene 4: what is norm ? """
-        # # norm definition
-        norm_group, norm_box, question_group, question_box = self.scene4_subScene1(title)
+        # From Intuition to Mathematics
+        self.scene4_subScene0(title)
 
-        # # shapes for norm definition
-        self.scene4_subScene2(question_group, question_box, title)
+        # norm definition
+        # norm_group, norm_box, question_group, question_box = self.scene4_subScene1(title)
+
+        # shapes for norm definition
+        # self.scene4_subScene2(question_group, question_box, title)
 
         # prove and show ||x||>=0
-        self.scene4_subScene3(title)
+        # self.scene4_subScene3(title)
 
         # examples of norm
-        self.scene4_subScene4(title)
+        # self.scene4_subScene4(title)
 
 
     def scene3(self,topic_number):
