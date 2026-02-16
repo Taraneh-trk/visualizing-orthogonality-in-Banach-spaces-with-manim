@@ -15,6 +15,8 @@ dark_orange = "#E66914"
 light_orange = "#E668149B"
 dark_purple = "#5802A6"
 light_purple = "#5702A68C"
+dark_terquise = "#02A6A1"
+dark_not_green = "#46A602"
 axes_background_color = "#D3D3D3"
 topics_backGround_color = "#0D113EFF"
 
@@ -55,7 +57,7 @@ class Part1_Scene(MovingCameraScene):
         
         return mobject
 
-    def show_warning(self, body: MathTex):
+    def show_warning(self, body: MathTex,set_image=False):
         """Show warning message with box"""
 
         title_text = Text("❗Note❗", color=dark_red, font_size=36)
@@ -70,13 +72,37 @@ class Part1_Scene(MovingCameraScene):
             width=group.width + 1,
             height=group.height + 0.8
         )
-        
 
         box.move_to(group.get_center())
+
+        if set_image==True:
+            # ex_mark_1 = ImageMobject("images/ex_mark_1_img.png").move_to(box.get_top()+ 3*LEFT + 1.5*UP ).scale(3)
+            # self.add(ex_mark_1) 
+
+            ex_mark_2 = ImageMobject("images/ex_mark_2_img.png").move_to(box.get_top()+ 1.5*UP ).scale(3)
+            self.add(ex_mark_2)
+
+            # arrow_0_0_down = CurvedArrow(
+            #     start_point=box.get_corner(UR)+2*UP+1.5*LEFT,
+            #     end_point=box.get_top()+1.0*RIGHT,
+            #     angle=PI/2,
+            #     color=light_red,
+            # ).scale(1.5)
+            # self.play(
+            #     Create(arrow_0_0_down),
+            #     run_time=1
+            # )
 
         self.play(Create(box), Write(group))
         self.wait(2)
         self.play(FadeOut(group), FadeOut(box))
+
+        if set_image==True:
+            self.play(
+                # FadeOut(arrow_0_0_down),
+                # FadeOut(ex_mark_1),
+                FadeOut(ex_mark_2)
+            )
 
     def ask_question(self,body, return_notShow=False):
         """Show message with box to ask a question. """
@@ -229,6 +255,10 @@ class Part1_Scene(MovingCameraScene):
 
     def scene4_subScene0(self,title):
         self.play(
+            Write(title),
+        )
+        self.wait(2)
+        self.play(
             FadeOut(title),
         )
         # length
@@ -282,10 +312,119 @@ class Part1_Scene(MovingCameraScene):
             Write(norm2_2d[0]),
             GrowArrow(vector, run_time=1.2, rate_func=rush_from),
         )
+        self.wait(2)
+
+        for _ in range(2):
+            self.play(
+                tip.animate.scale(1.5).set_color(BLACK),
+                rate_func=there_and_back,
+            )
+
+        dot_line_1 =  DashedLine(
+            start=axes.c2p(6,4),
+            end=axes.c2p(6,0), 
+            dash_length=0.2, 
+            dashed_ratio=0.5, 
+            color=dark_red,
+        )
+
+        dot_line_1_result = Line(
+            start=axes.c2p(0,0),
+            end=axes.c2p(6,0), 
+            color=dark_pink,
+        )
+
+        text_dot_x = MathTex(r"x",color=BLACK).move_to(dot_line_1_result.get_center()+0.3*UP)
+
+        dot_line_2 =  DashedLine(
+            start=axes.c2p(6,4),
+            end=axes.c2p(0,4), 
+            dash_length=0.2, 
+            dashed_ratio=0.5, 
+            color=dark_not_green,
+        )
+
+        dot_line_2_result = Line(
+            start=axes.c2p(0,0),
+            end=axes.c2p(0,4), 
+            color=dark_purple,
+        )
+
+        text_dot_y = MathTex(r"y",color=BLACK).move_to(dot_line_2_result.get_center()+0.3*LEFT)
+
+        self.play(
+            Create(dot_line_1),
+            Create(dot_line_2),
+            run_time=1
+        )
+        self.wait(2)
+        self.play(
+            Create(dot_line_1_result),
+            Write(text_dot_x),
+        )
+        self.wait(0.5)
+        self.play(
+            Create(dot_line_2_result),
+            Write(text_dot_y),
+        )
         self.wait(1)
+        self.play(
+            FadeOut(dot_line_1),
+            FadeOut(dot_line_2),
+        )
+        dot_line_1_result_group_with_text_x = VGroup(dot_line_1_result,text_dot_x)
+        self.play(
+            dot_line_1_result_group_with_text_x.animate.move_to(dot_line_2.get_center()+0.19*UP),
+            run_time=1
+        )
+        self.wait(1)
+
+        tip_triangle_1 = Dot(axes.c2p(0,0), color=dark_pink, radius=0.07)
+        self.play(FadeIn(tip_triangle_1))
+        self.wait(0.5)
+
+        tip_triangle_2 = Dot(axes.c2p(0,4), color=dark_purple, radius=0.07)
+        self.play(FadeIn(tip_triangle_2))
+        self.wait(1)
+
+        triangle_Euclid = Polygon(
+            tip.get_center(),
+            tip_triangle_1.get_center(),
+            tip_triangle_2.get_center(),
+        )
+
+        triangle_Euclid.set_stroke(color=dark_terquise, width=8)
+        triangle_Euclid.set_fill(dark_terquise, opacity=0.2)
+
+        self.play(
+            DrawBorderThenFill(triangle_Euclid,2),
+            run_time=1
+        )
+        self.wait(3)
+        self.play(
+            triangle_Euclid.animate.set_fill(WHITE),
+            run_time=1
+        )
+
+        for _ in range(2):
+            self.play(
+                vector.animate.set_stroke(width=15).set_color("#9A0000"),
+                rate_func=there_and_back,
+            )
+
         self.play(
             Write(norm2_2d[1]),
             Write(norm2_2d[2]),
+        )
+        self.wait(2)
+        self.play(
+            FadeOut(triangle_Euclid),
+            FadeOut(dot_line_1_result_group_with_text_x),
+            FadeOut(text_dot_y),
+            FadeOut(dot_line_1_result),
+            FadeOut(dot_line_2_result),
+            FadeOut(tip_triangle_1),
+            FadeOut(tip_triangle_2),
         )
         self.wait(3)
 
@@ -718,13 +857,13 @@ class Part1_Scene(MovingCameraScene):
             # FadeOut(text_y),
             FadeOut(tip),
         )
-        self.wait(2)
+        self.wait(4)
 
         text_x.shift(0.7*RIGHT+0.4*DOWN)
         vector_rule3_1_group = VGroup(vector_rule3_1,text_x)
         self.play(
             vector_rule3_1_group.animate.move_to(dot_arrow_2.get_center()),
-            run_time=1
+            run_time=2
         )
         self.wait(2)
 
@@ -738,8 +877,8 @@ class Part1_Scene(MovingCameraScene):
         triangle.set_fill(light_orange, opacity=0.3)
 
         self.play(
-            DrawBorderThenFill(triangle),
-            run_time=3
+            DrawBorderThenFill(triangle,2),
+            run_time=1
         )
         self.wait(3)
 
@@ -772,7 +911,7 @@ class Part1_Scene(MovingCameraScene):
             FadeIn(text_2),
         )
 
-        self.wait(1)
+        self.wait(3)
 
         vector.set_color(BLACK)
         self.play(
@@ -796,7 +935,7 @@ class Part1_Scene(MovingCameraScene):
             run_time=2
         )
 
-        norm2_def_Euclidean = MathTex(r"\text{length}_{\text{Euclidean}  }",color=BLACK
+        norm2_def_Euclidean = MathTex(r"\text{length}_{\text{Euclidean}} \text{  }",color=BLACK
         ).move_to(norm2_def[0].get_center()+0.2*LEFT)
 
         self.play(
@@ -841,6 +980,9 @@ class Part1_Scene(MovingCameraScene):
         )
         text_dot_y = MathTex(r"x_2").set_color(BLACK).move_to(dot_arrow_y.get_center()+0.4*RIGHT)
 
+        sum_norm_text = MathTex(r"|x_1| + |x_2|",color=BLACK
+        ).move_to(text_x.get_center()+0.7*LEFT)
+
         self.play(
             Create(dot_arrow_x),
             Write(text_dot_x),
@@ -851,6 +993,12 @@ class Part1_Scene(MovingCameraScene):
             Write(text_dot_y),
         )
         self.wait(2)
+
+        self.play(
+            TransformMatchingTex(text_x, sum_norm_text),
+            run_time=1
+        )
+        self.wait(1)
 
         norm1_2d = MathTex(
             r"\text{length}_{\text{Manhattan}}",r"= ",r"|x_1| + |x_2|",color=BLACK
@@ -864,7 +1012,7 @@ class Part1_Scene(MovingCameraScene):
             FadeOut(plane),
             FadeOut(axes),
             FadeOut(manhatan_arrow),
-            FadeOut(text_x),
+            FadeOut(sum_norm_text),
             FadeOut(dot_arrow_x),
             FadeOut(text_dot_x),
             FadeOut(dot_arrow_y),
@@ -873,6 +1021,7 @@ class Part1_Scene(MovingCameraScene):
             FadeOut(norm2_def[1:]),
             FadeOut(norm2_def_Euclidean),
         )
+        self.wait(1)
 
     def scene4_subScene2(self,title):
         "scene4 : subScene2 : norm definition"
@@ -1489,19 +1638,33 @@ class Part1_Scene(MovingCameraScene):
     def scene3(self,topic_number,first_time=False):
         """scene 3: show topics list"""
 
+        title = Tex(
+            "Topics We Will Discuss In this Video ...",
+            color=GOLD_A, font_size=60
+        ).to_edge(UP)
+        self.play(
+            Write(title),
+        )
+        self.wait(2)
+
         if first_time:
 
+            self.camera.background_color = topics_backGround_color
             img = ImageMobject("images/topics.png")
             img.scale(2.65)
-            self.add(img)
-            self.camera.background_color = topics_backGround_color
+
+            self.play(
+                FadeIn(img), 
+                run_time=2
+            )
+
             self.camera.frame.save_state()
 
 
-            rect_1 = Rectangle(width=3, height=5).move_to(img.get_left() + RIGHT * 1.4 +0.6*UP)
-            rect_2 = Rectangle(width=3, height=5).move_to(img.get_left() + RIGHT * 4.3 +0.6*UP)
-            rect_3 = Rectangle(width=5, height=5).move_to(img.get_left() + RIGHT * 8 +0.6*UP)
-            rect_4 = Rectangle(width=4, height=5).move_to(img.get_left() + RIGHT * 12.5 +0.6*UP)
+            rect_1 = Rectangle(width=3, height=5).move_to(img.get_left() + RIGHT * 1.4 +0.6*UP).round_corners(radius=0.3)
+            rect_2 = Rectangle(width=3, height=5).move_to(img.get_left() + RIGHT * 4.3 +0.6*UP).round_corners(radius=0.3)
+            rect_3 = Rectangle(width=5, height=5).move_to(img.get_left() + RIGHT * 8 +0.6*UP).round_corners(radius=0.3)
+            rect_4 = Rectangle(width=4, height=5).move_to(img.get_left() + RIGHT * 12.5 +0.6*UP).round_corners(radius=0.3)
 
             zoom_rects = [rect_1, rect_2, rect_3, rect_4]
 
@@ -1509,13 +1672,13 @@ class Part1_Scene(MovingCameraScene):
 
                 rect.set_stroke(GOLD_A, 3)
 
-                self.play(Create(rect), run_time=1.2)
+                self.play(Create(rect), run_time=0.3)
 
                 self.play(
                     self.camera.frame.animate
                     .move_to(rect.get_center())
                     .set(width=rect.width).set(height=rect.height),  
-                    run_time=3,
+                    run_time=1,
                     rate_func=smooth
                 )
 
@@ -1531,16 +1694,15 @@ class Part1_Scene(MovingCameraScene):
 
             self.wait(2)
 
+            self.play(
+                FadeOut(img), 
+                run_time=2
+            )
+            self.play(
+                Unwrite(title),
+            )
             self.camera.background_color = WHITE
-            self.play(FadeOut(img), run_time=2)
 
-        
-        title = Tex(
-            "Topics We Will Discuss In this Video ...",
-            color=WHITE, font_size=60
-        ).to_edge(UP)
-        
-             
         items_list = [  "The Birth of Norms", 
                         "From Norms to Metrics", 
                         "Cauchy Sequences : The Mystery of Nearness", 
@@ -1557,7 +1719,7 @@ class Part1_Scene(MovingCameraScene):
             r"\text{where } \mathbb{K} \text{ is } \mathbb{R} \text{ or } \mathbb{C}.",
             color=BLACK,
         )
-        self.show_warning(warning_text)
+        self.show_warning(warning_text,True)
         self.wait(2)
 
     def scene1_SubScene1(self,):
