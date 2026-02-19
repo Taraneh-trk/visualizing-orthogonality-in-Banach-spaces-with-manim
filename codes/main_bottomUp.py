@@ -270,15 +270,29 @@ class Part1_Scene(MovingCameraScene):
     
     def construct(self):
 
-        self.scene1()
+        # self.scene1()
 
-        self.scene2()
+        # self.scene2()
 
-        topic_number = 0
-        title = self.scene3(topic_number,True)
+        # topic_number = 0
+        # title = self.scene3(topic_number,True)
 
         # norm
-        self.scene4(title)
+        # self.scene4(title)
+
+        # from norm to metrics
+        topic_number = 1
+        title = self.scene3(topic_number,False)
+
+        self.scene5(title)
+
+    def scene5(self,title):
+        self.play(
+            Write(title),
+        )
+        self.wait(1)
+
+        # ...
 
     def scene4_subScene0(self,title):
         self.play(
@@ -2458,7 +2472,81 @@ class Part1_Scene(MovingCameraScene):
             FadeOut(condition_oo),
             FadeOut(norm_oo_short_form),
         )
+
+        self.wait(1)
+
         self.play(
+            VGroup(plane, axes).animate.shift(1.5*UP+1*LEFT),
+            run_time=1
+        )
+
+        circle_static = Circle(radius=axes.x_axis.unit_size * 3,color=dark_terquise).move_to(axes.c2p(0,0))
+
+        text_p1 = MathTex(r"p = 1",color=dark_pink).move_to(brain_img.get_top()+2*UP).scale(2)
+        rect_p1 = SurroundingRectangle(
+            text_p1,
+            color=dark_red,        
+            buff=0.2,          
+            fill_opacity=0,    
+            stroke_width=3,    
+            corner_radius=0.15 
+        )
+        text_p2 = MathTex(r"p = 2",color=dark_pink).move_to(brain_img.get_top()+2*UP).scale(2)
+        rect_p2 = SurroundingRectangle(
+            text_p2,
+            color=dark_red,        
+            buff=0.2,          
+            fill_opacity=0,    
+            stroke_width=3,    
+            corner_radius=0.15 
+        )
+        text_pinf = MathTex(r"p \to \infty",color=dark_pink).move_to(brain_img.get_top()+2*UP).scale(2)
+        rect_pinf = SurroundingRectangle(
+            text_pinf,
+            color=dark_red,        
+            buff=0.2,          
+            fill_opacity=0,    
+            stroke_width=3,    
+            corner_radius=0.15 
+        )
+
+        polygon.shift(1.5*UP+1*LEFT)
+        self.play(
+            Write(text_p1),
+            Create(rect_p1),
+        )
+        self.wait(0.5)
+        self.play(
+            Create(polygon),
+        )
+        self.wait(1)
+
+        # circle_static.shift(1.5*UP+1*LEFT)
+        self.play(
+            TransformMatchingTex(text_p1, text_p2),
+            TransformMatchingShapes(rect_p1, rect_p2),
+        )
+        self.wait(0.5)
+        self.play(
+            Transform(polygon, circle_static),
+        )
+        self.wait(1)
+
+        squre.shift(1.5*UP+1*LEFT)
+        self.play(
+            TransformMatchingTex(text_p2, text_pinf),
+            TransformMatchingShapes(rect_p2, rect_pinf),
+        )
+        self.wait(0.5)
+        self.play(
+            Transform(polygon, squre),
+        )
+        self.wait(1)
+
+        self.play(
+            FadeOut(rect_pinf),
+            FadeOut(text_pinf),
+            FadeOut(polygon),
             FadeOut(axes),
             FadeOut(plane),
             FadeOut(brain_img),
@@ -2474,7 +2562,7 @@ class Part1_Scene(MovingCameraScene):
 
         self.scene4_subScene1(title,plane,axes,norm2_def)
 
-        self.scene4_subScene1_part2(title)
+        # self.scene4_subScene1_part2(title)
 
         # norm definition
         norm_group, norm_box, question_group, question_box, norm_title = self.scene4_subScene2(title)
