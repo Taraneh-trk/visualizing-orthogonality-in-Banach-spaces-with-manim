@@ -286,13 +286,284 @@ class Part1_Scene(MovingCameraScene):
 
         self.scene5(title)
 
+    def scene5_subScene0(self, title):
+        """ constructing metrics with norms """
+        # metric induced by the norm
+        self.play(
+            FadeOut(title),
+        )
+        self.wait(0.5)
+
+        text_metric_space = MathTex(r"\text{Metric space}",color=dark_green).move_to(title.get_center()+DOWN).scale(2)
+        text_metric_space_parts = MathTex(r"(",r"X",r",",r"d",r")",color=dark_blue,arg_separator="  ").move_to(text_metric_space.get_center()+1.6*DOWN).scale(2)
+        rect_x = SurroundingRectangle(
+            text_metric_space_parts[1],
+            color=dark_pink,        
+            buff=0.1,          
+            fill_opacity=0,    
+            stroke_width=3,    
+            corner_radius=0.15 
+        )
+        text_vector_space = MathTex(r"\text{Vector space}",color=dark_pink).move_to(text_metric_space_parts.get_center()+2.6*DOWN+3*LEFT).scale(2)
+        rect_vec_x = SurroundingRectangle(
+            text_vector_space,
+            color=dark_pink,        
+            buff=0.1,          
+            fill_opacity=0,    
+            stroke_width=3,    
+            corner_radius=0.15 
+        )
+        arrow_x = CurvedArrow(
+            start_point=text_metric_space_parts[1].get_left()+0.1*LEFT,
+            end_point=rect_vec_x.get_top()+0.2*UP,
+            angle=PI/2,
+            stroke_width=6,
+            color=dark_pink,
+            tip_length=0.25,
+            tip_shape=StealthTip
+        )
+        rect_d = SurroundingRectangle(
+            text_metric_space_parts[3],
+            color=dark_orange,        
+            buff=0.2,          
+            fill_opacity=0,    
+            stroke_width=3,    
+            corner_radius=0.15 
+        )
+        text_distance = MathTex(r"\text{Distance}",color=dark_orange).move_to(text_metric_space_parts.get_center()+2.6*DOWN+3*RIGHT).scale(2)
+        rect_distance = SurroundingRectangle(
+            text_distance,
+            color=dark_orange,        
+            buff=0.2,          
+            fill_opacity=0,    
+            stroke_width=3,    
+            corner_radius=0.15 
+        )
+        arrow_d = CurvedArrow(
+            start_point=text_metric_space_parts[3].get_right()+0.2*RIGHT,
+            end_point=rect_distance.get_top()+0.2*UP,
+            angle=-PI/2,
+            stroke_width=6,
+            color=dark_orange,
+            tip_length=0.25,
+            tip_shape=StealthTip
+        )
+
+        self.play(
+            Write(text_metric_space),
+        )
+        self.wait(1)
+        self.play(
+            Write(text_metric_space_parts[::2]),
+        )
+        self.wait(1)
+        self.play(
+            Write(text_metric_space_parts[1]),
+            Create(rect_x),
+            Create(arrow_x),
+            Create(rect_vec_x),
+            Write(text_vector_space),
+        )
+        self.wait(1)
+        self.play(
+            Write(text_metric_space_parts[3]),
+            Create(rect_d),
+            Create(arrow_d),
+            Create(rect_distance),
+            Write(text_distance),
+        )
+        self.wait(1)
+
+        fade_out_list = [text_metric_space, text_metric_space_parts, rect_x, 
+                         arrow_x, rect_vec_x, text_vector_space,
+                         rect_d, arrow_d, rect_distance, text_distance]
+        self.play(
+            FadeOut(VGroup(*fade_out_list)),
+        )
+
+        self.wait(1)
+
+        # draw number plane as background
+        plane = NumberPlane(
+            y_range=[-6, 7, 1],
+            x_range=[-8, 8, 1],
+            background_line_style={"stroke_color": axes_background_color, "stroke_opacity": 0.5},
+            y_length=8,
+            x_length=13,
+        ).move_to([0, 0, 0]+DOWN)
+        self.play(Create(plane))
+        self.wait(0.5)
+
+        # draw axes on top
+        axes = Axes(  # NumberLine
+            y_range=[-6, 7, 1],
+            y_length=8,
+            x_range=[-8, 8, 1],
+            x_length=13,
+            axis_config={"color": dark_blue, "include_ticks": False, "tip_length":0.25, "tip_shape":StealthTip} # "tip_shape":ArrowTip.TIP_STYLE_ROUND
+        ).move_to([0, 0, 0]+DOWN)
+        self.play(Create(axes))
+        self.wait(0.5)
+
+        # dot at tip of vector
+        tip_x = Dot(axes.c2p(6,4), color=dark_red, radius=0.07)
+        self.play(FadeIn(tip_x))
+        self.wait(1)
+        tip_x_text = MathTex("A = (x_1,y_1)",color=BLACK).next_to(tip_x,UP).shift(0.6*RIGHT)
+        self.play(
+            Write(tip_x_text),
+        )
+        self.wait(1)
+
+        tip_y = Dot(axes.c2p(2,6), color=dark_green, radius=0.07)
+        self.play(FadeIn(tip_y))
+        self.wait(1)
+        tip_y_text = MathTex("B = (x_2,y_2)",color=BLACK).next_to(tip_y,UP)  #.shift(0.1*RIGHT)
+        self.play(
+            Write(tip_y_text),
+        )
+        self.wait(1)
+
+        dot_line_distance =  DashedLine(
+            start=axes.c2p(6,4),
+            end=axes.c2p(2,6), 
+            dash_length=0.2, 
+            dashed_ratio=0.5, 
+            color=dark_orange,
+        )
+        text_distance.scale(0.5).next_to(dot_line_distance,DOWN) #.shift(0.4*RIGHT)
+        text_dxy = MathTex(r"d(A,B)",color=dark_orange).shift(axes.c2p(0,0)+DOWN+1.5*LEFT).scale(1.5)
+
+        self.play(
+            Create(dot_line_distance),
+            Write(text_distance),
+        )
+        self.wait(0.5)
+        self.play(
+            Write(text_dxy),
+        )
+        self.wait(0.5)
+        self.play(
+            FadeOut(text_distance),
+        )
+
+        vector_amb = Arrow(
+            start=axes.c2p(2,6),
+            end=axes.c2p(6,4),
+            buff=0,
+            stroke_width=6,
+            color=dark_orange,
+            tip_length=0.25,
+            tip_shape=StealthTip
+        )
+        text_vec_amb = MathTex(r"\vec{BA}",color=dark_orange).move_to(vector_amb.get_center()+0.5*UP)
+        text_norm_ab = MathTex(r" = ",r"\|\vec{BA}\|",color=dark_orange).scale(1.5).next_to(text_dxy,RIGHT)
+
+        self.play(
+            FadeTransform(dot_line_distance, vector_amb),
+        )
+        self.wait(0.5)
+        self.play(
+            Write(text_vec_amb),
+            Write(text_norm_ab),
+        )
+        self.wait(0.5)
+
+        vector_a = Arrow(
+            start=axes.c2p(0,0),
+            end=axes.c2p(6,4),
+            buff=0,
+            stroke_width=6,
+            color=dark_red,
+            tip_length=0.25,
+            tip_shape=StealthTip
+        )
+
+        vector_b = Arrow(
+            start=axes.c2p(0,0),
+            end=axes.c2p(2,6),
+            buff=0,
+            stroke_width=6,
+            color=dark_green,
+            tip_length=0.25,
+            tip_shape=StealthTip
+        )
+
+        text_vec_b = MathTex(r"\vec{b}",color=dark_green).move_to(vector_b.get_center()+0.5*LEFT)
+        text_vec_a = MathTex(r"\vec{a}",color=dark_red).move_to(vector_a.get_center()+0.5*RIGHT)
+
+        self.play(
+            GrowArrow(vector_a, run_time=1.2, rate_func=rush_from),
+            Write(text_vec_a),
+        )
+        self.wait(0.5)
+        self.play(
+            GrowArrow(vector_b, run_time=1.2, rate_func=rush_from),
+            Write(text_vec_b),
+        )
+        self.wait(0.5)
+
+        text_vec_amb_2 = MathTex(r"\vec{BA} = ",r"\vec{a} - \vec{b}",color=dark_pink).move_to(vector_amb.get_center()+0.5*UP+7*LEFT).scale(2)
+        text_norm_ab_2 = MathTex(r" = ",r"\|\vec{a} - \vec{b}\|",color=dark_orange).next_to(text_norm_ab,DOWN).scale(1.5)
+
+        self.play(
+            TransformFromCopy(text_vec_amb, text_vec_amb_2),
+        )
+        self.wait(0.5)
+        self.play(
+            TransformFromCopy(VGroup(text_vec_amb_2,text_norm_ab), text_norm_ab_2),
+        )
+        self.wait(0.5)
+
+        fade_out_list = [
+            plane, axes, tip_x , tip_x_text , tip_y , tip_y_text , text_dxy , vector_amb,
+            text_vec_amb , text_norm_ab , vector_a , vector_b, text_vec_a , text_vec_b, 
+            text_vec_amb_2, text_norm_ab_2, 
+        ]
+        self.play(
+            FadeOut(VGroup(*fade_out_list)),
+        )
+
+        self.wait(1)
+
+    def scene5_subScene1(self, title):
+        """prove d is a meter part 1"""
+        normed_space = MathTex("")
+
+    def scene5_subScene2(self, title):
+        """prove d is a meter part 2"""
+        normed_space = MathTex("")
+
+    def scene5_subScene3(self, title):
+        """prove d is a meter part 3"""
+        normed_space = MathTex("")
+
+    def scene5_subScene4(self, title):
+        """definition of normed space"""
+        normed_space = MathTex("")
+
+
     def scene5(self,title):
         self.play(
             Write(title),
         )
         self.wait(1)
 
-        # ...
+        # constructing metrics with norms
+        self.scene5_subScene0(title)
+
+        # prove part 1
+        # self.scene5_subScene1(title)
+
+        # prove part 2
+        # self.scene5_subScene2(title)
+
+        # prove part 3
+        # self.scene5_subScene3(title)
+
+        # normed space
+        # self.scene5_subScene4(title)
+
 
     def scene4_subScene0(self,title):
         self.play(
@@ -2552,8 +2823,6 @@ class Part1_Scene(MovingCameraScene):
             FadeOut(brain_img),
         )
         self.wait(1)
-
-
 
     def scene4(self,title):
         """scene 4: what is norm ? """
