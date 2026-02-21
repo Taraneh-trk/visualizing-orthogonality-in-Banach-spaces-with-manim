@@ -549,6 +549,9 @@ class Part1_Scene(MovingCameraScene):
 
         self.play(
             Create(rect_prove_1),
+        )
+        self.wait(0.6)
+        self.play(
             TransformFromCopy(prove_1[1], step_1),
         )
         self.wait(0.6)
@@ -599,43 +602,45 @@ class Part1_Scene(MovingCameraScene):
         self.wait(1)
 
         tip_x = Dot(axes.c2p(6,4), color=dark_orange, radius=0.09)
-        self.play(FadeIn(tip_x))
-        self.wait(0.1)
         tipx_text = MathTex("x",color=BLACK).next_to(tip_x,DOWN)
         self.play(
+            FadeIn(tip_x),
             Write(tipx_text),
         )
         self.wait(0.3)
 
         tip_y = Dot(axes.c2p(2,1), color=dark_purple, radius=0.09)
-        self.play(FadeIn(tip_y))
-        self.wait(0.1)
         tipy_text = MathTex("y",color=BLACK).next_to(tip_y,UP)
         self.play(
+            FadeIn(tip_y),
             Write(tipy_text),
         )
         self.wait(1)
 
-        dot_line_distance =  DashedLine(
+        dot_line_distance =  Arrow(
             start=axes.c2p(2,1),
-            end=axes.c2p(6,4), 
-            dash_length=0.2, 
-            dashed_ratio=0.5, 
+            end=axes.c2p(6,4),
+            buff=0,
+            stroke_width=6,
             color=dark_red,
+            tip_length=0.25,
+            tip_shape=StealthTip
         )
 
         self.play(
-            Create(dot_line_distance),
+            GrowArrow(dot_line_distance),
         )
         self.wait(0.5)
 
         self.play(
             dot_line_distance.animate.scale(
-                0,
+                0.01,
                 about_point=dot_line_distance.get_start()  
             ),
             VGroup(tip_x,tipx_text).animate.move_to(axes.c2p(2,1)),
-            rum_time=2
+            tip_y.animate.set_opacity(0),
+            FadeOut(dot_line_distance.tip),
+            rum_time=3
         )
 
         self.wait(1)
@@ -647,10 +652,177 @@ class Part1_Scene(MovingCameraScene):
             FadeOut(VGroup(*fade_out_list)),
         )
 
-    def scene5_subScene2(self, title, prove_2, distance):
+    def scene5_subScene2(self, title, prove_1, prove_2, distance):
         """prove d is a meter part 2"""
 
-    def scene5_subScene3(self, title):
+        # proof
+        step_1 = MathTex(r"d(x,y)",color=BLACK).scale(1.5).move_to(prove_2.get_center()+2*DOWN)
+        step_2 = MathTex(r" = ",r"\|x-y\|",color=BLACK).scale(1.5).next_to(step_1,RIGHT)
+        step_3 = MathTex(r" = ",r"\|(-1) \, (y-x)\|",color=BLACK).scale(1.5).next_to(step_2,RIGHT)
+        step_4 = MathTex(r" = ",r"|-1| \|(y-x)\|",color=BLACK).scale(1.5).next_to(step_2,DOWN).shift(1*RIGHT)
+        step_3to4 = MathTex(r"(N2)",color=dark_orange).scale(1.5).next_to(step_4,RIGHT)
+        step_5 = MathTex(r" = ",r"\|(y-x)\|",color=BLACK).scale(1.5).next_to(step_4,DOWN).shift(0.5*LEFT)
+        step_6 = MathTex(r" = ",r"d(y,x)",color=BLACK).scale(1.5).next_to(step_5,RIGHT)
+        square_for_end_proof = Square(0.3,color=BLACK).scale(1.5).next_to(step_6,RIGHT)
+        prove_2_group = VGroup(step_1, step_2, step_3, step_4, step_3to4, step_5, step_6, square_for_end_proof).shift(4*LEFT+0.7*UP)
+        rect_prove_2 = SurroundingRectangle(
+            prove_2_group,
+            color=dark_orange,        
+            buff=0.3,          
+            fill_opacity=0.1,    
+            stroke_width=3,    
+            corner_radius=0.15 
+        )
+
+        self.play(
+            TransformMatchingTex(prove_1, prove_2),
+        )
+        self.wait(1)
+
+        self.play(
+            Create(rect_prove_2),
+        )
+        self.wait(0.6)
+        self.play(
+            TransformFromCopy(prove_2[1], step_1),
+        )
+        self.wait(0.6)
+        self.play(
+            TransformFromCopy(distance[2],step_2),
+        )
+        self.wait(0.6)
+        self.play(
+            Write(step_3),
+        )
+        self.wait(0.6)
+        self.play(
+            Write(step_3to4),
+        )
+        self.wait(0.3)
+        self.play(
+            TransformFromCopy(VGroup(step_3to4,step_3),step_4),
+        )
+        self.wait(0.6)
+        self.play(
+            Write(step_5),
+        )
+        self.wait(0.6)
+        self.play(
+            Write(step_6),
+        )
+        self.wait(0.6)
+        self.play(
+            Create(square_for_end_proof),
+        )
+        self.wait(0.6)
+
+        step_1.set_color(dark_red)
+        step_6.set_color(dark_red)
+
+        self.wait(0.6)
+
+        # shape
+
+        # draw number plane as background
+        plane = NumberPlane(
+            y_range=[-2, 5, 1],
+            x_range=[-8, 8, 1],
+            background_line_style={"stroke_color": axes_background_color, "stroke_opacity": 0.5},
+            y_length=4,
+            x_length=13,
+        ).move_to([0, 0, 0]+1.5*DOWN)
+
+        # draw axes on top
+        axes = Axes(  # NumberLine
+            y_range=[-2, 5, 1],
+            y_length=4,
+            x_range=[-8, 8, 1],
+            x_length=13,
+            axis_config={"color": dark_blue, "include_ticks": False, "tip_length":0.25, "tip_shape":StealthTip} # "tip_shape":ArrowTip.TIP_STYLE_ROUND
+        ).move_to([0, 0, 0]+1.5*DOWN)
+
+        self.play(
+            FadeTransform(VGroup(prove_2_group,rect_prove_2),VGroup(plane,axes)),
+        )
+        self.wait(1)
+
+        tip_x = Dot(axes.c2p(6,4), color=dark_orange, radius=0.09)
+        tipx_text = MathTex("x",color=BLACK).next_to(tip_x,DOWN)
+        self.play(
+            FadeIn(tip_x),
+            Write(tipx_text),
+        )
+        self.wait(0.3)
+
+        tip_y = Dot(axes.c2p(2,1), color=dark_purple, radius=0.09)
+        tipy_text = MathTex("y",color=BLACK).next_to(tip_y,UP)
+        self.play(
+            FadeIn(tip_y),
+            Write(tipy_text),
+        )
+        self.wait(1)
+
+        vector_1 = Arrow(
+            start=axes.c2p(2,1),
+            end=axes.c2p(6,4),
+            buff=0,
+            stroke_width=6,
+            color=dark_green,
+            tip_length=0.25,
+            tip_shape=StealthTip
+        )
+
+        vector_2 = Arrow(
+            start=axes.c2p(6,4),
+            end=axes.c2p(2,1),
+            buff=0,
+            stroke_width=6,
+            color=dark_terquise,
+            tip_length=0.25,
+            tip_shape=StealthTip
+        )
+
+        self.play(
+            GrowArrow(vector_1),
+        )
+        self.wait(1)
+
+        self.play(
+            vector_1.animate.shift(8*LEFT),
+            run_time=1
+        )
+        self.wait(1)
+
+        self.play(
+            GrowArrow(vector_2),
+        )
+        self.wait(1)
+
+        self.play(
+            vector_2.animate.shift(7.7*LEFT+0.4*DOWN),
+            run_time=1
+        )
+        self.wait(1)
+
+        comp_line = Line(vector_1.get_start(),vector_1.get_end(),color=dark_red, stroke_width=10)
+        self.play(
+            Create(comp_line),
+        )
+        self.wait(0.3)
+        self.play(
+            comp_line.animate.move_to(vector_2.get_center()),
+            run_time=1
+        )
+        self.wait(1)
+
+        fade_out_list = [
+            plane, axes, tip_x ,tip_y , tipx_text, tipy_text, vector_1, vector_2, comp_line
+        ]
+        self.play(
+            FadeOut(VGroup(*fade_out_list)),
+        )
+
+    def scene5_subScene3(self, title, prove_2, prove_3, distance):
         """prove d is a meter part 3"""
         normed_space = MathTex("")
 
@@ -708,12 +880,16 @@ class Part1_Scene(MovingCameraScene):
         # prove part 2
         prove_2 = MathTex(r"2. \text{  }",r"d(x,y)",r" = ",r"d(y,x)",color=BLACK).scale(1.5).move_to(title.get_center()+2*DOWN)
         proof_2_needed = [
-            prove_2, distance
+            prove_1, prove_2, distance
         ]
         self.scene5_subScene2(title,*proof_2_needed)
 
         # prove part 3
-        # self.scene5_subScene3(title)
+        prove_3 = MathTex(r"3. \text{  }",r"d(x,y)",r" \le ",r"d(x,z)",r" + ",r"d(z,y)",color=BLACK).scale(1.5).move_to(title.get_center()+2*DOWN)
+        proof_3_needed = [
+            prove_2, prove_3, distance
+        ]
+        self.scene5_subScene3(title, *proof_3_needed)
 
         # normed space
         # self.scene5_subScene4(title)
