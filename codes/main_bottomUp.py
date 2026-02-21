@@ -639,8 +639,10 @@ class Part1_Scene(MovingCameraScene):
             ),
             VGroup(tip_x,tipx_text).animate.move_to(axes.c2p(2,1)),
             tip_y.animate.set_opacity(0),
-            FadeOut(dot_line_distance.tip),
-            rum_time=3
+            rum_time=2
+        )
+        self.play(
+            FadeOut(dot_line_distance),
         )
 
         self.wait(1)
@@ -659,9 +661,9 @@ class Part1_Scene(MovingCameraScene):
         step_1 = MathTex(r"d(x,y)",color=BLACK).scale(1.5).move_to(prove_2.get_center()+2*DOWN)
         step_2 = MathTex(r" = ",r"\|x-y\|",color=BLACK).scale(1.5).next_to(step_1,RIGHT)
         step_3 = MathTex(r" = ",r"\|(-1) \, (y-x)\|",color=BLACK).scale(1.5).next_to(step_2,RIGHT)
-        step_4 = MathTex(r" = ",r"|-1| \|(y-x)\|",color=BLACK).scale(1.5).next_to(step_2,DOWN).shift(1*RIGHT)
+        step_4 = MathTex(r" = ",r"|-1| \, \|(y-x)\|",color=BLACK).scale(1.5).next_to(step_2,DOWN).shift(1.3*RIGHT)
         step_3to4 = MathTex(r"(N2)",color=dark_orange).scale(1.5).next_to(step_4,RIGHT)
-        step_5 = MathTex(r" = ",r"\|(y-x)\|",color=BLACK).scale(1.5).next_to(step_4,DOWN).shift(0.5*LEFT)
+        step_5 = MathTex(r" = ",r"\|y-x\|",color=BLACK).scale(1.5).next_to(step_4,DOWN).shift(1.1*LEFT)
         step_6 = MathTex(r" = ",r"d(y,x)",color=BLACK).scale(1.5).next_to(step_5,RIGHT)
         square_for_end_proof = Square(0.3,color=BLACK).scale(1.5).next_to(step_6,RIGHT)
         prove_2_group = VGroup(step_1, step_2, step_3, step_4, step_3to4, step_5, step_6, square_for_end_proof).shift(4*LEFT+0.7*UP)
@@ -782,6 +784,7 @@ class Part1_Scene(MovingCameraScene):
             tip_shape=StealthTip
         )
 
+        prove_2.set_color_by_tex(r"d(x,y)",dark_green)
         self.play(
             GrowArrow(vector_1),
         )
@@ -793,6 +796,8 @@ class Part1_Scene(MovingCameraScene):
         )
         self.wait(1)
 
+        prove_2.set_color_by_tex(r"d(x,y)",BLACK)
+        prove_2.set_color_by_tex(r"d(y,x)",dark_terquise)
         self.play(
             GrowArrow(vector_2),
         )
@@ -803,6 +808,7 @@ class Part1_Scene(MovingCameraScene):
             run_time=1
         )
         self.wait(1)
+        prove_2.set_color_by_tex(r"d(y,x)",BLACK)
 
         comp_line = Line(vector_1.get_start(),vector_1.get_end(),color=dark_red, stroke_width=10)
         self.play(
@@ -824,11 +830,211 @@ class Part1_Scene(MovingCameraScene):
 
     def scene5_subScene3(self, title, prove_2, prove_3, distance):
         """prove d is a meter part 3"""
-        normed_space = MathTex("")
+        # proof
+        step_1 = MathTex(r"d(x,y)",color=BLACK).scale(1.5).move_to(prove_2.get_center()+2*DOWN)
+        step_2 = MathTex(r" = ",r"\|x-y\|",color=BLACK).scale(1.5).next_to(step_1,RIGHT)
+        step_3 = MathTex(r" = ",r"\|",r"x ",r" - z",r" + ",r"z",r"- y",r"\|",color=BLACK).scale(1.5).next_to(step_2,DOWN).shift(1.3*RIGHT)
+        step_3.set_color_by_tex(r" - z",dark_blue)
+        step_3.set_color_by_tex(r"z",dark_blue)
+        step_3.set_color_by_tex(r" + ",dark_blue)
+        rect_step_3_x = SurroundingRectangle(
+            step_3[2:4],
+            color=dark_pink,        
+            buff=0.15,          
+            fill_opacity=0.1,    
+            stroke_width=3,    
+            corner_radius=0.15 
+        )
+        rect_step_3_y = SurroundingRectangle(
+            step_3[5:7],
+            color=dark_purple,        
+            buff=0.15,          
+            fill_opacity=0.1,    
+            stroke_width=3,    
+            corner_radius=0.15 
+        )
+        step_4 = MathTex(r" \le ",r"\|x-z\|",r" + ",r"\|z-y\|",color=BLACK).scale(1.5).next_to(step_3,DOWN).shift(0.2*RIGHT)
+        step_4.set_color_by_tex(r"\|x-z\|",dark_pink)
+        step_4.set_color_by_tex(r"\|z-y\|",dark_purple)
+        step_3to4 = MathTex(r"(N3)",color=dark_orange).scale(1.5).next_to(step_4,RIGHT)
+        step_5 = MathTex(r" = ",r"d(x,z) + d(z,y)",color=BLACK).scale(1.5).next_to(step_4,DOWN).shift(0.5*LEFT)
+        square_for_end_proof = Square(0.3,color=BLACK).scale(1.5).next_to(step_5,RIGHT)
+        prove_2_group = VGroup(step_1, step_2, step_3, rect_step_3_x, rect_step_3_y, step_4, step_3to4, step_5, square_for_end_proof).shift(4*LEFT+0.7*UP)
+        rect_prove_2 = SurroundingRectangle(
+            prove_2_group,
+            color=dark_orange,        
+            buff=0.3,          
+            fill_opacity=0.1,    
+            stroke_width=3,    
+            corner_radius=0.15 
+        )
+
+        self.play(
+            TransformMatchingTex(prove_2, prove_3),
+        )
+        self.wait(1)
+
+        self.play(
+            Create(rect_prove_2),
+        )
+        self.wait(0.6)
+        self.play(
+            TransformFromCopy(prove_2[1], step_1),
+        )
+        self.wait(0.6)
+        self.play(
+            TransformFromCopy(distance[2],step_2),
+        )
+        self.wait(0.6)
+        self.play(
+            Write(step_3),
+        )
+        self.wait(0.6)
+        self.play(
+            Create(rect_step_3_x),
+        )
+        self.wait(0.3)
+        self.play(
+            Create(rect_step_3_y),
+        )
+        self.wait(0.3)
+        self.play(
+            Write(step_3to4),
+        )
+        self.wait(0.3)
+        self.play(
+            TransformFromCopy(VGroup(step_3to4,step_3),step_4),
+        )
+        self.wait(0.6)
+        self.play(
+            Write(step_5),
+        )
+        self.wait(0.6)
+        self.play(
+            Create(square_for_end_proof),
+        )
+        self.wait(0.6)
+
+        step_1.set_color(dark_red)
+        step_5.set_color(dark_red)
+        step_5.set_color_by_tex(r" = ",BLACK)
+        step_4.set_color_by_tex(r" \le ",dark_red)
+
+        self.wait(0.6)
+
+        # shape
+
+        # draw number plane as background
+        plane = NumberPlane(
+            y_range=[-2, 5, 1],
+            x_range=[-8, 8, 1],
+            background_line_style={"stroke_color": axes_background_color, "stroke_opacity": 0.5},
+            y_length=4,
+            x_length=13,
+        ).move_to([0, 0, 0]+1.5*DOWN)
+
+        # draw axes on top
+        axes = Axes(  # NumberLine
+            y_range=[-2, 5, 1],
+            y_length=4,
+            x_range=[-8, 8, 1],
+            x_length=13,
+            axis_config={"color": dark_blue, "include_ticks": False, "tip_length":0.25, "tip_shape":StealthTip} # "tip_shape":ArrowTip.TIP_STYLE_ROUND
+        ).move_to([0, 0, 0]+1.5*DOWN)
+
+        self.play(
+            FadeTransform(VGroup(prove_2_group,rect_prove_2),VGroup(plane,axes)),
+        )
+        self.wait(1)
+
+        tip_x = Dot(axes.c2p(6,4), color=dark_orange, radius=0.09)
+        tipx_text = MathTex("x",color=BLACK).next_to(tip_x,UP)
+        self.play(
+            FadeIn(tip_x),
+            Write(tipx_text),
+        )
+        self.wait(0.3)
+
+        tip_y = Dot(axes.c2p(2,1), color=dark_purple, radius=0.09)
+        tipy_text = MathTex("y",color=BLACK).next_to(tip_y,UP)
+        self.play(
+            FadeIn(tip_y),
+            Write(tipy_text),
+        )
+        self.wait(1)
+
+        vector_1 = Arrow(
+            start=axes.c2p(2,1),
+            end=axes.c2p(6,4),
+            buff=0,
+            stroke_width=6,
+            color=dark_green,
+            tip_length=0.25,
+            tip_shape=StealthTip
+        )
+
+        prove_3.set_color_by_tex(r"d(x,y)",dark_green)
+        self.play(
+            GrowArrow(vector_1),
+        )
+        self.wait(1)
+
+        tip_z = Dot(axes.c2p(5,1), color=dark_blue, radius=0.09)
+        tipz_text = MathTex("z",color=BLACK).next_to(tip_z,DOWN)
+        self.play(
+            FadeIn(tip_z),
+            Write(tipz_text),
+        )
+        self.wait(1)
+
+        vector_2 = Arrow(
+            start=axes.c2p(5,1),
+            end=axes.c2p(6,4),
+            buff=0,
+            stroke_width=6,
+            color=dark_pink,
+            tip_length=0.25,
+            tip_shape=StealthTip
+        )
+
+        vector_3 = Arrow(
+            start=axes.c2p(2,1),
+            end=axes.c2p(5,1),
+            buff=0,
+            stroke_width=6,
+            color=dark_purple,
+            tip_length=0.25,
+            tip_shape=StealthTip
+        )
+
+        prove_3.set_color_by_tex(r"d(x,z)",dark_pink)
+        self.play(
+            GrowArrow(vector_2),
+        )
+        self.wait(1)
+
+        prove_3.set_color_by_tex(r"d(z,y)",dark_purple)
+        self.play(
+            GrowArrow(vector_3),
+        )
+        self.wait(1)
+        prove_3.set_color_by_tex(r"d(x,y)",BLACK)
+        prove_3.set_color_by_tex(r"d(x,z)",BLACK)
+        prove_3.set_color_by_tex(r"d(z,y)",BLACK)
+
+        self.wait(1)
+
+        fade_out_list = [
+            plane, axes, tip_x ,tip_y , tipx_text, tipy_text, vector_1, vector_2, vector_3, tip_z, tipz_text
+        ]
+        self.play(
+            FadeOut(VGroup(*fade_out_list)),
+        )
 
     def scene5_subScene4(self, title):
         """definition of normed space"""
         normed_space = MathTex("")
+        self.wait(1)
 
 
     def scene5(self,title):
@@ -842,7 +1048,7 @@ class Part1_Scene(MovingCameraScene):
         self.wait(0.5)
 
         # constructing metrics with norms
-        # self.scene5_subScene0(title)
+        self.scene5_subScene0(title)
 
         # proof needed things
         distance = MathTex(r"d(x,y) ",r" = ",r"\|x-y\|",color=BLACK).scale(2).move_to(title.get_center()+0.2*DOWN)
@@ -891,8 +1097,15 @@ class Part1_Scene(MovingCameraScene):
         ]
         self.scene5_subScene3(title, *proof_3_needed)
 
+        fade_out_list = [
+            distance, rect_distance, text_claim, prove_3
+        ]
+        self.play(
+            FadeOut(VGroup(*fade_out_list)),
+        )
+
         # normed space
-        # self.scene5_subScene4(title)
+        self.scene5_subScene4(title)
 
 
     def scene4_subScene0(self,title):
