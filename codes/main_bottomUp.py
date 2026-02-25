@@ -58,7 +58,7 @@ class Part1_Scene(MovingCameraScene):
         
         return mobject
 
-    def show_warning(self, body: MathTex,set_image=False):
+    def show_warning(self, body: MathTex,set_image=False,return_not_show=False):
         """Show warning message with box"""
 
         title_text = Text("❗Note❗", color=dark_red, font_size=36)
@@ -93,10 +93,10 @@ class Part1_Scene(MovingCameraScene):
             #     Create(arrow_0_0_down),
             #     run_time=1
             # )
-
-        self.play(Create(box), Write(group))
-        self.wait(2)
-        self.play(FadeOut(group), FadeOut(box))
+        if return_not_show==False:
+            self.play(Create(box), Write(group))
+            self.wait(2)
+            self.play(FadeOut(group), FadeOut(box))
 
         if set_image==True:
             self.play(
@@ -104,6 +104,8 @@ class Part1_Scene(MovingCameraScene):
                 # FadeOut(ex_mark_1),
                 FadeOut(ex_mark_2)
             )
+        if return_not_show==True:
+            return group, box
 
     def ask_question(self,body, return_notShow=False,set_image=False):
         """Show message with box to ask a question. """
@@ -182,6 +184,7 @@ class Part1_Scene(MovingCameraScene):
         self.play(Create(box), Write(group))
         self.wait(2)
         self.play(FadeOut(group), FadeOut(box))
+        return group, box
 
     def show_definition(self, definition: MathTex, total_title, retrun_notShow=False, what_is_defined=""):
         """Show definition with box"""
@@ -281,10 +284,617 @@ class Part1_Scene(MovingCameraScene):
         # self.scene4(title)
 
         # from norm to metrics
-        topic_number = 1
+        # topic_number = 1
+        # title = self.scene3(topic_number,False)
+
+        # self.scene5(title)
+
+        # Cauchy Sequences : The Mystery of Nearness
+        topic_number = 2
         title = self.scene3(topic_number,False)
 
-        self.scene5(title)
+        self.scene6(title)
+
+    def scene6_subScene0(self, title):
+
+        # part 1
+        
+        text_xn = MathTex(r"(X, d) \text{ Metric space, } ",r"(y_n)_{n \in \mathbb{N}} \subset X",color=BLACK).to_edge(UL)
+        text_converge = Text("Convergent", color=BLACK).move_to(text_xn.get_center()+1.5*DOWN+2*LEFT)
+        rect_converge = SurroundingRectangle(
+            text_converge,
+            color=dark_red,        
+            buff=0.2,          
+            fill_opacity=0,    
+            stroke_width=3,    
+            corner_radius=0.15 
+        )
+        converge_def = MathTex(r"\lim_{n \to \infty} y_n = y",r"\in X", color=BLACK).next_to(rect_converge, RIGHT,buff=0.5)
+
+        self.play(
+            Write(text_xn[0]),
+        )
+        self.wait(0.3)
+        self.play(
+            Write(text_xn[1]),
+        )
+        self.wait(0.5)
+        self.play(
+            Create(rect_converge),
+            Write(text_converge),
+        )
+        self.wait(1)
+        self.play(
+            Write(converge_def[0]),
+        )
+        self.wait(0.5)
+        self.play(
+            Write(converge_def[1]),
+        )
+        self.wait(0.5)
+        self.play(
+            FadeOut(converge_def),
+        )
+        self.wait(0.5)
+
+        # shape
+
+        zoom = 3
+        grid = NumberPlane(
+            x_range=[-7, 7, 0.5], 
+            y_range=[-5, 6, 0.5], 
+            background_line_style={"stroke_opacity": 0.3, "stroke_color":axes_background_color},
+            color=axes_background_color
+        ) #.shift(DOWN)
+        self.play(
+            Create(grid),
+        )
+        axes = Axes(  # NumberLine
+            x_range=[-7, 7, 0.5], 
+            y_range=[-5, 6, 0.5],
+            # axis_config={"color": dark_blue, "include_ticks": False, "tip_length":0.25, "tip_shape":StealthTip} # "tip_shape":ArrowTip.TIP_STYLE_ROUND
+        )
+        shape_center = grid.get_center() + DOWN*0.5 + RIGHT*1
+
+        angles = np.linspace(0, 2*PI, 8, endpoint=False)
+        radii = [1.4, 1.3, 1.0, 1.5, 1.4, 1.2, 0.6, 1.5]
+        radii = [r * zoom for r in radii]
+
+        points = [
+            shape_center + np.array([
+                radii[i] * np.cos(angles[i]),
+                radii[i] * np.sin(angles[i]),
+                0
+            ])
+            for i in range(len(angles))
+        ]
+
+        smooth_shape = VMobject(color=dark_pink, fill_color=light_pink, fill_opacity=0.1)
+        smooth_shape.set_points_smoothly(points + [points[0]])
+        smooth_shape.close_path()
+        smooth_shape.shift(1*RIGHT)
+
+        text_x = Text("X",color=BLACK).next_to(smooth_shape,DOWN).shift(0.6*UP)
+
+        self.play(
+            Create(smooth_shape),
+            Write(text_x),
+            run_time=2
+        )
+
+        limit_dot = Dot(axes.c2p(5.5,-3.5),color=dark_red, radius=0.08).shift(0.3*DR)
+        text_y_limit = MathTex(r"y",color=BLACK).next_to(limit_dot, UP, buff=0.2)
+        limit_text = Text("limit", font_size=24, color=BLACK, weight=BOLD)
+        limit_text.next_to(limit_dot, UP, buff=0.3)
+        self.play(
+            Create(limit_dot),
+            Write(text_y_limit),
+        )
+
+        points = [
+            axes.c2p(-2,4),
+            axes.c2p(1,1),
+            axes.c2p(3,-1),
+            axes.c2p(4,-2),
+            axes.c2p(4.5,-2.5),
+            axes.c2p(4.75,-2.75),
+        ]
+        dots = []
+        text_xi = []
+        for i,p in enumerate(points):
+            dots.append( 
+                new_dot:=Dot(p, color=dark_blue, radius=0.08).shift(0.3*DR)
+            )
+            if i%2==0:
+                text_xi.append(
+                    new_text:=MathTex(rf"y_{i+1}",color=BLACK).scale(0.7).next_to(new_dot,UP)
+                )
+            else:
+                text_xi.append(
+                    new_text:=MathTex(rf"y_{i+1}",color=BLACK).scale(0.7).next_to(new_dot,DOWN)
+                )
+            
+            line = Line(
+                start=new_dot.get_center(),
+                end=limit_dot.get_center(),
+                color=dark_green,
+                stroke_width=2,
+            )
+
+            self.play(
+                FadeIn(new_dot),
+                Write(new_text),
+            )
+            self.wait(0.1)
+            self.play(
+                Create(line)
+            )
+            self.wait(0.1)
+            self.play(
+                Uncreate(line)
+            )
+        
+        dots_group = VGroup(*dots)
+        text_xi_group = VGroup(*text_xi)
+
+        arrow = Arrow(
+            start=dots[-1].get_center(),
+            end=limit_dot.get_center(),
+            color=BLACK,
+            stroke_width=4,
+            tip_length=0.15,
+            tip_shape=StealthTip,
+        )
+
+        final_dot = Dot(
+            point=limit_dot.get_center(),
+            color=BLACK,
+            radius=0.12,
+            fill_opacity=1
+        )
+
+        self.play(
+            GrowArrow(arrow),
+            FadeTransform(text_y_limit, limit_text),
+            Transform(limit_dot, final_dot),
+        )
+
+        for _ in range(2):
+            self.play(
+                final_dot.animate.scale(1.5).set_color(dark_red),
+                rate_func=there_and_back,
+            )
+        
+        self.wait(1)
+
+        # part 2
+
+        smooth_shape_copy = smooth_shape.copy().set_color(dark_orange).scale(0.85).shift(0.45*UL)
+        text_y = Text("Y",color=BLACK).next_to(smooth_shape_copy,RIGHT) #.shift(0.4*DOWN)
+        self.play(
+            FadeOut(arrow),
+            TransformFromCopy(smooth_shape, smooth_shape_copy),
+            Write(text_y),
+            run_time=1
+        )
+
+        cross_img = ImageMobject("images/red_cross.png").scale(2).move_to(text_converge)
+        self.add(cross_img)
+        self.wait(2)
+        self.play(
+            FadeOut(cross_img),
+        )
+        prop = MathTex(
+            r"\text{Properties of}\\ \text{the sequence}",
+            color=BLACK
+        )
+
+        plus = MathTex(
+            r"+",
+            color=BLACK
+        )
+
+        space = MathTex(
+            r"\text{Underlying }\\ \text{metric space}",
+            color=BLACK
+        )
+
+        text_explain = VGroup(prop, plus, space).arrange(DOWN, buff=0.5).next_to(rect_converge, DOWN,buff=0.3)
+        rect_text_expalin = SurroundingRectangle(
+            text_explain,
+            color=dark_green,        
+            buff=0.2,          
+            fill_opacity=0,    
+            stroke_width=3,    
+            corner_radius=0.15 
+        )
+        self.play(
+            Create(rect_text_expalin),
+            Write(text_explain),
+        )
+        self.wait(0.5)
+        space.set_color(dark_red)
+        self.wait(0.5)
+
+        fade_out_list = [
+            rect_text_expalin, text_explain, text_converge, rect_converge, text_xn, grid,
+            smooth_shape, text_x, limit_dot, limit_text, dots_group, text_xi_group, 
+            final_dot, smooth_shape_copy, text_y,
+        ]
+
+        self.wait(1)
+        self.play(
+            FadeOut(VGroup(*fade_out_list)),
+        )
+        self.wait(1)
+
+
+    def scene6_subScene1(self, title):
+        
+        # come_up_img = ImageMobject("come up with.png").scale(3).to_edge(UP)
+        # self.add(come_up_img)
+
+        question = MathTex(r"\text{How can we define a space-independent idea of convergence?}",color=BLACK).scale(0.9)
+        group, box, think_img, find_img = self.ask_question(question,True,True)
+
+        group_GroupBoxQuetion = VGroup(group, box)
+        group_GroupBoxQuetion.shift(2*UP)
+        think_img.scale(1.2).shift(2.8*DOWN)
+        self.add(think_img)
+        self.wait(0.2)
+        self.play(
+            FadeIn(group_GroupBoxQuetion),
+        )
+        self.wait(0.5)
+
+        fade_out_list = [
+            group_GroupBoxQuetion
+        ]
+        self.play(
+            FadeOut(VGroup(*fade_out_list)),
+            FadeOut(think_img),
+        )
+    
+    def scene6_subScene2(self, title):
+
+        title_cauchy_text = Tex("Cauchy sequence", color=BLACK, font_size=80).move_to(title.get_center())
+        self.play(
+            Write(title_cauchy_text),
+        )
+        
+        part0 = MathTex(r"A\ sequence\ \{x_n\}\ in\ a\ metric\ space\ (X,d)\ ",color=BLACK) #(or fundamental)
+        part0_to_1 = MathTex(r"\Longleftrightarrow",color=BLACK)
+        part1 = MathTex(r"\text{is said to be Cauchy if } \text{for every } \varepsilon > 0,",color=BLACK)
+        part2 = MathTex(r"\text{there exists } N = N(\varepsilon) \text{ such that}",color=BLACK)
+        part3 = MathTex(r"d(x_m,x_n) < \varepsilon ",color=BLACK)
+        part4 = MathTex(r"\text{for every } m,n > N",color=BLACK)
+        # part1 = MathTex(r"\forall \varepsilon > 0,")
+        # part2 = MathTex(r"\exists N \in \mathbb{N}")
+        # part3 = MathTex(r"\forall m,n \ge N,")
+        # part4 = MathTex(r"d(x_m,x_n) < \varepsilon")
+
+        definition_part1 = VGroup(part0,part1, part2, part3, part4).arrange(DOWN, buff=0.2)
+
+        group, box = self.show_definition(definition_part1,title,True)
+        def_group = VGroup(group,box).scale(1.2).shift(1*UP)
+        self.play(
+            FadeIn(def_group),
+        )
+        self.wait(1)
+        self.play(
+            FadeOut(def_group),
+            # FadeOut(def_group),
+        )
+        self.wait(1)
+
+        return title_cauchy_text
+
+    def scene6_subScene3(self, title, title_cauchy_text):
+        
+        zoom = 3
+        grid = NumberPlane(
+            x_range=[-7, 7, 0.5], 
+            y_range=[-5, 6, 0.5], 
+            background_line_style={"stroke_opacity": 0.3, "stroke_color":axes_background_color},
+            color=axes_background_color
+        ) #.shift(DOWN)
+        self.play(
+            Create(grid),
+        )
+        axes = Axes(  # NumberLine
+            x_range=[-7, 7, 0.5], 
+            y_range=[-5, 6, 0.5],
+            # axis_config={"color": dark_blue, "include_ticks": False, "tip_length":0.25, "tip_shape":StealthTip} # "tip_shape":ArrowTip.TIP_STYLE_ROUND
+        )
+        shape_center = grid.get_center() + DOWN*0.5 + RIGHT*1
+
+        angles = np.linspace(0, 2*PI, 8, endpoint=False)
+        radii = [1.4, 1.3, 1.0, 1.5, 1.4, 1.2, 0.6, 1.5]
+        radii = [r * zoom for r in radii]
+
+        points = [
+            shape_center + np.array([
+                radii[i] * np.cos(angles[i]),
+                radii[i] * np.sin(angles[i]),
+                0
+            ])
+            for i in range(len(angles))
+        ]
+
+        smooth_shape = VMobject(color=dark_pink, fill_color=light_pink, fill_opacity=0.1)
+        smooth_shape.set_points_smoothly(points + [points[0]])
+        smooth_shape.close_path()
+        smooth_shape.shift(1*RIGHT)
+        smooth_shape_copy = smooth_shape.copy().set_color(dark_orange).scale(0.9).shift(0.2*DL + LEFT*0.2)
+        text_y = Text("Y",color=BLACK).next_to(smooth_shape_copy,RIGHT) #.shift(0.4*DOWN)
+        self.play(
+            Create(smooth_shape_copy),
+            Write(text_y),
+            run_time=1
+        )
+
+        points = [
+            axes.c2p(-2,4),
+            axes.c2p(1,1),
+            axes.c2p(3,-1),
+            axes.c2p(4,-2),
+            axes.c2p(4.5,-2.5),
+            axes.c2p(4.75,-2.75),
+        ]
+        dots = []
+        text_xi = []
+        old_dot = None
+        for i,p in enumerate(points):
+            dots.append( 
+                new_dot:=Dot(p, color=dark_blue, radius=0.08).shift(0.5*DR)
+            )
+            if i%2==0:
+                text_xi.append(
+                    new_text:=MathTex(rf"y_{i+1}",color=BLACK).scale(0.7).next_to(new_dot,UP)
+                )
+            else:
+                text_xi.append(
+                    new_text:=MathTex(rf"y_{i+1}",color=BLACK).scale(0.7).next_to(new_dot,DOWN)
+                )
+
+            self.play(
+                FadeIn(new_dot),
+                Write(new_text),
+            )
+            self.wait(0.1)
+
+            if i!=0:
+                line = Line(
+                    start=old_dot.get_center(),
+                    end=new_dot.get_center(),
+                    color=dark_green,
+                    stroke_width=2,
+                )
+
+                self.play(
+                    Create(line)
+                )
+                self.wait(0.1)
+                self.play(
+                    Uncreate(line)
+                )
+            
+            old_dot = new_dot
+        
+        dots_group = VGroup(*dots)
+        text_xi_group = VGroup(*text_xi)
+        
+        self.wait(1)
+
+        prop = MathTex(
+            r"\text{Intrinsic property}\\ \text{of the sequence }",
+            color=BLACK
+        )
+
+        but = MathTex(
+            r"\text{But}",
+            color=BLACK
+        )
+
+        space = MathTex(
+            r"\text{Independent}\\",
+            r"\text{of the space}",
+            color=BLACK
+        )
+
+        text_explain = VGroup(prop, but, space).arrange(DOWN, buff=0.5).next_to(smooth_shape_copy, LEFT,buff=0.5).scale(0.9)
+        rect_text_expalin = SurroundingRectangle(
+            text_explain,
+            color=dark_green,        
+            buff=0.2,          
+            fill_opacity=0,    
+            stroke_width=3,    
+            corner_radius=0.15 
+        )
+
+        self.play(
+            Create(rect_text_expalin),
+            Write(text_explain),
+        )
+        self.wait(1)
+        space[0].set_color(dark_red)
+        self.wait(1)
+
+        fade_out_list = [
+            title_cauchy_text , grid, smooth_shape_copy, dots_group, text_xi_group, text_y, text_explain,
+            rect_text_expalin,
+        ]
+        self.play(
+            FadeOut(VGroup(*fade_out_list)),
+        )
+        self.wait(1)
+
+        # lines = VGroup()
+        # for i in range(len(points)-1):
+        #     line = Line(
+        #         start=points[i],
+        #         end=points[i+1],
+        #         color=dark_green,
+        #         stroke_width=2,
+        #     ).shift(0.4*DR)
+        #     lines.add(line)
+
+        # self.play(Create(lines), run_time=2)
+        # self.wait(0.5)
+        # self.play(FadeOut(lines))
+
+    def scene6_subScene4(self, title):
+
+        book_brain_img = ImageMobject("images/book_brain.png").scale(2.5).to_corner(DL).shift(0.3*DL)
+        self.add(book_brain_img)
+
+        convergent_implies_cauchy = MathTex(
+            r"\text{Convergent} \;\Rightarrow\; \text{Cauchy}",color=BLACK
+        ).to_edge(UP)
+        
+        cauchy_not_implies_convergent = MathTex(
+            r"\text{Cauchy} \;\not\Rightarrow\; \text{Convergent} \;",
+            color=BLACK  #r"(\text{limit may not exist in the space})",
+        ).next_to(convergent_implies_cauchy, DOWN, buff=0.8)
+        
+        counter_example = MathTex(
+            r"x_n = 1 - \frac{1}{n} \in (0,1), \quad n=1,2,\dots",color=BLACK
+        ).next_to(cauchy_not_implies_convergent, DOWN, buff=0.6)
+        limit_counter_example = MathTex(
+            r"\quad \lim_{n\to\infty} x_n = 1 \notin (0,1)",color=BLACK
+        ).next_to(counter_example, DOWN, buff=0.6)
+
+        group, box = self.show_minorPoint(convergent_implies_cauchy,True)
+        con_to_cach = VGroup(box, group).to_edge(UP)
+        
+        self.play(
+            Create(box),
+            Write(group),
+            run_time=1
+        )
+        self.wait(2)
+        self.play(
+            FadeOut(con_to_cach),
+        )
+        self.wait(0.5)
+        group, box = self.show_warning(cauchy_not_implies_convergent,False,True)
+        cha_to_con = VGroup(box, group).to_edge(UP)
+        self.play(
+            Create(box),
+            Write(group),
+            run_time=1
+        )
+        self.wait(1)
+
+        example_group = VGroup(counter_example, limit_counter_example).arrange(DOWN, buff=0.5)
+        group, box = self.show_example(title, example_group,"Counter Example",True)
+        example_group_box = VGroup(box, group).next_to(cha_to_con, DOWN, buff=0.8).shift(1.5*RIGHT)
+
+        self.play(
+            Create(box),
+            Write(group),
+            run_time=1
+        )
+        self.wait(1)
+
+        fade_out_list = [
+            cha_to_con, example_group_box
+        ]
+        self.play(
+            FadeOut(VGroup(*fade_out_list)),
+            FadeOut(book_brain_img),
+        )
+
+    def scene6_subScene5(self, title):
+        book_brain_img = ImageMobject("images/find_img.png").scale(1.7).to_corner(DL).shift(0.3*DL+3*LEFT+UP*4)
+        book_brain_img.rotate(180*DEGREES)
+        self.add(book_brain_img)
+
+        self.wait(1)
+
+        title_compelte_text = Tex("Complete Space", color=BLACK, font_size=80).move_to(title.get_center())
+        self.play(
+            Write(title_compelte_text),
+        )
+        self.wait(1)
+
+        part1 = MathTex(
+            r"A\ metric\ space\ (X,d)\ \text{is said to be complete if}", 
+            color=BLACK
+        )
+        part2 = MathTex(
+            r"\text{every Cauchy sequence } \{x_n\} \subset X,",
+            color=BLACK
+        )
+        part3 = MathTex(
+            r"\text{converges, i.e., there exists } x \in X \text{ such that}",
+            color=BLACK
+        )
+        part4 = MathTex(
+            r"\lim_{n \to \infty} x_n = x",
+            color=BLACK
+        )
+        complete_def = VGroup(part1, part2, part3, part4).arrange(DOWN,buff=0.3)
+        group, box = self.show_definition(complete_def,title_compelte_text,True)
+        def_group = VGroup(group, box).scale(1.2).shift(0.5*UP)
+
+        self.play(
+            Create(box),
+            Write(group),
+            run_time=1
+        )
+        self.wait(1)
+
+        final_note = MathTex(
+            r"\text{Convergent} \;\Leftrightarrow\; \text{Cauchy}",color=BLACK
+        ).scale(2)
+
+        group, box = self.show_minorPoint(final_note,True)
+        final_group = VGroup(group, box).shift(0.5*DOWN)
+
+        self.play(
+            TransformMatchingShapes(def_group, VGroup(group, box)),
+        )
+
+        fade_out_list = [
+            group, box, title_compelte_text
+        ]
+        self.play(
+            FadeOut(VGroup(*fade_out_list)),
+            FadeOut(book_brain_img),
+        )
+
+        self.wait(1)
+
+    def scene6(self, title):
+        """ Cauchy Sequences : The Mystery of Nearness """
+        title.shift(0.3*DOWN)
+        self.play(
+            Write(title),
+        )
+        self.wait(1)
+        self.play(
+            FadeOut(title),
+        )
+        self.wait(0.5)
+
+        # Recall Convergence
+        self.scene6_subScene0(title)
+
+        # Intuitive Idea
+        self.scene6_subScene1(title)
+
+        # Formal Definition of Cauchy
+        title_cauchy_text = self.scene6_subScene2(title)
+
+        # Intuitive Idea of Cauchy
+        self.scene6_subScene3(title, title_cauchy_text)
+
+        ## ( Convergence <-> Cauchy ) & Question
+        self.scene6_subScene4(title)
+
+        # Formal Definition of Completeness
+        self.scene6_subScene5(title)
 
     def scene5_subScene0(self, title):
         """ constructing metrics with norms """
@@ -326,7 +936,7 @@ class Part1_Scene(MovingCameraScene):
             stroke_width=3,    
             corner_radius=0.15 
         )
-        text_distance = MathTex(r"\text{Distance}",color=dark_orange).move_to(text_metric_space_parts.get_center()+2.6*DOWN+3*RIGHT).scale(2)
+        text_distance = MathTex(r"\text{Metric}",color=dark_orange).move_to(text_metric_space_parts.get_center()+2.6*DOWN+3*RIGHT).scale(2)
         rect_distance = SurroundingRectangle(
             text_distance,
             color=dark_orange,        
@@ -427,6 +1037,7 @@ class Part1_Scene(MovingCameraScene):
             dashed_ratio=0.5, 
             color=dark_orange,
         )
+        text_distance = MathTex(r"\text{Distance}",color=dark_orange).move_to(text_metric_space_parts.get_center()+2.6*DOWN+3*RIGHT).scale(2)
         text_distance.scale(0.5).next_to(dot_line_distance,DOWN) #.shift(0.4*RIGHT)
         text_dxy = MathTex(r"d(A,B)",color=dark_orange).shift(axes.c2p(0,0)+DOWN+1.5*LEFT).scale(1.5)
 
@@ -1033,9 +1644,94 @@ class Part1_Scene(MovingCameraScene):
 
     def scene5_subScene4(self, title):
         """definition of normed space"""
-        normed_space = MathTex("")
+        text_metric_space = MathTex(r"\text{Metric space}",color=dark_green).move_to(title.get_center()+DOWN).scale(2)
+        text_metric_space_parts = MathTex(r"(",r"X",r",",r"d(x,y) = \|x - y\|",r")",color=dark_blue,arg_separator="  ").move_to(text_metric_space.get_center()+1.6*DOWN).scale(2)
+        rect_x = SurroundingRectangle(
+            text_metric_space_parts[1],
+            color=dark_pink,        
+            buff=0.1,          
+            fill_opacity=0,    
+            stroke_width=3,    
+            corner_radius=0.15 
+        )
+        text_vector_space = MathTex(r"\text{Vector space}",color=dark_pink).move_to(text_metric_space_parts.get_center()+2.6*DOWN+3*LEFT).scale(2)
+        rect_vec_x = SurroundingRectangle(
+            text_vector_space,
+            color=dark_pink,        
+            buff=0.1,          
+            fill_opacity=0,    
+            stroke_width=3,    
+            corner_radius=0.15 
+        )
+        arrow_x = CurvedArrow(
+            start_point=text_metric_space_parts[1].get_left()+0.1*LEFT,
+            end_point=rect_vec_x.get_top()+0.2*UP,
+            angle=PI/2,
+            stroke_width=6,
+            color=dark_pink,
+            tip_length=0.25,
+            tip_shape=StealthTip
+        )
+        rect_d = SurroundingRectangle(
+            text_metric_space_parts[3],
+            color=dark_orange,        
+            buff=0.2,          
+            fill_opacity=0,    
+            stroke_width=3,    
+            corner_radius=0.15 
+        )
+        text_distance = MathTex(r"\text{Metric}",color=dark_orange).move_to(text_metric_space_parts.get_center()+2.6*DOWN+3*RIGHT).scale(2)
+        rect_distance = SurroundingRectangle(
+            text_distance,
+            color=dark_orange,        
+            buff=0.2,          
+            fill_opacity=0,    
+            stroke_width=3,    
+            corner_radius=0.15 
+        )
+        arrow_d = CurvedArrow(
+            start_point=text_metric_space_parts[3].get_right()+0.2*RIGHT,
+            end_point=rect_distance.get_top()+0.2*UP,
+            angle=-PI/2,
+            stroke_width=6,
+            color=dark_orange,
+            tip_length=0.25,
+            tip_shape=StealthTip
+        )
+
+        self.play(
+            Write(text_metric_space_parts[::2]),
+        )
+        self.wait(1)
+        self.play(
+            Write(text_metric_space_parts[1]),
+            Create(rect_x),
+            Create(arrow_x),
+            Create(rect_vec_x),
+            Write(text_vector_space),
+        )
+        self.wait(1)
+        self.play(
+            Write(text_metric_space_parts[3]),
+            Create(rect_d),
+            Create(arrow_d),
+            Create(rect_distance),
+            Write(text_distance),
+        )
+        self.wait(1)
+        self.play(
+            Write(text_metric_space),
+        )
         self.wait(1)
 
+        fade_out_list = [text_metric_space, text_metric_space_parts, rect_x, 
+                         arrow_x, rect_vec_x, text_vector_space,
+                         rect_d, arrow_d, rect_distance, text_distance]
+        self.play(
+            FadeOut(VGroup(*fade_out_list)),
+        )
+
+        self.wait(1)
 
     def scene5(self,title):
         self.play(
@@ -1106,7 +1802,6 @@ class Part1_Scene(MovingCameraScene):
 
         # normed space
         self.scene5_subScene4(title)
-
 
     def scene4_subScene0(self,title):
         self.play(
@@ -3461,8 +4156,8 @@ class Part1_Scene(MovingCameraScene):
 
         items_list = [  "The Birth of Norms", 
                         "From Norms to Metrics", 
-                        "Cauchy Sequences : The Mystery of Nearness", 
-                        "Banach Spaces : The Kingdom of Completeness",  ]
+                        r"Cauchy Sequences \\ The Mystery of Nearness", 
+                        r"Banach Spaces \\ The Kingdom of Completeness",  ]
 
         selected_title = Tex(items_list[topic_number], color=BLACK, font_size=80)
         selected_title.move_to(title.get_center())
