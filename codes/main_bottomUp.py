@@ -277,10 +277,10 @@ class Part1_Scene(MovingCameraScene):
 
         # self.scene2()
 
+        # the birth of norms
         # topic_number = 0
-        # title = self.scene3(topic_number,True)
+        # title = self.scene3(topic_number,False)
 
-        # norm
         # self.scene4(title)
 
         # from norm to metrics
@@ -290,10 +290,28 @@ class Part1_Scene(MovingCameraScene):
         # self.scene5(title)
 
         # Cauchy Sequences : The Mystery of Nearness
-        topic_number = 2
+        # topic_number = 2
+        # title = self.scene3(topic_number,False)
+
+        # self.scene6(title)
+
+        # Banach Spaces : The Kingdom of Completeness
+        topic_number = 3
         title = self.scene3(topic_number,False)
 
-        self.scene6(title)
+        self.scene7(title)
+
+    def scene7(self, title):
+        """ Banach Spaces : The Kingdom of Completeness """
+        title.shift(0.3*DOWN)
+        self.play(
+            Write(title),
+        )
+        self.wait(1)
+        self.play(
+            FadeOut(title),
+        )
+        self.wait(1)
 
     def scene6_subScene0(self, title):
 
@@ -4062,6 +4080,97 @@ class Part1_Scene(MovingCameraScene):
         )
         self.wait(1)
 
+    def scene4_subScene6(self, title):
+        """ A normed space X is a vector space with a norm defined on it """
+        text_normed_space = MathTex(r"\text{Normed space}",color=dark_green).move_to(title.get_center()+DOWN).scale(2)
+        text_normed_space_parts = MathTex(r"( \, ",r"X",r" \, , \, ",r"\|.\|",r" \, )",color=dark_blue,arg_separator="  ").move_to(text_normed_space.get_center()+1.6*DOWN).scale(2)
+        rect_x = SurroundingRectangle(
+            text_normed_space_parts[1],
+            color=dark_pink,        
+            buff=0.2,          
+            fill_opacity=0,    
+            stroke_width=3,    
+            corner_radius=0.15 
+        )
+        text_vector_space = MathTex(r"\text{Vector space}",color=dark_pink).move_to(text_normed_space_parts.get_center()+2.6*DOWN+3*LEFT).scale(2)
+        rect_vec_x = SurroundingRectangle(
+            text_vector_space,
+            color=dark_pink,        
+            buff=0.2,          
+            fill_opacity=0,    
+            stroke_width=3,    
+            corner_radius=0.15 
+        )
+        arrow_x = CurvedArrow(
+            start_point=text_normed_space_parts[1].get_left()+0.2*LEFT,
+            end_point=rect_vec_x.get_top()+0.2*UP,
+            angle=PI/2,
+            stroke_width=6,
+            color=dark_pink,
+            tip_length=0.25,
+            tip_shape=StealthTip
+        )
+        rect_d = SurroundingRectangle(
+            text_normed_space_parts[3],
+            color=dark_orange,        
+            buff=0.2,          
+            fill_opacity=0,    
+            stroke_width=3,    
+            corner_radius=0.15 
+        )
+        text_distance = MathTex(r"\text{Norm}",color=dark_orange).move_to(text_normed_space_parts.get_center()+2.6*DOWN+3*RIGHT).scale(2)
+        rect_distance = SurroundingRectangle(
+            text_distance,
+            color=dark_orange,        
+            buff=0.2,          
+            fill_opacity=0,    
+            stroke_width=3,    
+            corner_radius=0.15 
+        )
+        arrow_d = CurvedArrow(
+            start_point=text_normed_space_parts[3].get_right()+0.2*RIGHT,
+            end_point=rect_distance.get_top()+0.2*UP,
+            angle=-PI/2,
+            stroke_width=6,
+            color=dark_orange,
+            tip_length=0.25,
+            tip_shape=StealthTip
+        )
+
+        self.play(
+            Write(text_normed_space),
+        )
+        self.wait(1)
+        self.play(
+            Write(text_normed_space_parts[::2]),
+        )
+        self.wait(1)
+        self.play(
+            Write(text_normed_space_parts[1]),
+            Create(rect_x),
+            Create(arrow_x),
+            Create(rect_vec_x),
+            Write(text_vector_space),
+        )
+        self.wait(1)
+        self.play(
+            Write(text_normed_space_parts[3]),
+            Create(rect_d),
+            Create(arrow_d),
+            Create(rect_distance),
+            Write(text_distance),
+        )
+        self.wait(1)
+
+        fade_out_list = [text_normed_space, text_normed_space_parts, rect_x, 
+                         arrow_x, rect_vec_x, text_vector_space,
+                         rect_d, arrow_d, rect_distance, text_distance]
+        self.play(
+            FadeOut(VGroup(*fade_out_list)),
+        )
+
+        self.wait(1)
+
     def scene4(self,title):
         """scene 4: what is norm ? """
         # From Intuition to Mathematics
@@ -4069,7 +4178,7 @@ class Part1_Scene(MovingCameraScene):
 
         self.scene4_subScene1(title,plane,axes,norm2_def)
 
-        # self.scene4_subScene1_part2(title)
+        self.scene4_subScene1_part2(title)
 
         # norm definition
         norm_group, norm_box, question_group, question_box, norm_title = self.scene4_subScene2(title)
@@ -4082,6 +4191,9 @@ class Part1_Scene(MovingCameraScene):
 
         # examples of norm
         self.scene4_subScene5(title)
+
+        # normed space
+        self.scene4_subScene6(title)
 
 
     def scene3(self,topic_number,first_time=False):
