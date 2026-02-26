@@ -301,17 +301,55 @@ class Part1_Scene(MovingCameraScene):
 
         self.scene7(title)
 
+    def scene7_SubScene0(self, title):
+        part1 = MathTex(
+            r"\text{A Banach space is a normed space } (X,\|\cdot\|) ",
+            # r"d(x,y)=\|x-y\|.",
+            color=BLACK
+        )
+        part2 = MathTex(
+            r"\text{ which is complete with respect to the metric}",
+            # r"d(x,y)=\|x-y\|.",
+            color=BLACK
+        )
+        part3 = MathTex(
+            r"\text{induced by the norm .}",
+            # r"d(x,y)=\|x-y\|.",
+            color=BLACK
+        )
+        banach_definition = VGroup(part1, part2, part3).arrange(DOWN,buff=0.2)
+
+        group, box = self.show_definition(banach_definition,title,True)
+        banach_group = VGroup(group, box).scale(1.2)
+
+        self.play(
+            Create(box),
+            Write(group),
+        )
+
+        self.wait(1)
+
+        self.play(
+            FadeOut(banach_group),
+        )
+
+    def scene7_SubScene1(self, title):
+        ...
+
     def scene7(self, title):
         """ Banach Spaces : The Kingdom of Completeness """
-        title.shift(0.3*DOWN)
         self.play(
             Write(title),
         )
-        self.wait(1)
-        self.play(
-            FadeOut(title),
-        )
-        self.wait(1)
+        # self.wait(0.3)
+        # self.play(
+        #     FadeOut(title),
+        # )
+        # self.wait(1)
+
+        # self.scene7_SubScene0(title)
+
+        self.scene7_SubScene1(title)
 
     def scene6_subScene0(self, title):
 
@@ -563,7 +601,7 @@ class Part1_Scene(MovingCameraScene):
         self.play(
             FadeIn(group_GroupBoxQuetion),
         )
-        self.wait(0.5)
+        self.wait(1)
 
         fade_out_list = [
             group_GroupBoxQuetion
@@ -679,7 +717,6 @@ class Part1_Scene(MovingCameraScene):
                 FadeIn(new_dot),
                 Write(new_text),
             )
-            self.wait(0.1)
 
             if i!=0:
                 line = Line(
@@ -692,7 +729,7 @@ class Part1_Scene(MovingCameraScene):
                 self.play(
                     Create(line)
                 )
-                self.wait(0.1)
+                # self.wait(0.1)
                 self.play(
                     Uncreate(line)
                 )
@@ -763,12 +800,12 @@ class Part1_Scene(MovingCameraScene):
 
     def scene6_subScene4(self, title):
 
-        book_brain_img = ImageMobject("images/book_brain.png").scale(2.5).to_corner(DL).shift(0.3*DL)
+        book_brain_img = ImageMobject("images/book_brain.png").scale(1.5).to_corner(DL).shift(0.3*DL)
         self.add(book_brain_img)
 
         convergent_implies_cauchy = MathTex(
             r"\text{Convergent} \;\Rightarrow\; \text{Cauchy}",color=BLACK
-        ).to_edge(UP)
+        ).to_corner(UL)
         
         cauchy_not_implies_convergent = MathTex(
             r"\text{Cauchy} \;\not\Rightarrow\; \text{Convergent} \;",
@@ -783,16 +820,135 @@ class Part1_Scene(MovingCameraScene):
         ).next_to(counter_example, DOWN, buff=0.6)
 
         group, box = self.show_minorPoint(convergent_implies_cauchy,True)
-        con_to_cach = VGroup(box, group).to_edge(UP)
+        con_to_cach = VGroup(box, group).to_corner(UL).scale(0.9)
         
+
+        zoom = 3
+        # -------------------- Grid & Axes --------------------
+        grid = NumberPlane(
+            x_range=[-7, 7, 0.5], 
+            y_range=[-5, 6, 0.5], 
+            background_line_style={
+                "stroke_opacity": 0.3,
+                "stroke_color": axes_background_color
+            },
+            color=axes_background_color
+        )
+
+        axes = Axes(
+            x_range=[-7, 7, 0.5], 
+            y_range=[-5, 6, 0.5],
+        )
+
+        # -------------------- Smooth Shape X --------------------
+        shape_center = grid.get_center() + DOWN*0.5 + RIGHT*1
+
+        angles = np.linspace(0, 2*PI, 8, endpoint=False)
+        radii = [1.4, 1.3, 1.0, 1.5, 1.4, 1.2, 0.6, 1.5]
+        radii = [r * zoom for r in radii]
+
+        points_shape = [
+            shape_center + np.array([
+                radii[i] * np.cos(angles[i]),
+                radii[i] * np.sin(angles[i]),
+                0
+            ])
+            for i in range(len(angles))
+        ]
+
+        smooth_shape = VMobject(
+            color=dark_pink,
+            fill_color=light_pink,
+            fill_opacity=0.1
+        )
+        smooth_shape.set_points_smoothly(points_shape + [points_shape[0]])
+        smooth_shape.close_path()
+        smooth_shape.shift(1*RIGHT)
+
+        text_x = Text("X", color=BLACK).next_to(smooth_shape, DOWN).shift(0.6*UP)
+
+        # -------------------- Limit Point --------------------
+        limit_dot = Dot(
+            axes.c2p(5.5, -3.5),
+            color=BLACK,
+            radius=0.12
+        ).shift(0.3*DR)
+
+        limit_text = Text("limit", font_size=24, color=BLACK, weight=BOLD)
+        limit_text.next_to(limit_dot, UP, buff=0.3)
+
+        # -------------------- Sequence Points --------------------
+        points_seq = [
+            axes.c2p(-2,4),
+            axes.c2p(1,1),
+            axes.c2p(3,-1),
+            axes.c2p(4,-2),
+            axes.c2p(4.5,-2.5),
+            axes.c2p(4.75,-2.75),
+        ]
+
+        dots = []
+        text_xi = []
+
+        for i, p in enumerate(points_seq):
+
+            new_dot = Dot(p, color=dark_blue, radius=0.08).shift(0.3*DR)
+            dots.append(new_dot)
+
+            if i % 2 == 0:
+                label = MathTex(rf"y_{i+1}", color=BLACK).scale(0.7).next_to(new_dot, UP)
+            else:
+                label = MathTex(rf"y_{i+1}", color=BLACK).scale(0.7).next_to(new_dot, DOWN)
+
+            text_xi.append(label)
+
+        # -------------------- Arrow --------------------
+        arrow = Arrow(
+            start=dots[-1].get_center(),
+            end=limit_dot.get_center(),
+            color=BLACK,
+            stroke_width=4,
+            tip_length=0.15,
+            tip_shape=StealthTip,
+        )
+
+        # -------------------- Shape Y --------------------
+        smooth_shape_copy = smooth_shape.copy()
+        smooth_shape_copy.set_color(dark_orange)
+        smooth_shape_copy.scale(0.85)
+        smooth_shape_copy.shift(0.45*UL)
+
+        text_y = Text("Y", color=BLACK).next_to(smooth_shape_copy, RIGHT)
+
+        # -------------------- Group Everything --------------------
+        all_objects = VGroup(
+            grid,
+            axes,
+            smooth_shape,
+            text_x,
+            limit_dot,
+            limit_text,
+            *dots,
+            *text_xi,
+            arrow,
+            smooth_shape_copy,
+            text_y,
+        )
+
+        all_objects.scale(0.85).shift(0.5*DOWN+0.3*RIGHT)
+
+        self.play(
+            FadeIn(all_objects),
+        )
         self.play(
             Create(box),
             Write(group),
-            run_time=1
         )
+
         self.wait(2)
         self.play(
             FadeOut(con_to_cach),
+            FadeOut(all_objects),
         )
         self.wait(0.5)
         group, box = self.show_warning(cauchy_not_implies_convergent,False,True)
@@ -806,7 +962,7 @@ class Part1_Scene(MovingCameraScene):
 
         example_group = VGroup(counter_example, limit_counter_example).arrange(DOWN, buff=0.5)
         group, box = self.show_example(title, example_group,"Counter Example",True)
-        example_group_box = VGroup(box, group).next_to(cha_to_con, DOWN, buff=0.8).shift(1.5*RIGHT)
+        example_group_box = VGroup(box, group).next_to(cha_to_con, DOWN, buff=0.8) #.shift(1.5*RIGHT)
 
         self.play(
             Create(box),
@@ -829,6 +985,26 @@ class Part1_Scene(MovingCameraScene):
         self.add(book_brain_img)
 
         self.wait(1)
+
+        final_note_1 = MathTex(
+            r"\text{Let us build a space where}",color=BLACK
+        ).scale(1.5)
+        final_note_2 = MathTex(r"\text{Convergent} \;\Leftrightarrow\; \text{Cauchy}",color=BLACK
+        ).scale(1.5)
+        final_note = VGroup(final_note_1, final_note_2).arrange(DOWN,buff=0.3)
+
+        tot_title = MathTex(r"IDEA",color=dark_purple).scale(2)
+        group, box = self.show_example(title,final_note,"IDEA",True)
+        final_group = VGroup(group, box).shift(0.5*DOWN)
+
+        self.play(
+            Create(box),
+            Write(group),
+        )
+        self.wait(0.5)
+        self.play(
+            FadeOut(final_group),
+        )
 
         title_compelte_text = Tex("Complete Space", color=BLACK, font_size=80).move_to(title.get_center())
         self.play(
@@ -863,17 +1039,6 @@ class Part1_Scene(MovingCameraScene):
         )
         self.wait(1)
 
-        final_note = MathTex(
-            r"\text{Convergent} \;\Leftrightarrow\; \text{Cauchy}",color=BLACK
-        ).scale(2)
-
-        group, box = self.show_minorPoint(final_note,True)
-        final_group = VGroup(group, box).shift(0.5*DOWN)
-
-        self.play(
-            TransformMatchingShapes(def_group, VGroup(group, box)),
-        )
-
         fade_out_list = [
             group, box, title_compelte_text
         ]
@@ -887,29 +1052,29 @@ class Part1_Scene(MovingCameraScene):
     def scene6(self, title):
         """ Cauchy Sequences : The Mystery of Nearness """
         title.shift(0.3*DOWN)
-        self.play(
-            Write(title),
-        )
-        self.wait(1)
-        self.play(
-            FadeOut(title),
-        )
-        self.wait(0.5)
+        # self.play(
+        #     Write(title),
+        # )
+        # self.wait(1)
+        # self.play(
+        #     FadeOut(title),
+        # )
+        # self.wait(0.5)
 
         # Recall Convergence
-        self.scene6_subScene0(title)
+        # self.scene6_subScene0(title)
 
         # Intuitive Idea
-        self.scene6_subScene1(title)
+        # self.scene6_subScene1(title)
 
         # Formal Definition of Cauchy
-        title_cauchy_text = self.scene6_subScene2(title)
+        # title_cauchy_text = self.scene6_subScene2(title)
 
         # Intuitive Idea of Cauchy
-        self.scene6_subScene3(title, title_cauchy_text)
+        # self.scene6_subScene3(title, title_cauchy_text)
 
         ## ( Convergence <-> Cauchy ) & Question
-        self.scene6_subScene4(title)
+        # self.scene6_subScene4(title)
 
         # Formal Definition of Completeness
         self.scene6_subScene5(title)
@@ -920,92 +1085,92 @@ class Part1_Scene(MovingCameraScene):
 
         text_metric_space = MathTex(r"\text{Metric space}",color=dark_green).move_to(title.get_center()+DOWN).scale(2)
         text_metric_space_parts = MathTex(r"(",r"X",r",",r"d",r")",color=dark_blue,arg_separator="  ").move_to(text_metric_space.get_center()+1.6*DOWN).scale(2)
-        rect_x = SurroundingRectangle(
-            text_metric_space_parts[1],
-            color=dark_pink,        
-            buff=0.1,          
-            fill_opacity=0,    
-            stroke_width=3,    
-            corner_radius=0.15 
-        )
-        text_vector_space = MathTex(r"\text{Vector space}",color=dark_pink).move_to(text_metric_space_parts.get_center()+2.6*DOWN+3*LEFT).scale(2)
-        rect_vec_x = SurroundingRectangle(
-            text_vector_space,
-            color=dark_pink,        
-            buff=0.1,          
-            fill_opacity=0,    
-            stroke_width=3,    
-            corner_radius=0.15 
-        )
-        arrow_x = CurvedArrow(
-            start_point=text_metric_space_parts[1].get_left()+0.1*LEFT,
-            end_point=rect_vec_x.get_top()+0.2*UP,
-            angle=PI/2,
-            stroke_width=6,
-            color=dark_pink,
-            tip_length=0.25,
-            tip_shape=StealthTip
-        )
-        rect_d = SurroundingRectangle(
-            text_metric_space_parts[3],
-            color=dark_orange,        
-            buff=0.2,          
-            fill_opacity=0,    
-            stroke_width=3,    
-            corner_radius=0.15 
-        )
-        text_distance = MathTex(r"\text{Metric}",color=dark_orange).move_to(text_metric_space_parts.get_center()+2.6*DOWN+3*RIGHT).scale(2)
-        rect_distance = SurroundingRectangle(
-            text_distance,
-            color=dark_orange,        
-            buff=0.2,          
-            fill_opacity=0,    
-            stroke_width=3,    
-            corner_radius=0.15 
-        )
-        arrow_d = CurvedArrow(
-            start_point=text_metric_space_parts[3].get_right()+0.2*RIGHT,
-            end_point=rect_distance.get_top()+0.2*UP,
-            angle=-PI/2,
-            stroke_width=6,
-            color=dark_orange,
-            tip_length=0.25,
-            tip_shape=StealthTip
-        )
+        # rect_x = SurroundingRectangle(
+        #     text_metric_space_parts[1],
+        #     color=dark_pink,        
+        #     buff=0.1,          
+        #     fill_opacity=0,    
+        #     stroke_width=3,    
+        #     corner_radius=0.15 
+        # )
+        # text_vector_space = MathTex(r"\text{Vector space}",color=dark_pink).move_to(text_metric_space_parts.get_center()+2.6*DOWN+3*LEFT).scale(2)
+        # rect_vec_x = SurroundingRectangle(
+        #     text_vector_space,
+        #     color=dark_pink,        
+        #     buff=0.1,          
+        #     fill_opacity=0,    
+        #     stroke_width=3,    
+        #     corner_radius=0.15 
+        # )
+        # arrow_x = CurvedArrow(
+        #     start_point=text_metric_space_parts[1].get_left()+0.1*LEFT,
+        #     end_point=rect_vec_x.get_top()+0.2*UP,
+        #     angle=PI/2,
+        #     stroke_width=6,
+        #     color=dark_pink,
+        #     tip_length=0.25,
+        #     tip_shape=StealthTip
+        # )
+        # rect_d = SurroundingRectangle(
+        #     text_metric_space_parts[3],
+        #     color=dark_orange,        
+        #     buff=0.2,          
+        #     fill_opacity=0,    
+        #     stroke_width=3,    
+        #     corner_radius=0.15 
+        # )
+        # text_distance = MathTex(r"\text{Metric}",color=dark_orange).move_to(text_metric_space_parts.get_center()+2.6*DOWN+3*RIGHT).scale(2)
+        # rect_distance = SurroundingRectangle(
+        #     text_distance,
+        #     color=dark_orange,        
+        #     buff=0.2,          
+        #     fill_opacity=0,    
+        #     stroke_width=3,    
+        #     corner_radius=0.15 
+        # )
+        # arrow_d = CurvedArrow(
+        #     start_point=text_metric_space_parts[3].get_right()+0.2*RIGHT,
+        #     end_point=rect_distance.get_top()+0.2*UP,
+        #     angle=-PI/2,
+        #     stroke_width=6,
+        #     color=dark_orange,
+        #     tip_length=0.25,
+        #     tip_shape=StealthTip
+        # )
 
-        self.play(
-            Write(text_metric_space),
-        )
-        self.wait(1)
-        self.play(
-            Write(text_metric_space_parts[::2]),
-        )
-        self.wait(1)
-        self.play(
-            Write(text_metric_space_parts[1]),
-            Create(rect_x),
-            Create(arrow_x),
-            Create(rect_vec_x),
-            Write(text_vector_space),
-        )
-        self.wait(1)
-        self.play(
-            Write(text_metric_space_parts[3]),
-            Create(rect_d),
-            Create(arrow_d),
-            Create(rect_distance),
-            Write(text_distance),
-        )
-        self.wait(1)
+        # self.play(
+        #     Write(text_metric_space),
+        # )
+        # self.wait(1)
+        # self.play(
+        #     Write(text_metric_space_parts[::2]),
+        # )
+        # self.wait(1)
+        # self.play(
+        #     Write(text_metric_space_parts[1]),
+        #     Create(rect_x),
+        #     Create(arrow_x),
+        #     Create(rect_vec_x),
+        #     Write(text_vector_space),
+        # )
+        # self.wait(1)
+        # self.play(
+        #     Write(text_metric_space_parts[3]),
+        #     Create(rect_d),
+        #     Create(arrow_d),
+        #     Create(rect_distance),
+        #     Write(text_distance),
+        # )
+        # self.wait(1)
 
-        fade_out_list = [text_metric_space, text_metric_space_parts, rect_x, 
-                         arrow_x, rect_vec_x, text_vector_space,
-                         rect_d, arrow_d, rect_distance, text_distance]
-        self.play(
-            FadeOut(VGroup(*fade_out_list)),
-        )
+        # fade_out_list = [text_metric_space, text_metric_space_parts, rect_x, 
+        #                  arrow_x, rect_vec_x, text_vector_space,
+        #                  rect_d, arrow_d, rect_distance, text_distance]
+        # self.play(
+        #     FadeOut(VGroup(*fade_out_list)),
+        # )
 
-        self.wait(1)
+        # self.wait(1)
 
         # draw number plane as background
         plane = NumberPlane(
@@ -1015,8 +1180,6 @@ class Part1_Scene(MovingCameraScene):
             y_length=8,
             x_length=13,
         ).move_to([0, 0, 0]+DOWN)
-        self.play(Create(plane))
-        self.wait(0.5)
 
         # draw axes on top
         axes = Axes(  # NumberLine
@@ -1026,24 +1189,25 @@ class Part1_Scene(MovingCameraScene):
             x_length=13,
             axis_config={"color": dark_blue, "include_ticks": False, "tip_length":0.25, "tip_shape":StealthTip} # "tip_shape":ArrowTip.TIP_STYLE_ROUND
         ).move_to([0, 0, 0]+DOWN)
-        self.play(Create(axes))
+        self.play(
+            Create(plane),
+            Create(axes)
+        )
         self.wait(0.5)
 
         # dot at tip of vector
         tip_x = Dot(axes.c2p(6,4), color=dark_red, radius=0.07)
-        self.play(FadeIn(tip_x))
-        self.wait(1)
         tip_x_text = MathTex("A = (x_1,y_1)",color=BLACK).next_to(tip_x,UP).shift(0.6*RIGHT)
         self.play(
+            FadeIn(tip_x),
             Write(tip_x_text),
         )
-        self.wait(1)
+        self.wait(0.5)
 
         tip_y = Dot(axes.c2p(2,6), color=dark_green, radius=0.07)
-        self.play(FadeIn(tip_y))
-        self.wait(1)
         tip_y_text = MathTex("B = (x_2,y_2)",color=BLACK).next_to(tip_y,UP)  #.shift(0.1*RIGHT)
         self.play(
+            FadeIn(tip_y),
             Write(tip_y_text),
         )
         self.wait(1)
@@ -1063,7 +1227,6 @@ class Part1_Scene(MovingCameraScene):
             Create(dot_line_distance),
             Write(text_distance),
         )
-        self.wait(0.5)
         self.play(
             Write(text_dxy),
         )
@@ -1085,14 +1248,14 @@ class Part1_Scene(MovingCameraScene):
         text_norm_ab = MathTex(r" = ",r"\|\vec{BA}\|",color=dark_orange).scale(1.5).next_to(text_dxy,RIGHT)
 
         self.play(
-            FadeTransform(dot_line_distance, vector_amb),
+            Transform(dot_line_distance, vector_amb),
         )
         self.wait(0.5)
         self.play(
             Write(text_vec_amb),
             Write(text_norm_ab),
         )
-        self.wait(0.5)
+        self.wait(1)
 
         vector_a = Arrow(
             start=axes.c2p(0,0),
@@ -1141,7 +1304,7 @@ class Part1_Scene(MovingCameraScene):
         self.wait(0.5)
 
         fade_out_list = [
-            plane, axes, tip_x , tip_x_text , tip_y , tip_y_text , text_dxy , vector_amb,
+            plane, axes, tip_x , tip_x_text , tip_y , tip_y_text , text_dxy , dot_line_distance,
             text_vec_amb , text_norm_ab , vector_a , vector_b, text_vec_a , text_vec_b, 
             text_vec_amb_2, text_norm_ab_2, 
         ]
@@ -1179,31 +1342,31 @@ class Part1_Scene(MovingCameraScene):
         self.play(
             Create(rect_prove_1),
         )
-        self.wait(0.6)
+        self.wait(0.3)
         self.play(
             TransformFromCopy(prove_1[1], step_1),
         )
-        self.wait(0.6)
+        self.wait(0.3)
         self.play(
             TransformFromCopy(distance[2],step_2),
         )
-        self.wait(0.6)
+        self.wait(0.3)
         self.play(
             Write(step_2to3),
         )
-        self.wait(0.3)
+        self.wait(0.1)
         self.play(
             TransformFromCopy(VGroup(step_2to3,step_2),step_3),
         )
-        self.wait(0.6)
+        self.wait(0.3)
         self.play(
             Write(step_4),
         )
-        self.wait(0.6)
+        self.wait(0.3)
         self.play(
             Create(square_for_end_proof),
         )
-        self.wait(0.6)
+        self.wait(0.3)
 
         # shape
 
@@ -1236,7 +1399,6 @@ class Part1_Scene(MovingCameraScene):
             FadeIn(tip_x),
             Write(tipx_text),
         )
-        self.wait(0.3)
 
         tip_y = Dot(axes.c2p(2,1), color=dark_purple, radius=0.09)
         tipy_text = MathTex("y",color=BLACK).next_to(tip_y,UP)
@@ -1244,7 +1406,7 @@ class Part1_Scene(MovingCameraScene):
             FadeIn(tip_y),
             Write(tipy_text),
         )
-        self.wait(1)
+        self.wait(0.3)
 
         dot_line_distance =  Arrow(
             start=axes.c2p(2,1),
@@ -1261,23 +1423,31 @@ class Part1_Scene(MovingCameraScene):
         )
         self.wait(0.5)
 
-        self.play(
-            dot_line_distance.animate.scale(
-                0.01,
-                about_point=dot_line_distance.get_start()  
-            ),
-            VGroup(tip_x,tipx_text).animate.move_to(axes.c2p(2,1)),
-            tip_y.animate.set_opacity(0),
-            rum_time=2
+        dot_line_distance_new = Line(
+            start=axes.c2p(2,1),
+            end=axes.c2p(6,4),
+            buff=0,
+            stroke_width=6,
+            color=dark_red,
         )
         self.play(
-            FadeOut(dot_line_distance),
+            Transform(dot_line_distance, dot_line_distance_new),
+            run_time=0.1
+        )
+        self.play(
+            dot_line_distance.animate.scale(
+                0,
+                about_point=dot_line_distance.get_start()  
+            ),
+            FadeOut(tip_y),
+            VGroup(tip_x,tipx_text).animate.move_to(axes.c2p(2,1)),
+            rum_time=2
         )
 
         self.wait(1)
 
         fade_out_list = [
-            plane, axes, tip_x ,tip_y , tipx_text, tipy_text
+            plane, axes, tip_x , tipx_text, tipy_text
         ]
         self.play(
             FadeOut(VGroup(*fade_out_list)),
@@ -1308,49 +1478,49 @@ class Part1_Scene(MovingCameraScene):
         self.play(
             TransformMatchingTex(prove_1, prove_2),
         )
-        self.wait(1)
+        self.wait(0.3)
 
         self.play(
             Create(rect_prove_2),
         )
-        self.wait(0.6)
+        self.wait(0.3)
         self.play(
             TransformFromCopy(prove_2[1], step_1),
         )
-        self.wait(0.6)
+        self.wait(0.3)
         self.play(
             TransformFromCopy(distance[2],step_2),
         )
-        self.wait(0.6)
+        self.wait(0.3)
         self.play(
             Write(step_3),
         )
-        self.wait(0.6)
+        self.wait(0.3)
         self.play(
             Write(step_3to4),
         )
-        self.wait(0.3)
+        self.wait(0.1)
         self.play(
             TransformFromCopy(VGroup(step_3to4,step_3),step_4),
         )
-        self.wait(0.6)
+        self.wait(0.3)
         self.play(
             Write(step_5),
         )
-        self.wait(0.6)
+        self.wait(0.3)
         self.play(
             Write(step_6),
         )
-        self.wait(0.6)
+        self.wait(0.3)
         self.play(
             Create(square_for_end_proof),
         )
-        self.wait(0.6)
+        self.wait(0.3)
 
         step_1.set_color(dark_red)
         step_6.set_color(dark_red)
 
-        self.wait(0.6)
+        self.wait(0.3)
 
         # shape
 
@@ -1375,7 +1545,7 @@ class Part1_Scene(MovingCameraScene):
         self.play(
             FadeTransform(VGroup(prove_2_group,rect_prove_2),VGroup(plane,axes)),
         )
-        self.wait(1)
+        self.wait(0.5)
 
         tip_x = Dot(axes.c2p(6,4), color=dark_orange, radius=0.09)
         tipx_text = MathTex("x",color=BLACK).next_to(tip_x,DOWN)
@@ -1383,7 +1553,6 @@ class Part1_Scene(MovingCameraScene):
             FadeIn(tip_x),
             Write(tipx_text),
         )
-        self.wait(0.3)
 
         tip_y = Dot(axes.c2p(2,1), color=dark_purple, radius=0.09)
         tipy_text = MathTex("y",color=BLACK).next_to(tip_y,UP)
@@ -1391,7 +1560,7 @@ class Part1_Scene(MovingCameraScene):
             FadeIn(tip_y),
             Write(tipy_text),
         )
-        self.wait(1)
+        self.wait(0.5)
 
         vector_1 = Arrow(
             start=axes.c2p(2,1),
@@ -1506,50 +1675,50 @@ class Part1_Scene(MovingCameraScene):
         self.play(
             Create(rect_prove_2),
         )
-        self.wait(0.6)
+        self.wait(0.3)
         self.play(
             TransformFromCopy(prove_2[1], step_1),
         )
-        self.wait(0.6)
+        self.wait(0.3)
         self.play(
             TransformFromCopy(distance[2],step_2),
         )
-        self.wait(0.6)
+        self.wait(0.3)
         self.play(
             Write(step_3),
         )
-        self.wait(0.6)
+        self.wait(0.3)
         self.play(
             Create(rect_step_3_x),
         )
-        self.wait(0.3)
+        self.wait(0.1)
         self.play(
             Create(rect_step_3_y),
         )
-        self.wait(0.3)
+        self.wait(0.1)
         self.play(
             Write(step_3to4),
         )
-        self.wait(0.3)
+        self.wait(0.1)
         self.play(
             TransformFromCopy(VGroup(step_3to4,step_3),step_4),
         )
-        self.wait(0.6)
+        self.wait(0.3)
         self.play(
             Write(step_5),
         )
-        self.wait(0.6)
+        self.wait(0.3)
         self.play(
             Create(square_for_end_proof),
         )
-        self.wait(0.6)
+        self.wait(0.3)
 
         step_1.set_color(dark_red)
         step_5.set_color(dark_red)
         step_5.set_color_by_tex(r" = ",BLACK)
         step_4.set_color_by_tex(r" \le ",dark_red)
 
-        self.wait(0.6)
+        self.wait(0.3)
 
         # shape
 
@@ -1574,7 +1743,6 @@ class Part1_Scene(MovingCameraScene):
         self.play(
             FadeTransform(VGroup(prove_2_group,rect_prove_2),VGroup(plane,axes)),
         )
-        self.wait(1)
 
         tip_x = Dot(axes.c2p(6,4), color=dark_orange, radius=0.09)
         tipx_text = MathTex("x",color=BLACK).next_to(tip_x,UP)
@@ -1582,7 +1750,6 @@ class Part1_Scene(MovingCameraScene):
             FadeIn(tip_x),
             Write(tipx_text),
         )
-        self.wait(0.3)
 
         tip_y = Dot(axes.c2p(2,1), color=dark_purple, radius=0.09)
         tipy_text = MathTex("y",color=BLACK).next_to(tip_y,UP)
@@ -1590,7 +1757,7 @@ class Part1_Scene(MovingCameraScene):
             FadeIn(tip_y),
             Write(tipy_text),
         )
-        self.wait(1)
+        self.wait(0.5)
 
         vector_1 = Arrow(
             start=axes.c2p(2,1),
@@ -1606,7 +1773,7 @@ class Part1_Scene(MovingCameraScene):
         self.play(
             GrowArrow(vector_1),
         )
-        self.wait(1)
+        self.wait(0.5)
 
         tip_z = Dot(axes.c2p(5,1), color=dark_blue, radius=0.09)
         tipz_text = MathTex("z",color=BLACK).next_to(tip_z,DOWN)
@@ -1614,7 +1781,7 @@ class Part1_Scene(MovingCameraScene):
             FadeIn(tip_z),
             Write(tipz_text),
         )
-        self.wait(1)
+        self.wait(0.5)
 
         vector_2 = Arrow(
             start=axes.c2p(5,1),
@@ -1640,7 +1807,7 @@ class Part1_Scene(MovingCameraScene):
         self.play(
             GrowArrow(vector_2),
         )
-        self.wait(1)
+        self.wait(0.5)
 
         prove_3.set_color_by_tex(r"d(z,y)",dark_purple)
         self.play(
@@ -1651,19 +1818,18 @@ class Part1_Scene(MovingCameraScene):
         prove_3.set_color_by_tex(r"d(x,z)",BLACK)
         prove_3.set_color_by_tex(r"d(z,y)",BLACK)
 
-        self.wait(1)
-
         fade_out_list = [
             plane, axes, tip_x ,tip_y , tipx_text, tipy_text, vector_1, vector_2, vector_3, tip_z, tipz_text
         ]
         self.play(
             FadeOut(VGroup(*fade_out_list)),
         )
+        self.wait(1)
 
     def scene5_subScene4(self, title):
         """definition of normed space"""
         text_metric_space = MathTex(r"\text{Metric space}",color=dark_green).move_to(title.get_center()+DOWN).scale(2)
-        text_metric_space_parts = MathTex(r"(",r"X",r",",r"d(x,y) = \|x - y\|",r")",color=dark_blue,arg_separator="  ").move_to(text_metric_space.get_center()+1.6*DOWN).scale(2)
+        text_metric_space_parts = MathTex(r"( \, ",r"X",r" \, , \, ",r"d(x,y) = \|x - y\|",r" \, )",color=dark_blue,arg_separator="  ").move_to(text_metric_space.get_center()+1.6*DOWN).scale(2)
         rect_x = SurroundingRectangle(
             text_metric_space_parts[1],
             color=dark_pink,        
@@ -1682,9 +1848,9 @@ class Part1_Scene(MovingCameraScene):
             corner_radius=0.15 
         )
         arrow_x = CurvedArrow(
-            start_point=text_metric_space_parts[1].get_left()+0.1*LEFT,
-            end_point=rect_vec_x.get_top()+0.2*UP,
-            angle=PI/2,
+            start_point=text_metric_space_parts[1].get_bottom()+0.1*LEFT+0.1*DOWN,
+            end_point=rect_vec_x.get_top()+0.1*UP,
+            angle=0,
             stroke_width=6,
             color=dark_pink,
             tip_length=0.25,
@@ -1708,9 +1874,9 @@ class Part1_Scene(MovingCameraScene):
             corner_radius=0.15 
         )
         arrow_d = CurvedArrow(
-            start_point=text_metric_space_parts[3].get_right()+0.2*RIGHT,
-            end_point=rect_distance.get_top()+0.2*UP,
-            angle=-PI/2,
+            start_point=text_metric_space_parts[3].get_bottom()+1*RIGHT+0.2*DOWN,
+            end_point=rect_distance.get_top()+0.1*UP,
+            angle=0,
             stroke_width=6,
             color=dark_orange,
             tip_length=0.25,
@@ -1718,11 +1884,11 @@ class Part1_Scene(MovingCameraScene):
         )
 
         self.play(
-            Write(text_metric_space_parts[::2]),
+            FadeIn(text_metric_space_parts),
         )
-        self.wait(1)
+        # self.wait(1)
         self.play(
-            Write(text_metric_space_parts[1]),
+            # Write(text_metric_space_parts[1]),
             Create(rect_x),
             Create(arrow_x),
             Create(rect_vec_x),
@@ -1730,7 +1896,7 @@ class Part1_Scene(MovingCameraScene):
         )
         self.wait(1)
         self.play(
-            Write(text_metric_space_parts[3]),
+            # Write(text_metric_space_parts[3]),
             Create(rect_d),
             Create(arrow_d),
             Create(rect_distance),
@@ -1742,7 +1908,7 @@ class Part1_Scene(MovingCameraScene):
         )
         self.wait(1)
 
-        fade_out_list = [text_metric_space, text_metric_space_parts, rect_x, 
+        fade_out_list = [text_metric_space ,text_metric_space_parts, rect_x, 
                          arrow_x, rect_vec_x, text_vector_space,
                          rect_d, arrow_d, rect_distance, text_distance]
         self.play(
@@ -1751,18 +1917,47 @@ class Part1_Scene(MovingCameraScene):
 
         self.wait(1)
 
-    def scene5(self,title):
+        circle_metric = Circle(3.9,dark_pink,fill_color=dark_pink,fill_opacity=0.1)
+        text_metric_space = MathTex(r"\text{Metric space}",color=BLACK).move_to(title.get_center()+DOWN).scale(2)
+        text_norm_space = MathTex(r"\text{Normed space}",color=BLACK).move_to(title.get_center()+3.5*DOWN).scale(1.2)
+        circle_norm = Circle(2,dark_purple,fill_color=dark_purple,fill_opacity=0.1).shift(0.5*DOWN)
+
         self.play(
-            Write(title),
-        )
-        self.wait(1)
-        self.play(
-            FadeOut(title),
+            Write(text_norm_space),
+            Create(circle_norm),
         )
         self.wait(0.5)
+        self.play(
+            Write(text_metric_space),
+            Create(circle_metric),
+        )
+
+        self.wait(1)
+
+        fade_out_list = [
+            circle_metric,
+            text_metric_space,
+            text_norm_space,
+            circle_norm,
+        ]
+        self.play(
+            FadeOut(VGroup(*fade_out_list)),
+        )
+
+        self.wait(1)
+
+    def scene5(self,title):
+        # self.play(
+        #     Write(title),
+        # )
+        # self.wait(1)
+        # self.play(
+        #     FadeOut(title),
+        # )
+        # self.wait(0.5)
 
         # constructing metrics with norms
-        self.scene5_subScene0(title)
+        # self.scene5_subScene0(title)
 
         # proof needed things
         distance = MathTex(r"d(x,y) ",r" = ",r"\|x-y\|",color=BLACK).scale(2).move_to(title.get_center()+0.2*DOWN)
@@ -1775,60 +1970,56 @@ class Part1_Scene(MovingCameraScene):
             corner_radius=0.15 
         )
 
-        self.play(
-            Create(rect_distance),
-            Write(distance),
-        )
-        self.wait(1)
+        # self.play(
+        #     Create(rect_distance),
+        #     Write(distance),
+        # )
+        # self.wait(1)
 
         text_claim = MathTex(r"\text{Claim : } \\ d \text{ is a } " ,r"\text{metric}",color=BLACK).scale(1.1)
         text_claim.set_color_by_tex(r"\text{metric}",color=dark_blue)
 
-        self.play(
-            VGroup(distance,rect_distance).scale(1).animate.to_edge(UL),
-            Write(text_claim.move_to(rect_distance.get_right()+0.5*RIGHT+0.2*DOWN)),
-        )
-        self.wait(1)
+        # self.play(
+        #     VGroup(distance,rect_distance).scale(1).animate.to_edge(UL),
+        #     Write(text_claim.move_to(rect_distance.get_right()+0.5*RIGHT+0.2*DOWN)),
+        # )
+        # self.wait(1)
 
         # prove part 1
-        prove_1 = MathTex(r"1. \text{  }",r"d(x,y) = 0",r"\iff",r"x = y",color=BLACK).scale(1.5).move_to(title.get_center()+2*DOWN)
-        proof_1_needed = [
-            prove_1, distance
-        ]
-        self.scene5_subScene1(title, *proof_1_needed)
+        # prove_1 = MathTex(r"1. \text{  }",r"d(x,y) = 0",r"\iff",r"x = y",color=BLACK).scale(1.5).move_to(title.get_center()+2*DOWN)
+        # proof_1_needed = [
+        #     prove_1, distance
+        # ]
+        # self.scene5_subScene1(title, *proof_1_needed)
 
         # prove part 2
-        prove_2 = MathTex(r"2. \text{  }",r"d(x,y)",r" = ",r"d(y,x)",color=BLACK).scale(1.5).move_to(title.get_center()+2*DOWN)
-        proof_2_needed = [
-            prove_1, prove_2, distance
-        ]
-        self.scene5_subScene2(title,*proof_2_needed)
+        # prove_2 = MathTex(r"2. \text{  }",r"d(x,y)",r" = ",r"d(y,x)",color=BLACK).scale(1.5).move_to(title.get_center()+2*DOWN)
+        # proof_2_needed = [
+        #     prove_1, prove_2, distance
+        # ]
+        # VGroup(distance,rect_distance).to_edge(UL)
+        # text_claim.move_to(rect_distance.get_right()+3.5*RIGHT)
+        # self.add(prove_2, distance, rect_distance, text_claim)
+        # self.scene5_subScene2(title,*proof_2_needed)
 
-        # prove part 3
-        prove_3 = MathTex(r"3. \text{  }",r"d(x,y)",r" \le ",r"d(x,z)",r" + ",r"d(z,y)",color=BLACK).scale(1.5).move_to(title.get_center()+2*DOWN)
-        proof_3_needed = [
-            prove_2, prove_3, distance
-        ]
-        self.scene5_subScene3(title, *proof_3_needed)
+        # # prove part 3
+        # prove_3 = MathTex(r"3. \text{  }",r"d(x,y)",r" \le ",r"d(x,z)",r" + ",r"d(z,y)",color=BLACK).scale(1.5).move_to(title.get_center()+2*DOWN)
+        # proof_3_needed = [
+        #     prove_2, prove_3, distance
+        # ]
+        # self.scene5_subScene3(title, *proof_3_needed)
 
-        fade_out_list = [
-            distance, rect_distance, text_claim, prove_3
-        ]
-        self.play(
-            FadeOut(VGroup(*fade_out_list)),
-        )
+        # fade_out_list = [
+        #     distance, rect_distance, text_claim, prove_3
+        # ]
+        # self.play(
+        #     FadeOut(VGroup(*fade_out_list)),
+        # )
 
         # normed space
         self.scene5_subScene4(title)
 
     def scene4_subScene0(self,title):
-        self.play(
-            Write(title),
-        )
-        self.wait(2)
-        self.play(
-            FadeOut(title),
-        )
         # length
 
         # draw number plane as background
@@ -1839,8 +2030,6 @@ class Part1_Scene(MovingCameraScene):
             y_length=8,
             x_length=13,
         ).move_to([0, 0, 0]+DOWN)
-        self.play(Create(plane))
-        self.wait(0.5)
 
         # draw axes on top
         axes = Axes(  # NumberLine
@@ -1850,15 +2039,16 @@ class Part1_Scene(MovingCameraScene):
             x_length=13,
             axis_config={"color": dark_blue, "include_ticks": False, "tip_length":0.25, "tip_shape":StealthTip} # "tip_shape":ArrowTip.TIP_STYLE_ROUND
         ).move_to([0, 0, 0]+DOWN)
-        self.play(Create(axes))
-        self.wait(0.5)
+        self.play(
+            Create(plane),
+            Create(axes),
+        )
 
         # dot at tip of vector
         tip = Dot(axes.c2p(6,4), color=dark_red, radius=0.07)
-        self.play(FadeIn(tip))
-        self.wait(1)
         tip_text = MathTex("(x,y)",color=BLACK).next_to(tip,UP)
         self.play(
+            FadeIn(tip),
             Write(tip_text),
         )
         self.wait(1)
@@ -1880,11 +2070,10 @@ class Part1_Scene(MovingCameraScene):
             Write(norm2_2d[0]),
             GrowArrow(vector, run_time=1.2, rate_func=rush_from),
         )
-        self.wait(2)
 
         for _ in range(2):
             self.play(
-                tip.animate.scale(1.5).set_color(BLACK),
+                tip.animate.scale(2).set_color(BLACK),
                 rate_func=there_and_back,
             )
 
@@ -1922,20 +2111,15 @@ class Part1_Scene(MovingCameraScene):
 
         self.play(
             Create(dot_line_1),
-            Create(dot_line_2),
-            run_time=1
-        )
-        self.wait(2)
-        self.play(
             Create(dot_line_1_result),
             Write(text_dot_x),
-        )
-        self.wait(0.5)
-        self.play(
+
+            Create(dot_line_2),
             Create(dot_line_2_result),
             Write(text_dot_y),
+
+            run_time=1
         )
-        self.wait(1)
         self.play(
             FadeOut(dot_line_1),
             FadeOut(dot_line_2),
@@ -1943,35 +2127,23 @@ class Part1_Scene(MovingCameraScene):
         dot_line_1_result_group_with_text_x = VGroup(dot_line_1_result,text_dot_x)
         self.play(
             dot_line_1_result_group_with_text_x.animate.move_to(dot_line_2.get_center()+0.19*UP),
-            run_time=1
+            run_time=0.5
         )
-        self.wait(1)
-
-        tip_triangle_1 = Dot(axes.c2p(0,0), color=dark_pink, radius=0.07)
-        self.play(FadeIn(tip_triangle_1))
-        self.wait(0.5)
-
-        tip_triangle_2 = Dot(axes.c2p(0,4), color=dark_purple, radius=0.07)
-        self.play(FadeIn(tip_triangle_2))
-        self.wait(1)
 
         triangle_Euclid = Polygon(
             tip.get_center(),
-            tip_triangle_1.get_center(),
-            tip_triangle_2.get_center(),
+            axes.c2p(0,0),
+            axes.c2p(0,4),
         )
-
         triangle_Euclid.set_stroke(color=dark_terquise, width=8)
         triangle_Euclid.set_fill(dark_terquise, opacity=0.2)
 
         self.play(
-            DrawBorderThenFill(triangle_Euclid,2),
-            run_time=1
+            DrawBorderThenFill(triangle_Euclid,1),
         )
-        self.wait(3)
         self.play(
             triangle_Euclid.animate.set_fill(WHITE),
-            run_time=1
+            run_time=0.5
         )
 
         for _ in range(2):
@@ -1984,49 +2156,49 @@ class Part1_Scene(MovingCameraScene):
             Write(norm2_2d[1]),
             Write(norm2_2d[2]),
         )
-        self.wait(2)
+        self.wait(1)
 
         # num example 
-        text_num_x = MathTex(r"4",color=dark_pink).move_to(text_dot_x.get_center())
-        text_num_y = MathTex(r"3",color=dark_pink).move_to(text_dot_y.get_center())
-        text_length_vector_1 = MathTex(r"\sqrt{4^2 + 3^2}",color=dark_pink).move_to(vector.get_center()+1.2*RIGHT)
-        text_length_vector_2part0 = MathTex(r"\sqrt{16 + 9}",color=dark_pink).move_to(vector.get_center()+1.2*RIGHT)
-        text_length_vector_2part1 = MathTex(r"\sqrt{ 25 }",color=dark_pink).move_to(text_length_vector_2part0.get_center())
-        text_length_vector_2part2 = MathTex(r"5",color=dark_pink).move_to(text_length_vector_2part1.get_center())
-        self.play(
-            FadeOut(text_dot_x),
-            FadeIn(text_num_x)
-        )
-        self.wait(0.5)
-        self.play(
-            FadeOut(text_dot_y),
-            FadeIn(text_num_y)
-        )
-        self.wait(0.5)
-        self.play(
-            FadeIn(text_length_vector_1),
-        )
-        self.wait(1)
-        self.play(
-            FadeTransform(text_length_vector_1,text_length_vector_2part0),
-        )
-        self.wait(0.7)
-        self.play(
-            FadeTransform(text_length_vector_2part0,text_length_vector_2part1),
-        )
-        self.wait(0.7)
-        self.play(
-            FadeTransform(text_length_vector_2part1,text_length_vector_2part2),
-        )
-        self.wait(1)
-        self.play(
-            FadeOut(text_num_x),
-            FadeIn(text_dot_x),
-            FadeOut(text_num_y),
-            FadeIn(text_dot_y),
-            FadeOut(text_length_vector_2part2),
-        )
-        self.wait(1)
+        # text_num_x = MathTex(r"4",color=dark_pink).move_to(text_dot_x.get_center())
+        # text_num_y = MathTex(r"3",color=dark_pink).move_to(text_dot_y.get_center())
+        # text_length_vector_1 = MathTex(r"\sqrt{4^2 + 3^2}",color=dark_pink).move_to(vector.get_center()+1.2*RIGHT)
+        # text_length_vector_2part0 = MathTex(r"\sqrt{16 + 9}",color=dark_pink).move_to(vector.get_center()+1.2*RIGHT)
+        # text_length_vector_2part1 = MathTex(r"\sqrt{ 25 }",color=dark_pink).move_to(text_length_vector_2part0.get_center())
+        # text_length_vector_2part2 = MathTex(r"5",color=dark_pink).move_to(text_length_vector_2part1.get_center())
+        # self.play(
+        #     FadeOut(text_dot_x),
+        #     FadeIn(text_num_x)
+        # )
+        # self.wait(0.5)
+        # self.play(
+        #     FadeOut(text_dot_y),
+        #     FadeIn(text_num_y)
+        # )
+        # self.wait(0.5)
+        # self.play(
+        #     FadeIn(text_length_vector_1),
+        # )
+        # self.wait(1)
+        # self.play(
+        #     FadeTransform(text_length_vector_1,text_length_vector_2part0),
+        # )
+        # self.wait(0.7)
+        # self.play(
+        #     FadeTransform(text_length_vector_2part0,text_length_vector_2part1),
+        # )
+        # self.wait(0.7)
+        # self.play(
+        #     FadeTransform(text_length_vector_2part1,text_length_vector_2part2),
+        # )
+        # self.wait(1)
+        # self.play(
+        #     FadeOut(text_num_x),
+        #     FadeIn(text_dot_x),
+        #     FadeOut(text_num_y),
+        #     FadeIn(text_dot_y),
+        #     FadeOut(text_length_vector_2part2),
+        # )
+        # self.wait(1)
 
         self.play(
             FadeOut(triangle_Euclid),
@@ -2034,26 +2206,21 @@ class Part1_Scene(MovingCameraScene):
             FadeOut(text_dot_y),
             FadeOut(dot_line_1_result),
             FadeOut(dot_line_2_result),
-            FadeOut(tip_triangle_1),
-            FadeOut(tip_triangle_2),
         )
-        self.wait(3)
+        self.wait(1)
 
 
         # properties of length
         # 1
         text_1 = MathTex(r"\text{Always non-negative}",color=dark_pink
         ).scale(1.3).to_edge(LEFT).shift(0.5*RIGHT+UP)
-        self.play(
-            Write(text_1),
-        )
-        self.wait(2)
         text_1_part2 = MathTex(r"\ge 0",color=dark_pink
         ).scale(1.3).next_to(norm2_2d,RIGHT)
         self.play(
+            Write(text_1),
             Write(text_1_part2),
         )
-        self.wait(2)
+        self.wait(1)
         self.play(
             FadeOut(text_1_part2),
         )
@@ -2071,34 +2238,26 @@ class Part1_Scene(MovingCameraScene):
         self.play(
             FadeTransform(text_1,text_2[0:2]),
         )
-        self.play(
-            FadeOut(vector),
-            tip.animate.move_to(axes.c2p(0,0)),
-            run_time=3
-        )
+
         text_2_formula_1 = MathTex(r" \sqrt{0^2 + 0^2}",color=dark_pink
         ).next_to(norm2_2d,DOWN)
         # text_2_formula_1[1].set_color(dark_pink)
         # text_2_formula_1[3].set_color(dark_pink)
-        self.play(
-            TransformFromCopy(norm2_2d[1:],text_2_formula_1),
-        )
-        self.wait(1)
+        
         text_2_formula_2 = MathTex(r" = ",r"0",color=dark_pink
         ).next_to(text_2_formula_1,RIGHT).shift(0*DOWN)
-        # text_2_formula_2.set_color_by_tex("0", dark_pink)
         self.play(
+            FadeOut(vector,run_time=0.5),
+            tip.animate.move_to(axes.c2p(0,0)),
+            TransformFromCopy(norm2_2d[1:],text_2_formula_1),
             Write(text_2_formula_2),
         )
         self.wait(1)
         self.play(
+            Create(arrow_0_0_down),
             Write(text_2[2:]),
         )
         self.wait(1)
-        self.play(
-            Create(arrow_0_0_down),
-        )
-        self.wait(2)
         arrow_0_0_up = CurvedArrow(
             start_point=text_2.get_corner(DL)+0.2*UP+0.3*LEFT,
             end_point=text_2.get_corner(UL)+0.3*DOWN+0.3*LEFT,
@@ -2108,7 +2267,7 @@ class Part1_Scene(MovingCameraScene):
         self.play(
             Create(arrow_0_0_up),
         )
-        self.wait(3)
+        self.wait(1)
 
         self.play(
             FadeOut(arrow_0_0_up),
@@ -2120,7 +2279,6 @@ class Part1_Scene(MovingCameraScene):
             tip.animate.move_to(axes.c2p(6,4)),
             run_time=1
         )
-        self.wait(1)
 
         # 3
 
@@ -2131,13 +2289,13 @@ class Part1_Scene(MovingCameraScene):
         self.play(
             Write(text_3_part1),
         )
-        self.wait(2)
+        self.wait(1)
         note_text = MathTex(r"t \cdot (x,y) = (t \times x , t \times y )",color=light_purple).move_to(text_3_part1.get_center()+0.6*UP)
-        self.play(
-            Write(note_text),
-            run_time=2.5
-        )
-        self.wait(2)
+        # self.play(
+        #     Write(note_text),
+        #     run_time=2.5
+        # )
+        # self.wait(2)
         
         # -----------------------------------
         # STEP 0: Original norm
@@ -2153,7 +2311,6 @@ class Part1_Scene(MovingCameraScene):
         ).next_to(norm2_2d, DOWN)
 
         self.play(Write(norm))
-        self.wait(2)
 
         # -----------------------------------
         # STEP 1: x,y  →  tx,ty
@@ -2171,7 +2328,6 @@ class Part1_Scene(MovingCameraScene):
         self.play(
             TransformMatchingTex(norm, scaled) #, transform_mismatches=True
         )
-        self.wait(2)
 
         # -----------------------------------
         # STEP 2: Expand powers
@@ -2189,13 +2345,11 @@ class Part1_Scene(MovingCameraScene):
         self.play(
             TransformMatchingTex(scaled, expanded)
         )
-        self.wait(2)
 
         # -----------------------------------
         # STEP 3: Highlight common factor
         # -----------------------------------
         expanded.set_color_by_tex("t^2", dark_orange)
-        self.wait(1)
 
         # -----------------------------------
         # STEP 4: Factor t^2
@@ -2212,7 +2366,6 @@ class Part1_Scene(MovingCameraScene):
         self.play(
             TransformMatchingTex(expanded, factored)
         )
-        self.wait(2)
 
         # -----------------------------------
         # STEP 5: Move sqrt(x^2+y^2) forward
@@ -2227,7 +2380,6 @@ class Part1_Scene(MovingCameraScene):
         self.play(
             TransformMatchingTex(factored, reordered)
         )
-        self.wait(2)
 
         # -----------------------------------
         # STEP 6: t^2 leaves sqrt and becomes |t|
@@ -2242,15 +2394,12 @@ class Part1_Scene(MovingCameraScene):
         self.play(
             TransformMatchingTex(reordered, final)
         )
-        self.wait(2)
         final[1].set_color(light_orange)
-        self.wait(2)
         length_text = MathTex(r"\text{length}",color=light_orange
         ).next_to(final[0],RIGHT)
         self.play(
             ReplacementTransform(final[1],length_text)
         )
-        self.wait(1)
 
         arrow_0_0_up = CurvedArrow(
             start_point=text_3_part1.get_corner(DR)+0.1*UP+0.6*RIGHT,
@@ -2258,24 +2407,18 @@ class Part1_Scene(MovingCameraScene):
             angle=-PI/2,
             color=light_pink,
         )
-        self.play(
-            Create(arrow_0_0_up),
-        )
-        self.play(
-            Write(text_3_part2),
-        )
         text_3_part2_2 = MathTex(r"|t| \cdot ",r"\text{length}",color=dark_pink
         ).scale(1.3).to_edge(LEFT).shift(RIGHT+0.6*DOWN)
         self.play(
-            FadeTransform(text_3_part2,text_3_part2_2),
+            Create(arrow_0_0_up),
+            Write(text_3_part2_2),
         )
-        self.wait(2)
+        self.wait(1)
 
         self.play(
             FadeOut(final[:2]),
             FadeOut(length_text),
-            # FadeOut(text_3_formula_2[0]),
-            FadeOut(note_text),
+            # FadeOut(note_text),
         )
 
         lambda_text = MathTex("|t| < 1",color=BLACK).scale(1.6).move_to(text_3_part2.get_center()+2*DOWN+LEFT)
@@ -2298,20 +2441,15 @@ class Part1_Scene(MovingCameraScene):
             Transform(vector, vector_lower)
         )
 
-        self.wait(1)
-
         self.play(
             Transform(vector, VECTOR_COPY)
         )
-
-        self.wait(1)
 
         # | lambda | > 1
 
         lambda_text_2 = MathTex("|t| > 1",color=BLACK).scale(1.6).move_to(text_3_part2.get_center()+2*DOWN+LEFT)
         self.play(
-            Unwrite(lambda_text),
-            Write(lambda_text_2)
+            FadeTransform(lambda_text, lambda_text_2),
         )
         vector_higher = Arrow(
             start=axes.c2p(0,0),
@@ -2327,20 +2465,15 @@ class Part1_Scene(MovingCameraScene):
             Transform(vector, vector_higher)
         )
 
-        self.wait(1)
-
         self.play(
             Transform(vector, VECTOR_COPY)
         )
-
-        self.wait(1)
 
         # lambda < 0 (negative)
 
         lambda_text_3 = MathTex("t < 0",color=BLACK).scale(1.6).move_to(text_3_part2.get_center()+2*DOWN+LEFT)
         self.play(
-            Unwrite(lambda_text_2),
-            Write(lambda_text_3)
+            FadeTransform(lambda_text_2, lambda_text_3),
         )
 
         vector_higher = Arrow(
@@ -2356,13 +2489,10 @@ class Part1_Scene(MovingCameraScene):
         self.play(
             Transform(vector, vector_higher)
         )
-        self.wait(1)
 
         self.play(
             Transform(vector, VECTOR_COPY)
         )
-
-        self.wait(2)
 
         self.play(
             FadeOut(text_3_part1),
@@ -2380,7 +2510,7 @@ class Part1_Scene(MovingCameraScene):
         self.play(
             Write(text_4),
         )
-        self.wait(2)
+        self.wait(1)
 
         vector_rule3_1 = Arrow(
             start=axes.c2p(0,0),
@@ -2407,16 +2537,12 @@ class Part1_Scene(MovingCameraScene):
         text_y = MathTex(r"\vec{b}").set_color(BLACK).move_to(vector_rule3_2.get_center()+0.3*DOWN)
 
         self.play(
-            # ,
-            FadeOut(tip),
-            FadeOut(vector),
+            FadeOut(VGroup(tip,vector)),
             GrowArrow(vector_rule3_1, run_time=1.0, rate_func=rush_from),
             Write(text_x),
             GrowArrow(vector_rule3_2, run_time=1.0, rate_func=rush_from),
             Write(text_y),
-            # run_time=1.0
         )
-        self.wait(2)
 
         dot_arrow_1 =  DashedLine(
             start=axes.c2p(2,3),
@@ -2439,7 +2565,7 @@ class Part1_Scene(MovingCameraScene):
             Create(dot_arrow_2),
             FadeIn(tip)
         )
-        self.wait(2)
+        self.wait(0.5)
 
         vector_rule3_3 = Arrow(
             start=axes.c2p(0,0),
@@ -2456,27 +2582,20 @@ class Part1_Scene(MovingCameraScene):
             Write(text_x_plus_y),
         )
 
-        self.wait(2)
-
         self.play(
-            # FadeOut(plane),
             FadeOut(axes),
             FadeOut(dot_arrow_1),
             FadeOut(dot_arrow_2),
-            # FadeOut(text_x_plus_y),
-            # FadeOut(text_x),
-            # FadeOut(text_y),
             FadeOut(tip),
         )
-        self.wait(4)
+        self.wait(1)
 
-        text_x.shift(0.7*RIGHT+0.4*DOWN)
         vector_rule3_1_group = VGroup(vector_rule3_1,text_x)
         self.play(
             vector_rule3_1_group.animate.move_to(dot_arrow_2.get_center()),
-            run_time=2
+            text_x.animate.shift(dot_arrow_2.get_center()+0.01*RIGHT),
+            run_time=1
         )
-        self.wait(2)
 
         triangle = Polygon(
             vector_rule3_1.get_end(),
@@ -2491,14 +2610,10 @@ class Part1_Scene(MovingCameraScene):
             DrawBorderThenFill(triangle,2),
             run_time=1
         )
-        self.wait(3)
-
         self.play(
             triangle.animate.set_opacity(0),
             run_time=0.5
         )
-
-        self.wait(2)
 
         self.play(
             FadeOut(triangle),
@@ -2514,19 +2629,18 @@ class Part1_Scene(MovingCameraScene):
         text_1 = MathTex(r" \text{length } (\vec{a} + \vec{b}) ").set_color(BLACK).move_to(vector.get_center()+0.7*DOWN+0.5*RIGHT)
         text_2 = MathTex(r" \text{length } \vec{a} + \text{length } \vec{b} ").set_color(BLACK).move_to(vector_merged.get_center()+0.7*UP+1.2*LEFT)
 
-        self.wait(3)
-
         self.play(
             FadeTransform(vectors_for_transform, vector_merged),
             FadeIn(text_1),
             FadeIn(text_2),
         )
 
-        self.wait(3)
+        self.wait(1)
 
         vector.set_color(BLACK)
         self.play(
-            # FadeOut(plane),
+            FadeOut(plane),
+            FadeOut(norm2_2d),
             FadeOut(text_2),
             FadeOut(text_1),
             FadeOut(vector_rule3_3),
@@ -2535,107 +2649,84 @@ class Part1_Scene(MovingCameraScene):
             FadeOut(text_4),
         )
 
-        return plane,axes,norm2_2d
+        return plane,axes
 
-    def scene4_subScene1(self,title,plane,axes,norm2_def):
-
-        self.play(
-            # Create(plane),
-            FadeOut(norm2_def),
-            Create(axes),
-            norm2_def.animate.to_edge(UL).shift(0.8*RIGHT),
-            run_time=2
-        )
-
-        # norm2_def_Euclidean = MathTex(r"\text{length}_{\text{Euclidean}} \text{  }",color=BLACK
-        # ).move_to(norm2_def[0].get_center()+0.2*LEFT)
-
-        # self.play(
-        #     ReplacementTransform(norm2_def[0],norm2_def_Euclidean),
-        #     run_time=2
-        # )
-        self.wait(2)
+    def scene4_subScene1(self,title,plane,axes):
 
         # 1
 
-        manhatan_arrow = Arrow(
-            start=axes.c2p(0,0),
-            end=axes.c2p(6,6),
-            buff=0,
-            stroke_width=6,
-            color=dark_orange,
-            tip_length=0.25,
-            tip_shape=StealthTip
-        )
+        # manhatan_arrow = Arrow(
+        #     start=axes.c2p(0,0),
+        #     end=axes.c2p(6,6),
+        #     buff=0,
+        #     stroke_width=6,
+        #     color=dark_orange,
+        #     tip_length=0.25,
+        #     tip_shape=StealthTip
+        # )
 
-        text_x = MathTex(r"\vec{x}").set_color(BLACK).move_to(manhatan_arrow.get_center()+0.4*UP)
+        # text_x = MathTex(r"\vec{x}").set_color(BLACK).move_to(manhatan_arrow.get_center()+0.4*UP)
 
-        self.play(
-            GrowArrow(manhatan_arrow, run_time=1.0, rate_func=rush_from),
-            Write(text_x),
-            run_time=1
-        )
-        self.wait(2)
+        # self.play(
+        #     GrowArrow(manhatan_arrow, run_time=1.0, rate_func=rush_from),
+        #     Write(text_x),
+        #     run_time=1
+        # )
 
-        dot_arrow_x =  DashedLine(
-            start=axes.c2p(0,0),
-            end=axes.c2p(6,0), 
-            dash_length=0.2, 
-            dashed_ratio=0.5, 
-            color=dark_green,
-            stroke_width=10,
-        )
-        text_dot_x = MathTex(r"x_1").set_color(BLACK).move_to(dot_arrow_x.get_center()+0.4*DOWN)
+        # dot_arrow_x =  DashedLine(
+        #     start=axes.c2p(0,0),
+        #     end=axes.c2p(6,0), 
+        #     dash_length=0.2, 
+        #     dashed_ratio=0.5, 
+        #     color=dark_green,
+        #     stroke_width=10,
+        # )
+        # text_dot_x = MathTex(r"x_1").set_color(BLACK).move_to(dot_arrow_x.get_center()+0.4*DOWN)
 
-        dot_arrow_y =  DashedLine(
-            start=axes.c2p(6,0),
-            end=axes.c2p(6,6), 
-            dash_length=0.2, 
-            dashed_ratio=0.5, 
-            color=dark_red,
-            stroke_width=10,
-        )
-        text_dot_y = MathTex(r"x_2").set_color(BLACK).move_to(dot_arrow_y.get_center()+0.4*RIGHT)
+        # dot_arrow_y =  DashedLine(
+        #     start=axes.c2p(6,0),
+        #     end=axes.c2p(6,6), 
+        #     dash_length=0.2, 
+        #     dashed_ratio=0.5, 
+        #     color=dark_red,
+        #     stroke_width=10,
+        # )
+        # text_dot_y = MathTex(r"x_2").set_color(BLACK).move_to(dot_arrow_y.get_center()+0.4*RIGHT)
 
-        sum_norm_text = MathTex(r"x_1 + x_2",color=BLACK
-        ).move_to(text_x.get_center()+0.7*LEFT)
+        # sum_norm_text = MathTex(r"x_1 + x_2",color=BLACK
+        # ).move_to(text_x.get_center()+0.7*LEFT)
 
-        self.wait(2)
-        tip_start = Dot(axes.c2p(0,0), color=dark_red, radius=0.1)
-        self.play(FadeIn(tip_start))
-        self.wait(1)
-        
-        tip_end = Dot(axes.c2p(6,6), color=dark_red, radius=0.1)
-        self.play(FadeIn(tip_end))
-        self.wait(1)
+        # tip_start = Dot(axes.c2p(0,0), color=dark_red, radius=0.1)        
+        # tip_end = Dot(axes.c2p(6,6), color=dark_red, radius=0.1)
+        # self.play(
+        #     FadeIn(tip_start),
+        #     FadeIn(tip_end)
+        # )
+        # self.wait(1)
 
 
-        self.play(
-            Create(dot_arrow_x),
-            Write(text_dot_x),
-        )
-        self.wait(1)
-        self.play(
-            Create(dot_arrow_y),
-            Write(text_dot_y),
-        )
-        self.wait(2)
+        # self.play(
+        #     Create(dot_arrow_x),
+        #     Write(text_dot_x),
+        # )
+        # self.play(
+        #     Create(dot_arrow_y),
+        #     Write(text_dot_y),
+        # )
+        # self.play(
+        #     TransformMatchingTex(text_x, sum_norm_text),
+        # )
 
-        self.play(
-            TransformMatchingTex(text_x, sum_norm_text),
-            run_time=1
-        )
-        self.wait(1)
-        self.play(
-            FadeOut(manhatan_arrow),
-            FadeOut(dot_arrow_x),
-            FadeOut(text_dot_x),
-            FadeOut(dot_arrow_y),
-            FadeOut(text_dot_y),
-            FadeOut(sum_norm_text),
-            FadeOut(tip_start),
-            FadeOut(tip_end),
-        )
+        # self.play(
+        #     FadeOut(manhatan_arrow),
+        #     FadeOut(dot_arrow_x),
+        #     FadeOut(text_dot_x),
+        #     FadeOut(dot_arrow_y),
+        #     FadeOut(text_dot_y),
+        #     FadeOut(sum_norm_text),
+        #     FadeOut(tip_start),
+        #     FadeOut(tip_end),
+        # )
 
         # 2
 
@@ -2656,7 +2747,6 @@ class Part1_Scene(MovingCameraScene):
             Write(text_x),
             run_time=1
         )
-        self.wait(2)
 
         dot_arrow_x =  DashedLine(
             start=axes.c2p(0,0),
@@ -2681,26 +2771,21 @@ class Part1_Scene(MovingCameraScene):
         sum_norm_text = MathTex(r"|x_1| + |x_2|",color=BLACK
         ).move_to(text_x.get_center()+0.7*RIGHT)
 
-        self.wait(2)
         tip_start = Dot(axes.c2p(0,0), color=dark_red, radius=0.1)
-        self.play(FadeIn(tip_start))
-        self.wait(1)
-        
         tip_end = Dot(axes.c2p(-6,-4), color=dark_red, radius=0.1)
-        self.play(FadeIn(tip_end))
-        self.wait(1)
-
+        self.play(
+            FadeIn(tip_start),
+            FadeIn(tip_end)
+        )
 
         self.play(
             Create(dot_arrow_x),
             Write(text_dot_x),
         )
-        self.wait(1)
         self.play(
             Create(dot_arrow_y),
             Write(text_dot_y),
         )
-        self.wait(2)
 
         self.play(
             TransformMatchingTex(text_x, sum_norm_text),
@@ -2709,71 +2794,65 @@ class Part1_Scene(MovingCameraScene):
         self.wait(1)
 
         # num example
-        text_num_x = MathTex(r"-4",color=dark_pink).move_to(text_dot_x.get_center())
-        text_num_y = MathTex(r"-3",color=dark_pink).move_to(text_dot_y.get_center()+0.1*LEFT)
-        text_length_vector_1 = MathTex(r"|-4| + |-3|",color=dark_pink).move_to(manhatan_arrow_2.get_center()+1.7*RIGHT)
-        text_length_vector_2part0 = MathTex(r"4 + 3",color=dark_pink).move_to(manhatan_arrow_2.get_center()+1*RIGHT)
-        text_length_vector_2part1 = MathTex(r"7",color=dark_pink).move_to(text_length_vector_2part0.get_center())
-        self.play(
-            FadeOut(text_dot_x),
-            FadeIn(text_num_x)
-        )
-        self.wait(0.5)
-        self.play(
-            FadeOut(text_dot_y),
-            FadeIn(text_num_y)
-        )
-        self.wait(0.5)
-        self.play(
-            FadeTransform(sum_norm_text,text_length_vector_1),
-        )
-        self.wait(1)
-        self.play(
-            FadeTransform(text_length_vector_1,text_length_vector_2part0),
-        )
-        self.wait(0.7)
-        self.play(
-            FadeTransform(text_length_vector_2part0,text_length_vector_2part1),
-        )
-        self.wait(1)
+        # text_num_x = MathTex(r"-4",color=dark_pink).move_to(text_dot_x.get_center())
+        # text_num_y = MathTex(r"-3",color=dark_pink).move_to(text_dot_y.get_center()+0.1*LEFT)
+        # text_length_vector_1 = MathTex(r"|-4| + |-3|",color=dark_pink).move_to(manhatan_arrow_2.get_center()+1.7*RIGHT)
+        # text_length_vector_2part0 = MathTex(r"4 + 3",color=dark_pink).move_to(manhatan_arrow_2.get_center()+1*RIGHT)
+        # text_length_vector_2part1 = MathTex(r"7",color=dark_pink).move_to(text_length_vector_2part0.get_center())
+        # self.play(
+        #     FadeOut(text_dot_x),
+        #     FadeIn(text_num_x)
+        # )
+        # self.wait(0.5)
+        # self.play(
+        #     FadeOut(text_dot_y),
+        #     FadeIn(text_num_y)
+        # )
+        # self.wait(0.5)
+        # self.play(
+        #     FadeTransform(sum_norm_text,text_length_vector_1),
+        # )
+        # self.wait(1)
+        # self.play(
+        #     FadeTransform(text_length_vector_1,text_length_vector_2part0),
+        # )
+        # self.wait(0.7)
+        # self.play(
+        #     FadeTransform(text_length_vector_2part0,text_length_vector_2part1),
+        # )
+        # self.wait(1)
        
-        self.play(
-            FadeOut(text_num_x),
-            FadeIn(text_dot_x),
-            FadeOut(text_num_y),
-            FadeIn(text_dot_y),
-            FadeOut(text_length_vector_2part1),
-        )
-        self.wait(1)
+        # self.play(
+        #     FadeOut(text_num_x),
+        #     FadeIn(text_dot_x),
+        #     FadeOut(text_num_y),
+        #     FadeIn(text_dot_y),
+        #     FadeOut(text_length_vector_2part1),
+        # )
+        # self.wait(1)
 
 
         norm1_2d = MathTex(
             r"\text{length}_{\text{Manhattan}}",r"= ",r"|x_1| + |x_2|",color=BLACK
-        ).next_to(norm2_def,DOWN).shift(0.3*RIGHT)
+        ).scale(2).move_to(axes.c2p(0,3))
         self.play(
             Write(norm1_2d),
         )
-        self.wait(10)
-
-        self.play(
-            FadeOut(tip_start),
-            FadeOut(tip_end),
-        )
+        self.wait(1)
 
         self.play(
             FadeOut(plane),
             FadeOut(axes),
+            FadeOut(tip_start),
+            FadeOut(tip_end),
             FadeOut(manhatan_arrow_2),
-            # FadeOut(sum_norm_text),
+            FadeOut(sum_norm_text),
             FadeOut(dot_arrow_x),
             FadeOut(text_dot_x),
             FadeOut(dot_arrow_y),
             FadeOut(text_dot_y),
             FadeOut(norm1_2d),
-            # FadeOut(norm2_def[1:]),
-            # FadeOut(norm2_def_Euclidean),
         )
-        self.wait(1)
 
     def scene4_subScene2(self,title):
         "scene4 : subScene2 : norm definition"
@@ -2788,7 +2867,7 @@ class Part1_Scene(MovingCameraScene):
         self.play(
             FadeIn(group_GroupBoxQuetion)
         )
-        self.wait(3)
+        self.wait(1)
 
         def_norm_line1 = MathTex(
             r"\text{A norm on } X \text{ is a function }",
@@ -2839,7 +2918,7 @@ class Part1_Scene(MovingCameraScene):
         image_2.shift(9*LEFT)
         self.add(image_2)
 
-        self.wait(5)
+        self.wait(1)
         for line in [line1_3, line2_3, line3_3]:
             rect = SurroundingRectangle(
                 line,
@@ -2851,15 +2930,13 @@ class Part1_Scene(MovingCameraScene):
             )
             self.play(
                 Create(rect), 
-                run_time=1
             )
-            self.wait(5)
+            self.wait(1)
             self.play(
                 Uncreate(rect), 
-                run_time=1
             )
 
-        self.wait(3)
+        self.wait(1)
         
         self.play(
             Uncreate(norm_box),
@@ -2920,7 +2997,7 @@ class Part1_Scene(MovingCameraScene):
             r"|x_2|", r"^3",
             r")^{", r"\frac{1}{3}", r"}",
             color=dark_red,
-        ).scale(1.5).move_to(norm2_3_compare.get_center()+1*DOWN+1*RIGHT)
+        ).scale(1.5).move_to(norm2_3_compare.get_center()+1*DOWN+1.2*RIGHT)
         common_color = dark_green
         norm3.set_color_by_tex("|x_1|", common_color)
         norm3.set_color_by_tex("|x_2|", common_color)
@@ -2936,7 +3013,7 @@ class Part1_Scene(MovingCameraScene):
             r"|x_2|", r"^4",
             r")^{", r"\frac{1}{4}", r"}",
             color=dark_red,
-        ).scale(1.5).move_to(norm2_3_compare.get_center()+1*DOWN+1*RIGHT)
+        ).scale(1.5).move_to(norm2_3_compare.get_center()+1*DOWN+1.2*RIGHT)
         common_color = dark_green
         norm4.set_color_by_tex("|x_1|", common_color)
         norm4.set_color_by_tex("|x_2|", common_color)
@@ -2953,7 +3030,7 @@ class Part1_Scene(MovingCameraScene):
             r"|x_2|", r"^p",
             r")^{", r"\frac{1}{p}", r"}",
             color=dark_red,
-        ).scale(1.5).move_to(norm2_3_compare.get_center()+1*DOWN+1*RIGHT)
+        ).scale(1.5).move_to(norm2_3_compare.get_center()+1*DOWN+1.2*RIGHT)
         common_color = dark_green
         normp.set_color_by_tex("|x_1|", common_color)
         normp.set_color_by_tex("|x_2|", common_color)
@@ -2964,70 +3041,59 @@ class Part1_Scene(MovingCameraScene):
         self.play(
             Write(point_text),
         )
-        self.wait(2)
+        self.wait(0.5)
         self.play(
             Write(norm1),
         )
-        self.wait(1)
         self.play(
             TransformMatchingTex(norm1,norm1_2),
-            run_time=0.5
         )
-        self.wait(1)
         self.play(
             TransformMatchingTex(norm1_2,norm1_3),
-            run_time=0.5
         )
-        self.wait(2)
+        self.wait(1)
 
         self.play(
             Write(norm2),
         )
-        self.wait(1)
         self.play(
             TransformMatchingTex(norm2,norm2_2),
-            run_time=0.5
         )
-        self.wait(1)
         self.play(
             TransformMatchingTex(norm2_2,norm2_3),
-            run_time=0.5
         )
-        self.wait(2)
+        self.wait(1)
 
         self.play(
             TransformMatchingTex(norm1_3,norm1_3_compare),
             TransformMatchingTex(norm2_3,norm2_3_compare),
-            run_time=1
         )
-        self.wait(2)
 
         image_think = ImageMobject("images/think_img.png").scale(2).to_edge(DL).shift(3.5*LEFT+1.1*DOWN)
         self.add(image_think)
-        self.wait(2)
+        self.wait(1)
 
         self.play(
             Write(norm3),
         )
-        self.wait(4)
+        self.wait(1)
         self.play(
             TransformMatchingTex(norm3,norm4),
         )
-        self.wait(4)
+        self.wait(1)
 
-        find_img = ImageMobject("images/find_img.png").scale(2).to_edge(DL).shift(3.5*LEFT+1.3*DOWN)
+        find_img = ImageMobject("images/find_img.png").scale(2).to_edge(DL).shift(3.5*LEFT+1.4*DOWN)
         self.play(
             FadeOut(image_think),
         )
         self.add(find_img)
-        self.wait(1)
 
         self.play(
             # find_img.animate.scale(0.7).shift(0.5*DOWN),
             TransformMatchingTex(norm4,normp),
             run_time=1
         )
-        self.wait(2)
+        self.wait(1)
 
         p_ge_1 = MathTex(r"p \ge 1",color=BLACK)
         text_group,box = self.show_minorPoint(p_ge_1,True)
@@ -3037,7 +3103,7 @@ class Part1_Scene(MovingCameraScene):
             Create(box),
             Write(text_group),
         )
-        self.wait(3)
+        self.wait(1)
 
         self.play(
             FadeOut(text_group),
@@ -3049,7 +3115,6 @@ class Part1_Scene(MovingCameraScene):
             FadeOut(point_text),
             # FadeOut(),
         )
-        self.wait(1)
 
     def scene4_subScene3(self, title):
         # draw number plane as background
@@ -3060,8 +3125,6 @@ class Part1_Scene(MovingCameraScene):
             y_length=6,
             x_length=8,
         ).move_to([0, 0, 0]+DOWN)
-        self.play(Create(plane))
-        self.wait(0.5)
 
         # draw axes on top
         axes = Axes(  # NumberLine
@@ -3071,7 +3134,10 @@ class Part1_Scene(MovingCameraScene):
             x_length=8,
             axis_config={"color": dark_blue, "include_ticks": False, "tip_length":0.25, "tip_shape":StealthTip} # "tip_shape":ArrowTip.TIP_STYLE_ROUND
         ).move_to([0, 0, 0]+DOWN)
-        self.play(Create(axes))
+        self.play(
+            Create(plane),
+            Create(axes)
+        )
         self.wait(0.5)
 
         # dot at tip of vector
@@ -3088,13 +3154,12 @@ class Part1_Scene(MovingCameraScene):
             tip_length=0.25,
             tip_shape=StealthTip
         )
-        self.play(GrowArrow(vector, run_time=1.2, rate_func=rush_from))
+        self.play(GrowArrow(vector, run_time=1, rate_func=rush_from))
         self.wait(0.5)
 
         # draw brace
         brace = BraceBetweenPoints(vector.get_start()+ UP*0.2, vector.get_end() + UP*0.2, rotate_vector(vector.get_unit_vector(), PI/2) ).set_color("#000000")
         self.play(GrowFromCenter(brace, run_time=0.8))
-        self.wait(0.5)
 
         # add norm text
         norm_text = brace.get_text("Norm").set_color(BLACK)
@@ -3381,6 +3446,9 @@ class Part1_Scene(MovingCameraScene):
 
     def scene4_subScene4(self,title):
         """scene 4 : sub scene 4 : prove and show ||x|| >= 0 """
+        norm_title = MathTex(r"\text{NORM}", color=BLACK, font_size=80).move_to(title.get_center())
+        self.add(norm_title)
+
         prove_text = MathTex("\|x\| \ge 0",color=BLACK).scale(1.3)
         text_group,box = self.show_conclusion(title, prove_text,True)
         self.play(
@@ -3400,18 +3468,18 @@ class Part1_Scene(MovingCameraScene):
         self.play(
             Write(proof_line1),
         )
-        self.wait(1)
+        self.wait(0.5)
 
         variable_replacement = MathTex("y = -x",color=BLACK).scale(1.7).move_to(prove_text.get_center()+2*DOWN)
         self.play(
             Write(variable_replacement),
         )
-        self.wait(1)
+        self.wait(0.5)
         proof_line1_variable_changed = MathTex("\|x + -x\| ","\le \|x\| + ","\|-x\|",color=BLACK).scale(1.5).move_to(title.get_center()+0.9*DOWN+2*RIGHT)
         self.play(
             TransformMatchingTex(proof_line1, proof_line1_variable_changed),
         )
-        self.wait(1)
+        self.wait(0.5)
 
         part1_brace = Brace(proof_line1_variable_changed[0],DOWN,color=dark_orange)
         self.play(
@@ -3421,12 +3489,12 @@ class Part1_Scene(MovingCameraScene):
         self.play(
             Write(proof_line2_part1_initial),
         )
-        self.wait(1)
+        self.wait(0.5)
         proof_line2_part1 = MathTex("0",color=BLACK).scale(1.5).move_to(proof_line1_variable_changed[0].get_center()+1.5*DOWN)
         self.play(
             FadeTransform(proof_line2_part1_initial,proof_line2_part1),
         )
-        self.wait(1)
+        self.wait(0.5)
 
         part2_brace = Brace(proof_line1_variable_changed[2],DOWN,color=dark_orange)
         self.play(
@@ -3436,7 +3504,11 @@ class Part1_Scene(MovingCameraScene):
         self.play(
             Write(proof_line2_part2_initial),
         )
-        self.wait(1)
+        self.wait(0.5)
+        proof_line2_part2 = MathTex("\|x\|",color=BLACK).scale(1.5).move_to(proof_line1_variable_changed[2].get_center()+1.5*DOWN)
+        self.play(
+            FadeTransform(proof_line2_part2_initial, proof_line2_part2),
+        )
 
         proof_line2_part3 = proof_line1_variable_changed[1].copy()
         self.play(
@@ -3444,17 +3516,14 @@ class Part1_Scene(MovingCameraScene):
             run_time=1
         )
 
-        proof_line2_part2 = MathTex("\|x\|",color=BLACK).scale(1.5).move_to(proof_line1_variable_changed[2].get_center()+1.5*DOWN)
-        self.play(
-            FadeTransform(proof_line2_part2_initial, proof_line2_part2),
-        )
+        
         proof_line2 = VGroup(proof_line2_part1, proof_line2_part3, proof_line2_part2)
 
         proof_line3 = MathTex("0 \le 2 \, \|x\|",color=BLACK).scale(1.5).move_to(proof_line2.get_center()+1.5*DOWN)
         self.play( 
             Write(proof_line3),
         )
-        self.wait(1)
+        self.wait(0.5)
 
         proof_line4 = MathTex("0 \le \|x\|",color=BLACK).scale(1.5).move_to(proof_line3.get_center()+1.5*DOWN)
         square_for_end_proof = Square(0.5,color=BLACK).next_to(proof_line4,RIGHT)
@@ -3462,7 +3531,7 @@ class Part1_Scene(MovingCameraScene):
             Write(proof_line4),
         )
 
-        self.wait(1)
+        self.wait(0.5)
 
         self.play(
             Create(square_for_end_proof),
@@ -3491,8 +3560,6 @@ class Part1_Scene(MovingCameraScene):
             y_length=6,
             x_length=8,
         ).move_to([0, 0, 0]+DOWN+RIGHT)
-        self.play(Create(plane))
-        self.wait(0.5)
 
         # draw axes on top
         axes = Axes(  # NumberLine
@@ -3502,7 +3569,10 @@ class Part1_Scene(MovingCameraScene):
             x_length=8,
             axis_config={"color": dark_blue, "include_ticks": False, "tip_length":0.25, "tip_shape":StealthTip} # "tip_shape":ArrowTip.TIP_STYLE_ROUND
         ).move_to([0, 0, 0]+DOWN+RIGHT)
-        self.play(Create(axes))
+        self.play(
+            Create(plane),
+            Create(axes)
+        )
         self.wait(0.5)
 
         # dot at tip of vector
@@ -3520,7 +3590,6 @@ class Part1_Scene(MovingCameraScene):
             tip_shape=StealthTip
         )
         self.play(GrowArrow(vector, run_time=1.2, rate_func=rush_from))
-        self.wait(0.5)
 
         # draw brace
         brace = BraceBetweenPoints(vector.get_start()+ UP*0.2, vector.get_end() + UP*0.2, rotate_vector(vector.get_unit_vector(), PI/2) ).set_color("#000000")
@@ -3719,26 +3788,25 @@ class Part1_Scene(MovingCameraScene):
         self.play(
            Write(normp_full_form),
         )
-        self.wait(0.6)
         self.play(
             Write(normp_short_form),
         )
-        self.wait(2)
+        self.wait(0.5)
         self.play(
             Unwrite(normp_short_form),
         )
-        self.wait(2)
+        self.wait(0.5)
 
         # norm 1
         self.play(
             Create(rect_1),
             Write(condition_1),
         )
-        self.wait(1)
+        self.wait(0.5)
         self.play(
             TransformMatchingShapes(normp_full_form, norm1_full_form)
         )
-        self.wait(2)
+        # self.wait(2)
 
         # # create grid
         self.play(Create(plane))
@@ -3856,17 +3924,17 @@ class Part1_Scene(MovingCameraScene):
             TransformMatchingShapes(rect_1, rect_2),
             FadeTransform(condition_1, condition_2),
         )
-        self.wait(1)
+        self.wait(0.5)
         self.play(
             TransformMatchingShapes(norm1_full_form, norm2_full_form)
         )
-        self.wait(2)
+        self.wait(1)
 
         # norm 2 grid
 
         vector = Arrow(
             start=axes.c2p(0,0),
-            end=axes.c2p(2,1),
+            end=axes.c2p(3,0),
             buff=0,
             stroke_width=6,
             color=dark_green,
@@ -3874,7 +3942,7 @@ class Part1_Scene(MovingCameraScene):
             tip_shape=StealthTip
         )
 
-        circle_static = Circle(radius=axes.x_axis.unit_size * np.sqrt(5),color=dark_terquise).move_to(axes.c2p(0,0))
+        circle_static = Circle(radius=axes.x_axis.unit_size * 3,color=dark_terquise).move_to(axes.c2p(0,0))
 
         path = TracedPath(
             vector.get_end,
@@ -3887,24 +3955,23 @@ class Part1_Scene(MovingCameraScene):
         )
 
         self.play(
+            Create(path),
+            Create(circle_static),
             Rotate(
                 vector,
                 angle=TAU,
                 about_point=axes.c2p(0,0)
             ),
-            Create(path),
-            Create(circle_static),
             run_time=3,
             rate_func=linear
         )
 
-        self.wait(2)
+        self.wait(1)
 
         self.play(
             FadeOut(vector),
             FadeOut(path),
             FadeOut(circle_static),
-            # FadeOut(),
         )
 
         self.play(
@@ -3918,15 +3985,15 @@ class Part1_Scene(MovingCameraScene):
             TransformMatchingShapes(rect_2, rect_oo),
             FadeTransform(condition_2, condition_oo),
         )
-        self.wait(1)
+        self.wait(0.5)
         self.play(
             TransformMatchingShapes(norm2_full_form, normoo_limit),
         )
-        self.wait(3)
+        self.wait(1)
         self.play(
             TransformMatchingShapes(normoo_limit, norm_oo_short_form),
         )
-        self.wait(2)
+        self.wait(1)
 
         # norm inf grid
 
@@ -3949,7 +4016,7 @@ class Part1_Scene(MovingCameraScene):
             end=axes.c2p(3,3),
             buff=0,
             stroke_width=5,
-            color=dark_not_green,
+            color=dark_pink,
         )
         vector_4 = Line(
             start=axes.c2p(3,-3),
@@ -3959,22 +4026,25 @@ class Part1_Scene(MovingCameraScene):
             color=dark_orange,
         )
 
-        self.play(
-            Create(vector_1),
-        )
-        self.wait(0.5)
-        self.play(
-            Create(vector_2),
-        )
-        self.wait(0.5)
-        self.play(
-            Create(vector_3),
-        )
-        self.wait(0.5)
-        self.play(
-            Create(vector_4),
-        )
-        self.wait(1)
+        # self.play(
+        #     Create(vector_1),
+        #     Create(vector_2),
+        #     Create(vector_3),
+        #     Create(vector_4),
+        # )
+        # self.wait(0.5)
+        # self.play(
+        #     Create(vector_2),
+        # )
+        # self.wait(0.5)
+        # self.play(
+        #     Create(vector_3),
+        # )
+        # self.wait(0.5)
+        # self.play(
+        #     Create(vector_4),
+        # )
+        # self.wait(0.5)
 
         squre = Polygon(
             *[axes.c2p(3,3), axes.c2p(3,-3), axes.c2p(-3,-3), axes.c2p(-3,3)],
@@ -3985,29 +4055,23 @@ class Part1_Scene(MovingCameraScene):
 
         self.play(
             Create(squre),
-            FadeOut(VGroup(*[vector_1, vector_2, vector_3, vector_4])),
-            rum_time=1
+            # FadeOut(VGroup(*[vector_1, vector_2, vector_3, vector_4])),
         )
         self.wait(1)
 
         self.play(
             FadeOut(squre),
-        )
-
-        self.play(
             FadeOut(rect_oo),
             FadeOut(condition_oo),
             FadeOut(norm_oo_short_form),
         )
-
-        self.wait(1)
 
         self.play(
             VGroup(plane, axes).animate.shift(1.5*UP+1*LEFT),
             run_time=1
         )
 
-        circle_static = Circle(radius=axes.x_axis.unit_size * 3,color=dark_terquise).move_to(axes.c2p(0,0))
+        circle_static = Circle(radius=axes.x_axis.unit_size * 2.9,color=dark_terquise).move_to(axes.c2p(0,0))
 
         text_p1 = MathTex(r"p = 1",color=dark_pink).move_to(brain_img.get_top()+2*UP).scale(2)
         rect_p1 = SurroundingRectangle(
@@ -4043,8 +4107,9 @@ class Part1_Scene(MovingCameraScene):
             Create(rect_p1),
         )
         self.wait(0.5)
+        shape = polygon
         self.play(
-            Create(polygon),
+            Create(shape),
         )
         self.wait(1)
 
@@ -4055,7 +4120,7 @@ class Part1_Scene(MovingCameraScene):
         )
         self.wait(0.5)
         self.play(
-            Transform(polygon, circle_static),
+            Transform(shape, circle_static),
         )
         self.wait(1)
 
@@ -4066,14 +4131,14 @@ class Part1_Scene(MovingCameraScene):
         )
         self.wait(0.5)
         self.play(
-            Transform(polygon, squre),
+            TransformMatchingShapes(shape, squre),
         )
         self.wait(1)
 
         self.play(
             FadeOut(rect_pinf),
             FadeOut(text_pinf),
-            FadeOut(polygon),
+            FadeOut(squre),
             FadeOut(axes),
             FadeOut(plane),
             FadeOut(brain_img),
@@ -4173,27 +4238,42 @@ class Part1_Scene(MovingCameraScene):
 
     def scene4(self,title):
         """scene 4: what is norm ? """
+
+        # self.play(
+        #     Write(title),
+        # )
+        # self.play(
+        #     FadeOut(title),
+        # )
+        # self.wait(1)
+
         # From Intuition to Mathematics
-        plane,axes,norm2_def = self.scene4_subScene0(title)
+        # plane,axes = self.scene4_subScene0(title)
 
-        self.scene4_subScene1(title,plane,axes,norm2_def)
+        # self.wait(1)
 
-        self.scene4_subScene1_part2(title)
+        # self.scene4_subScene1(title,plane,axes)
+
+        # self.wait(1)
+
+        # self.scene4_subScene1_part2(title)
+
+        # self.wait(1)
 
         # norm definition
-        norm_group, norm_box, question_group, question_box, norm_title = self.scene4_subScene2(title)
+        # norm_group, norm_box, question_group, question_box, norm_title = self.scene4_subScene2(title)
 
         # shapes for norm definition
-        self.scene4_subScene3(title)
+        # self.scene4_subScene3(title)
 
         # prove and show ||x||>=0
-        self.scene4_subScene4(title)
+        # self.scene4_subScene4(title)
 
         # examples of norm
         self.scene4_subScene5(title)
 
         # normed space
-        self.scene4_subScene6(title)
+        # self.scene4_subScene6(title)
 
 
     def scene3(self,topic_number,first_time=False):
@@ -4206,19 +4286,28 @@ class Part1_Scene(MovingCameraScene):
 
         if first_time:
 
-            self.camera.background_color = topics_backGround_color
+            bg_rect = Rectangle(
+                width=10*config.frame_width, 
+                height=10*config.frame_height, 
+                stroke_width=0, 
+                fill_color=topics_backGround_color, 
+                fill_opacity=1
+            )
+            self.add(bg_rect)
+            self.play(
+                FadeIn(bg_rect, run_time=0.5),
+            )
 
             self.play(
                 Write(title),
             )
-            self.wait(2)
             
             img = ImageMobject("images/topics.png")
             img.scale(2.65)
 
             self.play(
                 FadeIn(img), 
-                run_time=2
+                run_time=1
             )
 
             self.camera.frame.save_state()
@@ -4245,31 +4334,28 @@ class Part1_Scene(MovingCameraScene):
                     rate_func=smooth
                 )
 
-                self.wait(5)
-
-                self.play(FadeOut(rect), run_time=1)
+                self.play(FadeOut(rect))
 
             self.play(
                 Restore(self.camera.frame),
-                run_time=3,
+                run_time=1,
                 rate_func=smooth
             )
 
-            self.wait(2)
+            self.wait(1)
 
             self.play(
                 FadeOut(img), 
-                run_time=2
+                FadeOut(title),
             )
             self.play(
-                Unwrite(title),
+                FadeOut(bg_rect,run_time=0.5),
             )
-            self.camera.background_color = WHITE
 
         items_list = [  "The Birth of Norms", 
                         "From Norms to Metrics", 
                         r"Cauchy Sequences \\ The Mystery of Nearness", 
-                        r"Banach Spaces \\ The Kingdom of Completeness",  ]
+                        "Banach Spaces",  ] # \\ The Kingdom of Completeness
 
         selected_title = Tex(items_list[topic_number], color=BLACK, font_size=80)
         selected_title.move_to(title.get_center())
@@ -4282,8 +4368,22 @@ class Part1_Scene(MovingCameraScene):
             r"\text{where } \mathbb{K} \text{ is } \mathbb{R} \text{ or } \mathbb{C}.",
             color=BLACK,
         )
+        bg_rect = Rectangle(
+            width=config.frame_width, 
+            height=config.frame_height, 
+            stroke_width=0, 
+            fill_color=light_red, 
+            fill_opacity=0.2
+        )
+        self.add(bg_rect)
+        self.play(
+            FadeIn(bg_rect, run_time=0.5),
+        )
         self.show_warning(warning_text,True)
-        self.wait(2)
+        self.play(
+            FadeOut(bg_rect), 
+        )
+        self.wait(0.5)
 
     def scene1_SubScene1(self,):
         plane = NumberPlane(
@@ -4293,8 +4393,7 @@ class Part1_Scene(MovingCameraScene):
             y_length=6,
             x_length=8,
         ).move_to([0, 0, 0]).shift(DOWN*2)
-        self.play(Create(plane))
-        self.wait(0.5)
+        # self.wait(0.5)
 
         # draw axes on top
         axes = Axes(  # NumberLine
@@ -4304,8 +4403,7 @@ class Part1_Scene(MovingCameraScene):
             x_length=8,
             axis_config={"color": medium_blue, "include_ticks": False, "tip_length":0.25, "tip_shape":StealthTip} # "tip_shape":ArrowTip.TIP_STYLE_ROUND
         ).move_to([0, 0, 0]).shift(DOWN*2)
-        self.play(Create(axes))
-        self.wait(0.5)
+        # self.wait(0.5)
 
         # draw vector in (0,0) - a
         vector_a = Arrow(
@@ -4317,8 +4415,7 @@ class Part1_Scene(MovingCameraScene):
             tip_length=0.25,
             tip_shape=StealthTip
         )
-        self.play(GrowArrow(vector_a, run_time=1.2, rate_func=rush_from))
-        self.wait(0.5)
+        # self.wait(0.5)
 
         # draw vector in (0,0) - b
         vector_b = Arrow(
@@ -4330,21 +4427,29 @@ class Part1_Scene(MovingCameraScene):
             tip_length=0.25,
             tip_shape=StealthTip
         )
-        self.play(GrowArrow(vector_b, run_time=1.2, rate_func=rush_from))
-        self.wait(0.5)
+        # self.wait(0.5)
 
         # add texts
         a_text = MathTex(r"\overrightarrow{a} = (a_1, a_2)",color=BLACK).move_to(vector_a.get_end()+0.5*RIGHT+0.5*UP)
-        self.play(FadeIn(a_text, shift=UP*0.2))
-        self.wait(0.5)
+        # self.wait(0.5)
 
         b_text = MathTex(r"\overrightarrow{b} = (b_1, b_2)",color=BLACK).move_to(vector_b.get_end()+0.5*LEFT+0.5*UP)
-        self.play(FadeIn(b_text, shift=UP*0.2))
-        self.wait(0.5)
+        # self.wait(0.5)
 
         inner_product_text = MathTex(" \\langle \\vec{a}, \\vec{b} \\rangle = a_1 b_1 + a_2 b_2 = 0 ",color=BLACK).move_to(plane.get_center() + 0.75*DOWN)
-        self.play(FadeIn(inner_product_text, shift=UP*0.2))
-        self.wait(0.5)
+        # self.wait(0.5)
+
+        self.play(
+            Create(plane, run_time=0.2),
+            Create(axes, run_time=0.2),
+            GrowArrow(vector_a, run_time=0.3, rate_func=rush_from),
+            FadeIn(a_text, shift=UP*0.2),
+            GrowArrow(vector_b, run_time=0.3, rate_func=rush_from),
+            FadeIn(b_text, shift=UP*0.2),
+            FadeIn(inner_product_text, shift=UP*0.2),
+        )
+
+        self.wait(1)
 
         self.play(
             FadeOut(plane),
@@ -4390,7 +4495,7 @@ class Part1_Scene(MovingCameraScene):
         # draw axes on top
         self.scene1_SubScene1()
 
-        self.wait(0.5)
+        self.wait(1)
 
         self.play(
             Unwrite(title_up),
