@@ -34,6 +34,35 @@ class TitleScene(Scene):
             color=BLACK, font_size=80
         ).to_edge(UP)
 
+        norm_space = MathTex(r"(X\, , \|.\|)",r"+",r"\text{Complete}",r"\text{ w.r.t }",r"\text{norm induced metric}",color=BLACK).scale(1.3).move_to(title.get_center()+2*DOWN)
+        norm_space.set_color_by_tex(r"(X\, , \|.\|)",color=dark_pink)
+        norm_space.set_color_by_tex(r"\text{Complete}",color=dark_pink)
+        brace = BraceBetweenPoints(norm_space.get_left()+0.5*DOWN, norm_space.get_right()+0.5*DOWN).set_color(dark_orange)
+        banach_space = MathTex(r"\text{Banach space}",color=dark_pink).scale(2).next_to(brace,DOWN)
+
+        self.play(
+            Write(norm_space[0]),
+        )
+        self.play(
+            Write(norm_space[1:]),
+        )
+        self.play(
+            GrowFromCenter(brace, run_time=0.8),
+        )
+        self.play(
+            Write(banach_space),
+        )
+        self.wait(1)
+        fade_out_list = [
+            norm_space,
+            banach_space,
+            brace,
+        ]
+        self.play(
+            FadeOut(VGroup(*fade_out_list)),
+        )
+        
+
         circle_metric = Circle(4,dark_pink,fill_color=dark_pink,fill_opacity=0.1)
         text_metric_space = MathTex(r"\text{Metric space}",color=dark_pink).scale(2).move_to(circle_metric.get_center()+2.3*UP)
 
