@@ -101,9 +101,9 @@ class TitleScene(Scene):
 
     def construct(self):
 
-        # self.scene1()
+        self.scene1()
 
-        self.scene2()
+        # self.scene2()
 
     def scene1(self):
 
