@@ -290,16 +290,16 @@ class Part1_Scene(MovingCameraScene):
         # self.scene5(title)
 
         # Cauchy Sequences : The Mystery of Nearness
-        # topic_number = 2
-        # title = self.scene3(topic_number,False)
-
-        # self.scene6(title)
-
-        # Banach Spaces : The Kingdom of Completeness
-        topic_number = 3
+        topic_number = 2
         title = self.scene3(topic_number,False)
 
-        self.scene7(title)
+        self.scene6(title)
+
+        # Banach Spaces : The Kingdom of Completeness
+        # topic_number = 3
+        # title = self.scene3(topic_number,False)
+
+        # self.scene7(title)
 
     def scene7_SubScene0(self, title):
         part1 = MathTex(
@@ -1077,7 +1077,209 @@ class Part1_Scene(MovingCameraScene):
         # self.scene6_subScene4(title)
 
         # Formal Definition of Completeness
-        self.scene6_subScene5(title)
+        # self.scene6_subScene5(title)
+
+        # complete intuition with shapes
+        self.scene6_subScene6(title)
+
+
+    def scene6_subScene6(self, title):
+        zoom = 3
+        # -------------------- Grid & Axes --------------------
+        grid = NumberPlane(
+            x_range=[-7, 7, 0.5], 
+            y_range=[-5, 6, 0.5], 
+            background_line_style={
+                "stroke_opacity": 0.3,
+                "stroke_color": axes_background_color
+            },
+            color=axes_background_color
+        )
+
+        axes = Axes(
+            x_range=[-7, 7, 0.5], 
+            y_range=[-5, 6, 0.5],
+        )
+
+        # -------------------- Smooth Shape X --------------------
+        shape_center = grid.get_center() + DOWN*0.5 + RIGHT*1
+
+        angles = np.linspace(0, 2*PI, 8, endpoint=False)
+        radii = [1.4, 1.3, 1.0, 1.5, 1.4, 1.2, 0.6, 1.5]
+        radii = [r * zoom for r in radii]
+
+        points_shape = [
+            shape_center + np.array([
+                radii[i] * np.cos(angles[i]),
+                radii[i] * np.sin(angles[i]),
+                0
+            ])
+            for i in range(len(angles))
+        ]
+
+        smooth_shape = VMobject(
+            color=dark_pink,
+            fill_color=light_pink,
+            fill_opacity=0.1
+        )
+        smooth_shape.set_points_smoothly(points_shape + [points_shape[0]])
+        smooth_shape.close_path()
+        smooth_shape.shift(1*RIGHT)
+
+        text_x = Text("X", color=BLACK).next_to(smooth_shape, DOWN).shift(0.6*UP)
+
+        # -------------------- Limit Point --------------------
+        limit_dot = Dot(
+            axes.c2p(5.5, -3.5),
+            color=BLACK,
+            radius=0.12
+        ).shift(0.3*DR)
+
+        limit_text = Text("limit", font_size=24, color=BLACK, weight=BOLD)
+        limit_text.next_to(limit_dot, UP, buff=0.3)
+
+        # -------------------- Sequence Points --------------------
+        points_seq = [
+            axes.c2p(-2,4),
+            axes.c2p(1,1),
+            axes.c2p(3,-1),
+            axes.c2p(4,-2),
+            axes.c2p(4.5,-2.5),
+            axes.c2p(4.75,-2.75),
+        ]
+
+        dots = []
+        text_xi = []
+
+        for i, p in enumerate(points_seq):
+
+            new_dot = Dot(p, color=dark_blue, radius=0.08).shift(0.3*DR)
+            dots.append(new_dot)
+
+            if i % 2 == 0:
+                label = MathTex(rf"y_{i+1}", color=BLACK).scale(0.7).next_to(new_dot, UP)
+            else:
+                label = MathTex(rf"y_{i+1}", color=BLACK).scale(0.7).next_to(new_dot, DOWN)
+
+            text_xi.append(label)
+
+        # -------------------- Arrow --------------------
+        arrow = Arrow(
+            start=dots[-1].get_center(),
+            end=limit_dot.get_center(),
+            color=BLACK,
+            stroke_width=4,
+            tip_length=0.15,
+            tip_shape=StealthTip,
+        )
+
+        # -------------------- Shape Y --------------------
+        smooth_shape_copy = smooth_shape.copy()
+        smooth_shape_copy.set_color(dark_orange)
+        smooth_shape_copy.scale(0.85)
+        smooth_shape_copy.shift(0.45*UL)
+
+        text_y = Text("Y", color=BLACK).next_to(smooth_shape_copy, RIGHT)
+
+        # -------------------- Group Everything --------------------
+        all_objects = VGroup(
+            # grid,
+            # axes,
+            smooth_shape,
+            text_x,
+            limit_dot,
+            limit_text,
+            *dots,
+            *text_xi,
+            arrow,
+            # smooth_shape_copy,
+            # text_y,
+        )
+
+        all_objects.scale(1.1).move_to(ORIGIN).shift(1.5*RIGHT)
+        # self.play(
+        #     Create(grid),
+        # )
+        self.play(
+            FadeIn(all_objects),
+        )
+        self.wait(1)
+
+        # self.play(
+        #     FadeOut(
+        #         VGroup(*[
+        #             arrow, limit_text,
+        #         ])
+        #     )
+        # )
+        limit_dot_modify = Dot(
+            axes.c2p(5.5, -3.5),
+            stroke_color=dark_pink, stroke_width=2, fill_color=WHITE, fill_opacity=1,
+            radius=0.12
+        ).move_to(limit_dot.get_center())
+        self.play(
+            FadeTransform(limit_dot, limit_dot_modify),
+        )
+
+        self.wait(0.5)
+        self.play(
+            FadeOut(
+                VGroup(*[
+                    arrow, limit_text, *dots, *text_xi,
+                ])
+            )
+        )
+        limit_points_seq = [
+            Dot(axes.c2p(-2,4), stroke_color=dark_pink, stroke_width=2, fill_color=WHITE, fill_opacity=1, radius=0.12).shift(0.3*DR + 1.5*RIGHT),
+            Dot(axes.c2p(1,2), stroke_color=dark_pink, stroke_width=2, fill_color=WHITE, fill_opacity=1, radius=0.12).shift(0.3*DR + 1.5*RIGHT),
+            Dot(axes.c2p(-3,-3), stroke_color=dark_pink, stroke_width=2, fill_color=WHITE, fill_opacity=1, radius=0.12).shift(1.5*RIGHT),
+        ]
+        self.play(
+            FadeIn(
+                VGroup(*limit_points_seq)
+            ),
+        )
+        self.wait(1)
+        text_incomplete_part1 = MathTex(r"\text{Incomplete}",color=BLACK).scale(1.5)
+        text_incomplete_part2 = MathTex(r"\text{  Space  }",color=BLACK).scale(1.5)
+        text_incomplete = VGroup(text_incomplete_part1, text_incomplete_part2).arrange(DOWN).to_corner(UL)
+        self.play(
+            Write(text_incomplete),
+        )
+        self.wait(1)
+        
+        limit_points_seq_2 = [
+            Dot(axes.c2p(-2,4), stroke_color=dark_pink, stroke_width=2, fill_color=dark_pink, fill_opacity=1, radius=0.12).shift(0.3*DR + 1.5*RIGHT),
+            Dot(axes.c2p(1,2), stroke_color=dark_pink, stroke_width=2, fill_color=dark_pink, fill_opacity=1, radius=0.12).shift(0.3*DR + 1.5*RIGHT),
+            Dot(axes.c2p(-3,-3), stroke_color=dark_pink, stroke_width=2, fill_color=dark_pink, fill_opacity=1, radius=0.12).shift(1.5*RIGHT),
+            Dot(limit_dot.get_center(), stroke_color=dark_pink, stroke_width=2, fill_color=dark_pink, fill_opacity=1, radius=0.12),
+        ]
+        self.play(
+            FadeTransform(
+                VGroup(*[limit_points_seq, limit_dot_modify]),
+                VGroup(*limit_points_seq_2),
+            ),
+        )
+        self.wait(1)
+        text_complete_part1 = MathTex(r"\text{Complete}",color=BLACK).scale(1.5)
+        text_complete_part2 = MathTex(r"\text{  Space  }",color=BLACK).scale(1.5)
+        text_complete = VGroup(text_complete_part1, text_complete_part2).arrange(DOWN).to_corner(UL)
+        self.play(
+            Transform(text_incomplete, text_complete),
+        )
+        self.wait(1)
+
+        fade_out_list = [
+            smooth_shape,
+            text_x,
+            limit_points_seq_2,
+            text_incomplete,
+        ]
+        self.play(
+            FadeOut(VGroup(*fade_out_list))
+        )
+        self.wait(1)
+
 
     def scene5_subScene0(self, title):
         """ constructing metrics with norms """
