@@ -2201,7 +2201,7 @@ class Part1_Scene(MovingCameraScene):
             # run_time=2
             LaggedStart(
                 *[ Transform(recall_norm_space_all_shapes[i], recall_metric_space_all_shapes[i]) for i in range(3) ],
-                lag_ratio=2,
+                lag_ratio=1.5,
             ),
             # run_time=2
         )
@@ -2261,29 +2261,100 @@ class Part1_Scene(MovingCameraScene):
 
         rect_not_reverse = SurroundingRectangle(
             not_reverse,
-            color=dark_orange,
+            color=dark_purple,
             buff=0.08,
             stroke_width=3,
             corner_radius=0.15
         )
 
-        counter_example = MathTex(r"d(x,y)=\sum_{j=1}^{\infty}\frac{1}{2^j}\frac{|\xi_j-\eta_j|}{1+|\xi_j-\eta_j|}", color=BLACK)
-        
-        example_group = MathTex(r"""
-            \|\alpha x\|
-            = \sum_{j=1}^{\infty}\frac{1}{2^j}\frac{|\alpha\xi_j|}{1+|\alpha\xi_j|}
-            = \sum_{j=1}^{\infty}\frac{1}{2^j}\frac{|\alpha|\,|\xi_j|}{1+|\alpha|\,|\xi_j|}
-            \ne
-            \sum_{j=1}^{\infty}\frac{1}{2^j}\frac{|\alpha|\,|\xi_j|}{1+|\xi_j|}
-            = |\alpha|\sum_{j=1}^{\infty}\frac{1}{2^j}\frac{|\xi_j|}{1+|\xi_j|}
-            = |\alpha|\,\|x\|.
-        """, color=BLACK)
-        group, box = self.show_example(title, example_group,"Counterexample",True)
-        example_group_box = VGroup(box, group).next_to(group, DOWN, buff=0.8) #.shift(1.5*RIGHT)
+        counter_example1 = MathTex(r"d(x,y)=\sum_{j=1}^{\infty}\frac{1}{2^j}\frac{|\xi_j-\eta_j|}{1+|\xi_j-\eta_j|}", color=BLACK).next_to(group,DOWN,buff=2)
+        counter_example2 = MathTex(r"\|x\| = ",r"d(x,0)=\sum_{j=1}^{\infty}\frac{1}{2^j}\frac{|\xi_j-0|}{1+|\xi_j-0|}", color=BLACK).next_to(counter_example1,DOWN,buff=0.5)
+        counter_example3 = MathTex(r"\|x\| = ",r"d(x,0)=\sum_{j=1}^{\infty}\frac{1}{2^j}\frac{|\xi_j|}{1+|\xi_j|}", color=BLACK).move_to(counter_example2.get_center())
+        counter_example_1and2 = VGroup(*[
+            counter_example1,
+            counter_example2
+        ])
+        title_text = Text("Counterexample", color= dark_purple, font_size=36)
+        group_counter1 = VGroup(title_text, counter_example_1and2).arrange(DOWN, buff=0.3)
 
+        rect_counter_example_part1 = RoundedRectangle(
+            corner_radius=0.3,
+            color= dark_purple,
+            fill_color=light_purple,
+            fill_opacity=0.2,
+            width=group_counter1.width + 1,
+            height=group_counter1.height + 0.8
+        ).move_to(group_counter1.get_center())
+
+        VGroup(*[group_counter1, rect_counter_example_part1]).shift(0.5*DOWN)
+
+        # example_group_part1 = MathTex(
+        #     r"\|\alpha x\|",
+        #     color=BLACK,
+        # )
+        example_group_part2 = MathTex(
+            r"\|\alpha x\|",
+            r"= \sum_{j=1}^{\infty}\frac{1}{2^j}\frac{|\alpha\xi_j|}{1+|\alpha\xi_j|}",
+            r"= \sum_{j=1}^{\infty}\frac{1}{2^j}\frac{|\alpha|\,|\xi_j|}{1+|\alpha|\,|\xi_j|}",
+            color=BLACK,
+        )
+        # example_group_part3 = MathTex(
+        #     r"= \sum_{j=1}^{\infty}\frac{1}{2^j}\frac{|\alpha|\,|\xi_j|}{1+|\alpha|\,|\xi_j|}",
+        #     color=BLACK,
+        # )
+        example_group_part4 = MathTex(
+            r"\ne",
+            color=dark_red,
+        )
+        example_group_part5 = MathTex(
+            r"\sum_{j=1}^{\infty}\frac{1}{2^j}\frac{|\alpha|\,|\xi_j|}{1+|\xi_j|}",
+            r"= |\alpha|\sum_{j=1}^{\infty}\frac{1}{2^j}\frac{|\xi_j|}{1+|\xi_j|}",
+            r"= |\alpha|\,\|x\|.",
+            color=BLACK,
+        )
+        # example_group_part6 = MathTex(
+        #     r"= |\alpha|\sum_{j=1}^{\infty}\frac{1}{2^j}\frac{|\xi_j|}{1+|\xi_j|}",
+        #     color=BLACK,
+        # )
+        # example_group_part7 = MathTex(
+        #     r"= |\alpha|\,\|x\|.",
+        #     color=BLACK,
+        # )
+
+        example_group = VGroup(*[
+            title_text,
+            # example_group_part1,
+            example_group_part2,
+            # example_group_part3,
+            example_group_part4,
+            example_group_part5,
+            # example_group_part6,
+            # example_group_part7,
+        ]).arrange(DOWN,buff=0.3)
+
+        rect_counter_example_part2 = RoundedRectangle(
+            corner_radius=0.3,
+            color= dark_purple,
+            fill_color=light_purple,
+            fill_opacity=0.2,
+            width=example_group.width + 1,
+            height=example_group.height + 0.8
+        ).move_to(example_group.get_center())
+
+        VGroup(example_group, rect_counter_example_part2).shift(0.5*DOWN)
+
+        rect_not_reverse = SurroundingRectangle(
+            not_reverse,
+            color=dark_purple,
+            buff=0.08,
+            stroke_width=3,
+            corner_radius=0.15
+        )
 
         self.play(
             Write(text_counterexample),
+        )
+        self.play(
             Write(not_reverse),
         )
         self.wait(0.5)
@@ -2291,22 +2362,33 @@ class Part1_Scene(MovingCameraScene):
             Create(rect_not_reverse),
         )
         self.play(
-            Write(counter_example),
-            run_time=1
+            Create(rect_counter_example_part1),
+            Write(title_text),
+            Write(counter_example1),
+        )
+        self.wait(0.5)
+        self.play(
+            Write(counter_example2),
+        )
+        self.wait(0.5)
+        counter_example3.move_to(counter_example2.get_center())
+        self.play(
+            TransformMatchingTex(counter_example2, counter_example3),
+        )
+        self.wait(0.5)
+        self.play(
+            TransformMatchingShapes(
+                VGroup(*[rect_counter_example_part1, counter_example1, counter_example3]),
+                VGroup(*[rect_counter_example_part2, example_group]),
+            )
         )
         self.wait(1)
-        self.play(
-            FadeOut(counter_example),
-            FadeOut(box),
-            FadeOut(group),
-            run_time=1
-        )
-        # self.wait(1)
         fade_out_list2 = VGroup(*[
             text_counterexample,
             rect_not_reverse,
             not_reverse,
-
+            rect_counter_example_part2, 
+            example_group,
         ])
         self.play(
             FadeOut(fade_out_list2),
