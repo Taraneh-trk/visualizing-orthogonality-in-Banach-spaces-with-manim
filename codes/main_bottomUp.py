@@ -284,16 +284,16 @@ class Part1_Scene(MovingCameraScene):
         # self.scene4(title)
 
         # from norm to metrics
-        # topic_number = 1
-        # title = self.scene3(topic_number,False)
-
-        # self.scene5(title)
-
-        # Cauchy Sequences : The Mystery of Nearness
-        topic_number = 2
+        topic_number = 1
         title = self.scene3(topic_number,False)
 
-        self.scene6(title)
+        self.scene5(title)
+
+        # Cauchy Sequences : The Mystery of Nearness
+        # topic_number = 2
+        # title = self.scene3(topic_number,False)
+
+        # self.scene6(title)
 
         # Banach Spaces : The Kingdom of Completeness
         # topic_number = 3
@@ -2032,7 +2032,79 @@ class Part1_Scene(MovingCameraScene):
         self.wait(1)
 
     def scene5_subScene4(self, title):
-        """definition of normed space"""
+        """definition of Metric space"""
+
+        text_normed_space_ = MathTex(r"\text{Normed space}",color=dark_green).move_to(title.get_center()+DOWN).scale(2)
+        text_normed_space_parts_ = MathTex(r"( \, ",r"X",r" \, , \, ",r"\|.\|",r" \, )",color=dark_blue,arg_separator="  ").move_to(text_normed_space_.get_center()+1.6*DOWN).scale(2)
+        rect_x_ = SurroundingRectangle(
+            text_normed_space_parts_[1],
+            color=dark_pink,        
+            buff=0.2,          
+            fill_opacity=0,    
+            stroke_width=3,    
+            corner_radius=0.15 
+        )
+        text_vector_space_ = MathTex(r"\text{Vector space}",color=dark_pink).move_to(text_normed_space_parts_.get_center()+2.6*DOWN+3*LEFT).scale(2)
+        rect_vec_x_ = SurroundingRectangle(
+            text_vector_space_,
+            color=dark_pink,        
+            buff=0.2,          
+            fill_opacity=0,    
+            stroke_width=3,    
+            corner_radius=0.15 
+        )
+        arrow_x_ = CurvedArrow(
+            start_point=text_normed_space_parts_[1].get_left()+0.2*LEFT,
+            end_point=rect_vec_x_.get_top()+0.2*UP,
+            angle=PI/2,
+            stroke_width=6,
+            color=dark_pink,
+            tip_length=0.25,
+            tip_shape=StealthTip
+        )
+        rect_d_ = SurroundingRectangle(
+            text_normed_space_parts_[3],
+            color=dark_orange,        
+            buff=0.2,          
+            fill_opacity=0,    
+            stroke_width=3,    
+            corner_radius=0.15 
+        )
+        text_distance_ = MathTex(r"\text{Norm}",color=dark_orange).move_to(text_normed_space_parts_.get_center()+2.6*DOWN+3*RIGHT).scale(2)
+        rect_distance_ = SurroundingRectangle(
+            text_distance_,
+            color=dark_orange,        
+            buff=0.2,          
+            fill_opacity=0,    
+            stroke_width=3,    
+            corner_radius=0.15 
+        )
+        arrow_d_ = CurvedArrow(
+            start_point=text_normed_space_parts_[3].get_right()+0.2*RIGHT,
+            end_point=rect_distance_.get_top()+0.2*UP,
+            angle=-PI/2,
+            stroke_width=6,
+            color=dark_orange,
+            tip_length=0.25,
+            tip_shape=StealthTip
+        )
+        recall_norm_space_all_shapes = VGroup(*[
+            text_normed_space_,
+            text_normed_space_parts_,
+            rect_x_,
+            text_vector_space_,
+            rect_vec_x_,
+            arrow_x_,
+            rect_d_,
+            text_distance_,
+            rect_distance_,
+            arrow_d_,
+        ])
+
+        self.play(
+            FadeIn(recall_norm_space_all_shapes),
+        )
+
         text_metric_space = MathTex(r"\text{Metric space}",color=dark_green).move_to(title.get_center()+DOWN).scale(2)
         text_metric_space_parts = MathTex(r"( \, ",r"X",r" \, , \, ",r"d(x,y) = \|x - y\|",r" \, )",color=dark_blue,arg_separator="  ").move_to(text_metric_space.get_center()+1.6*DOWN).scale(2)
         rect_x = SurroundingRectangle(
@@ -2088,44 +2160,167 @@ class Part1_Scene(MovingCameraScene):
             tip_shape=StealthTip
         )
 
+        recall_norm_space_all_shapes = VGroup(*[
+
+            VGroup(*[
+                text_normed_space_parts_,
+                rect_x_,
+                arrow_x_,
+                text_vector_space_,
+                rect_vec_x_,
+                rect_d_,
+                arrow_d_,
+                rect_distance_,
+            ]),
+
+            text_distance_,
+
+            text_normed_space_,
+        ])
+
+        recall_metric_space_all_shapes = VGroup(*[
+
+            VGroup(*[
+                text_metric_space_parts,
+                rect_x,
+                arrow_x,
+                text_vector_space,
+                rect_vec_x,
+                rect_d,
+                arrow_d,
+                rect_distance,
+            ]),
+
+            text_distance,
+            
+            text_metric_space,
+        ])
+
         self.play(
-            FadeIn(text_metric_space_parts),
+            # FadeTransformPieces(recall_norm_space_all_shapes, recall_metric_space_all_shapes),
+            # run_time=2
+            LaggedStart(
+                *[ Transform(recall_norm_space_all_shapes[i], recall_metric_space_all_shapes[i]) for i in range(3) ],
+                lag_ratio=2,
+            ),
+            # run_time=2
+        )
+
+        # self.play(
+        #     FadeIn(text_metric_space_parts),
+        # )
+        # self.wait(1)
+        # self.play(
+        #     # Write(text_metric_space_parts[1]),
+        #     Create(rect_x),
+        #     Create(arrow_x),
+        #     Create(rect_vec_x),
+        #     Write(text_vector_space),
+        # )
+        # self.wait(1)
+        # self.play(
+        #     # Write(text_metric_space_parts[3]),
+        #     Create(rect_d),
+        #     Create(arrow_d),
+        #     Create(rect_distance),
+        #     Write(text_distance),
+        # )
+        # self.wait(1)
+        # self.play(
+        #     Write(text_metric_space),
+        # )
+        self.wait(1)
+
+        # fade_out_list = [text_metric_space ,text_metric_space_parts, rect_x, 
+        #                  arrow_x, rect_vec_x, text_vector_space,
+        #                  rect_d, arrow_d, rect_distance, text_distance]
+        # self.play(
+        #     FadeOut(VGroup(*fade_out_list)),
+        # )
+
+        self.play(
+            FadeOut(recall_norm_space_all_shapes),
+        )
+
+        self.wait(1)
+
+        # counterexample
+        text_counterexample = MathTex(
+            r"\text{Normed Space}",
+            r"\xrightarrow{}",
+            r"\text{Metric Space}",
+            color=BLACK
+        ).scale(1.2)
+
+        not_reverse = MathTex(r"\not\leftarrow", color=BLACK).scale(1.2)
+
+        # قرار دادن زیر فلش
+        not_reverse.next_to(text_counterexample[1], DOWN, buff=0.05)
+
+        group = VGroup(text_counterexample, not_reverse).to_edge(UP)
+
+        rect_not_reverse = SurroundingRectangle(
+            not_reverse,
+            color=dark_orange,
+            buff=0.08,
+            stroke_width=3,
+            corner_radius=0.15
+        )
+
+        counter_example = MathTex(r"d(x,y)=\sum_{j=1}^{\infty}\frac{1}{2^j}\frac{|\xi_j-\eta_j|}{1+|\xi_j-\eta_j|}", color=BLACK)
+        
+        example_group = MathTex(r"""
+            \|\alpha x\|
+            = \sum_{j=1}^{\infty}\frac{1}{2^j}\frac{|\alpha\xi_j|}{1+|\alpha\xi_j|}
+            = \sum_{j=1}^{\infty}\frac{1}{2^j}\frac{|\alpha|\,|\xi_j|}{1+|\alpha|\,|\xi_j|}
+            \ne
+            \sum_{j=1}^{\infty}\frac{1}{2^j}\frac{|\alpha|\,|\xi_j|}{1+|\xi_j|}
+            = |\alpha|\sum_{j=1}^{\infty}\frac{1}{2^j}\frac{|\xi_j|}{1+|\xi_j|}
+            = |\alpha|\,\|x\|.
+        """, color=BLACK)
+        group, box = self.show_example(title, example_group,"Counterexample",True)
+        example_group_box = VGroup(box, group).next_to(group, DOWN, buff=0.8) #.shift(1.5*RIGHT)
+
+
+        self.play(
+            Write(text_counterexample),
+            Write(not_reverse),
+        )
+        self.wait(0.5)
+        self.play(
+            Create(rect_not_reverse),
+        )
+        self.play(
+            Write(counter_example),
+            run_time=1
+        )
+        self.wait(1)
+        self.play(
+            FadeOut(counter_example),
+            FadeOut(box),
+            FadeOut(group),
+            run_time=1
         )
         # self.wait(1)
-        self.play(
-            # Write(text_metric_space_parts[1]),
-            Create(rect_x),
-            Create(arrow_x),
-            Create(rect_vec_x),
-            Write(text_vector_space),
-        )
-        self.wait(1)
-        self.play(
-            # Write(text_metric_space_parts[3]),
-            Create(rect_d),
-            Create(arrow_d),
-            Create(rect_distance),
-            Write(text_distance),
-        )
-        self.wait(1)
-        self.play(
-            Write(text_metric_space),
-        )
-        self.wait(1)
+        fade_out_list2 = VGroup(*[
+            text_counterexample,
+            rect_not_reverse,
+            not_reverse,
 
-        fade_out_list = [text_metric_space ,text_metric_space_parts, rect_x, 
-                         arrow_x, rect_vec_x, text_vector_space,
-                         rect_d, arrow_d, rect_distance, text_distance]
+        ])
         self.play(
-            FadeOut(VGroup(*fade_out_list)),
+            FadeOut(fade_out_list2),
         )
+        self.wait(0.5)
+
 
         self.wait(1)
 
-        circle_metric = Circle(3.9,dark_pink,fill_color=dark_pink,fill_opacity=0.1)
-        text_metric_space = MathTex(r"\text{Metric space}",color=BLACK).move_to(title.get_center()+DOWN).scale(2)
-        text_norm_space = MathTex(r"\text{Normed space}",color=BLACK).move_to(title.get_center()+3.5*DOWN).scale(1.2)
-        circle_norm = Circle(2,dark_purple,fill_color=dark_purple,fill_opacity=0.1).shift(0.5*DOWN)
+        circle_metric = Circle(4,dark_pink,fill_color=dark_pink,fill_opacity=0.1)
+        text_metric_space = MathTex(r"\text{Metric space}",color=dark_pink).scale(2).move_to(circle_metric.get_center()+2.3*UP)
+
+        circle_norm = Circle(2.8,dark_purple,fill_color=dark_purple,fill_opacity=0.1).shift(1*DOWN)
+        text_norm_space = MathTex(r"\text{Normed space}",color=dark_purple).scale(1.5).move_to(circle_norm.get_center()+1.3*UP)
 
         self.play(
             Write(text_norm_space),
@@ -2133,8 +2328,7 @@ class Part1_Scene(MovingCameraScene):
         )
         self.wait(0.5)
         self.play(
-            Write(text_metric_space),
-            Create(circle_metric),
+            TransformFromCopy(VGroup(text_norm_space, circle_norm), VGroup(text_metric_space, circle_metric)),
         )
 
         self.wait(1)
@@ -4517,10 +4711,10 @@ class Part1_Scene(MovingCameraScene):
         # self.scene4_subScene4(title)
 
         # examples of norm
-        self.scene4_subScene5(title)
+        # self.scene4_subScene5(title)
 
         # normed space
-        # self.scene4_subScene6(title)
+        self.scene4_subScene6(title)
 
 
     def scene3(self,topic_number,first_time=False):
