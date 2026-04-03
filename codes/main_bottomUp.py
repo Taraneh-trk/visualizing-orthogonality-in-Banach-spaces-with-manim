@@ -826,7 +826,7 @@ class Part1_Scene(MovingCameraScene):
         zoom = 3
         # -------------------- Grid & Axes --------------------
         grid = NumberPlane(
-            x_range=[-7, 7, 0.5], 
+            x_range=[-9, 9, 0.5], 
             y_range=[-5, 6, 0.5], 
             background_line_style={
                 "stroke_opacity": 0.3,
@@ -836,7 +836,7 @@ class Part1_Scene(MovingCameraScene):
         )
 
         axes = Axes(
-            x_range=[-7, 7, 0.5], 
+            x_range=[-9, 9, 0.5], 
             y_range=[-5, 6, 0.5],
         )
 
@@ -922,8 +922,6 @@ class Part1_Scene(MovingCameraScene):
 
         # -------------------- Group Everything --------------------
         all_objects = VGroup(
-            grid,
-            axes,
             smooth_shape,
             text_x,
             limit_dot,
@@ -938,6 +936,7 @@ class Part1_Scene(MovingCameraScene):
         all_objects.scale(0.85).shift(0.5*DOWN+0.3*RIGHT)
 
         self.play(
+            FadeIn(grid),
             FadeIn(all_objects),
         )
         self.play(
@@ -961,7 +960,7 @@ class Part1_Scene(MovingCameraScene):
         self.wait(1)
 
         example_group = VGroup(counter_example, limit_counter_example).arrange(DOWN, buff=0.5)
-        group, box = self.show_example(title, example_group,"Counter Example",True)
+        group, box = self.show_example(title, example_group,"Counterexample",True)
         example_group_box = VGroup(box, group).next_to(cha_to_con, DOWN, buff=0.8) #.shift(1.5*RIGHT)
 
         self.play(
@@ -972,12 +971,16 @@ class Part1_Scene(MovingCameraScene):
         self.wait(1)
 
         fade_out_list = [
-            cha_to_con, example_group_box
+            cha_to_con, example_group_box,
         ]
         self.play(
             FadeOut(VGroup(*fade_out_list)),
             FadeOut(book_brain_img),
         )
+        self.play(
+            FadeOut(grid),
+        )
+        self.wait(1)
 
     def scene6_subScene5(self, title):
         book_brain_img = ImageMobject("images/find_img.png").scale(1.7).to_corner(DL).shift(0.3*DL+3*LEFT+UP*4)
@@ -1074,13 +1077,13 @@ class Part1_Scene(MovingCameraScene):
         # self.scene6_subScene3(title, title_cauchy_text)
 
         ## ( Convergence <-> Cauchy ) & Question
-        # self.scene6_subScene4(title)
+        self.scene6_subScene4(title)
 
         # Formal Definition of Completeness
         # self.scene6_subScene5(title)
 
         # complete intuition with shapes
-        self.scene6_subScene6(title)
+        # self.scene6_subScene6(title)
 
 
     def scene6_subScene6(self, title):
@@ -3089,9 +3092,9 @@ class Part1_Scene(MovingCameraScene):
         #     r"\end{aligned}"
         # ).set_color(BLACK).scale(0.85)
 
-        line1_3 = MathTex(r"1.\quad \|x\| = 0 \iff x = 0")
-        line2_3 = MathTex(r"2.\quad \|\lambda x\| = |\lambda| \, \|x\|")
-        line3_3 = MathTex(r"3.\quad \|x + y\| \le \|x\| + \|y\|")
+        line1_3 = MathTex(r"N1.\quad \|x\| = 0 \iff x = 0")
+        line2_3 = MathTex(r"N2.\quad \|\lambda x\| = |\lambda| \, \|x\|")
+        line3_3 = MathTex(r"N3.\quad \|x + y\| \le \|x\| + \|y\|")
         def_norm_line3 = VGroup(line1_3, line2_3, line3_3).arrange(DOWN, aligned_edge=LEFT, buff=0.4).set_color(BLACK).scale(0.9)
 
         def_norm_line4 = MathTex(r"\quad \text{for all } x,y \in X \text{ and } \lambda \in \mathbb{K}.").set_color(BLACK)
@@ -3846,21 +3849,21 @@ class Part1_Scene(MovingCameraScene):
 
         # draw number plane as background
         plane = NumberPlane(
-            y_range=[-5, 4, 1],
-            x_range=[-4, 7, 1],
+            y_range=[-6, 4, 1],
+            x_range=[-4, 6, 1],
             background_line_style={"stroke_color": axes_background_color, "stroke_opacity": 0.5},
-            y_length=6,
-            x_length=8,
-        ).move_to([0, 0, 0]+2*DOWN+2*RIGHT)
+            y_length=7,
+            x_length=7,
+        ).move_to([0, 0, 0]+2.5*DOWN+2*RIGHT)
 
         # draw axes on top
         axes = Axes(  # NumberLine
-            y_range=[-5, 4, 1],
-            y_length=6,
-            x_range=[-4, 7, 1],
-            x_length=8,
+            y_range=[-6, 4, 1],
+            y_length=7,
+            x_range=[-4, 6, 1],
+            x_length=7,
             axis_config={"color": dark_blue, "include_ticks": False, "tip_length":0.25, "tip_shape":StealthTip} # "tip_shape":ArrowTip.TIP_STYLE_ROUND
-        ).move_to([0, 0, 0]+2*DOWN+2*RIGHT)
+        ).move_to([0, 0, 0]+2.5*DOWN+2*RIGHT)
 
         # example of norm
 
@@ -4268,12 +4271,29 @@ class Part1_Scene(MovingCameraScene):
             FadeOut(norm_oo_short_form),
         )
 
+        plane2 = NumberPlane(
+            y_range=[-6, 5, 1],
+            x_range=[-5, 6, 1],
+            background_line_style={"stroke_color": axes_background_color, "stroke_opacity": 0.5},
+            y_length=7,
+            x_length=7,
+        ).move_to([0, 0, 0]+2*RIGHT)
+
+        # draw axes on top
+        axes2 = Axes(  # NumberLine
+            y_range=[-6, 5, 1],
+            y_length=7,
+            x_range=[-5, 6, 1],
+            x_length=7,
+            axis_config={"color": dark_blue, "include_ticks": False, "tip_length":0.25, "tip_shape":StealthTip} # "tip_shape":ArrowTip.TIP_STYLE_ROUND
+        ).move_to([0, 0, 0]+2*RIGHT)
+
         self.play(
-            VGroup(plane, axes).animate.shift(1.5*UP+1*LEFT),
+            FadeTransform(VGroup(plane, axes), VGroup(plane2, axes2)),
             run_time=1
         )
 
-        circle_static = Circle(radius=axes.x_axis.unit_size * 2.9,color=dark_terquise).move_to(axes.c2p(0,0))
+        circle_static = Circle(radius=axes2.x_axis.unit_size * 3,color=dark_terquise).move_to(axes2.c2p(0,0))
 
         text_p1 = MathTex(r"p = 1",color=dark_pink).move_to(brain_img.get_top()+2*UP).scale(2)
         rect_p1 = SurroundingRectangle(
@@ -4303,15 +4323,32 @@ class Part1_Scene(MovingCameraScene):
             corner_radius=0.15 
         )
 
-        polygon.shift(1.5*UP+1*LEFT)
+        points_polygan = [
+            axes2.c2p(3, 0),
+            axes2.c2p(0, 3),
+            axes2.c2p(-3, 0),
+            axes2.c2p(0, -3),
+        ]
+
+        polygon = Polygon(
+            *points_polygan,
+            stroke_color=dark_terquise,
+            stroke_width=4,
+            fill_opacity=0
+        ).move_to(axes2.c2p(0,0))
+
         self.play(
             Write(text_p1),
             Create(rect_p1),
         )
         self.wait(0.5)
+        norm1_name_text = MathTex(r"\text{Taxi Cab Norm}",color=dark_red).scale(1.5).next_to(rect_p1,UP).shift(0.7*RIGHT)
+        norm2_name_text = MathTex(r"\text{Euclidean Norm}",color=dark_red).scale(1.5).next_to(rect_p1,UP).shift(0.8*RIGHT)
+        normoo_name_text = MathTex(r"\text{Chebyshev Norm}",color=dark_red).scale(1.5).next_to(rect_p1,UP).shift(1*RIGHT)
         shape = polygon
         self.play(
             Create(shape),
+            Write(norm1_name_text),
         )
         self.wait(1)
 
@@ -4323,26 +4360,34 @@ class Part1_Scene(MovingCameraScene):
         self.wait(0.5)
         self.play(
             Transform(shape, circle_static),
+            TransformMatchingTex(norm1_name_text, norm2_name_text),
         )
         self.wait(1)
 
-        squre.shift(1.5*UP+1*LEFT)
+        squre = Polygon(
+            *[axes2.c2p(3,-3), axes2.c2p(3,3), axes2.c2p(-3,3), axes2.c2p(-3,-3)],
+            stroke_color=dark_terquise,
+            stroke_width=4,
+            fill_opacity=0
+        ).move_to(axes2.c2p(0,0))
         self.play(
             TransformMatchingTex(text_p2, text_pinf),
             TransformMatchingShapes(rect_p2, rect_pinf),
         )
         self.wait(0.5)
         self.play(
-            TransformMatchingShapes(shape, squre),
+            Transform(shape, squre),
+            TransformMatchingTex(norm2_name_text, normoo_name_text),
         )
         self.wait(1)
 
         self.play(
             FadeOut(rect_pinf),
             FadeOut(text_pinf),
-            FadeOut(squre),
-            FadeOut(axes),
-            FadeOut(plane),
+            FadeOut(shape),
+            FadeOut(normoo_name_text),
+            FadeOut(axes2),
+            FadeOut(plane2),
             FadeOut(brain_img),
         )
         self.wait(1)
