@@ -41,6 +41,8 @@ class TitleScene(Scene):
 
         box.move_to(group.get_center())
 
+        VGroup(group, box).shift(1*DOWN)
+
         if set_image==True:
             # ex_mark_1 = ImageMobject("images/ex_mark_1_img.png").move_to(box.get_top()+ 3*LEFT + 1.5*UP ).scale(3)
             # self.add(ex_mark_1) 
@@ -101,7 +103,160 @@ class TitleScene(Scene):
 
     def construct(self):
 
-        self.scene1()
+        # self.scene1()
 
-    def scene1(self):
-        ...
+        self.scene2()
+
+    def scene1_SubScene1(self,):
+        plane = NumberPlane(
+            y_range=[-4, 7, 0.5],
+            x_range=[-4, 7, 0.5],
+            background_line_style={"stroke_color": axes_background_color, "stroke_opacity": 0.5},
+            y_length=6,
+            x_length=8,
+        ).move_to([0, 0, 0]).shift(DOWN*2)
+        # self.wait(0.5)
+
+        # draw axes on top
+        axes = Axes(  # NumberLine
+            y_range=[-4, 5, 0.5],
+            y_length=6,
+            x_range=[-4, 7, 0.5],
+            x_length=8,
+            axis_config={"color": medium_blue, "include_ticks": False, "tip_length":0.25, "tip_shape":StealthTip} # "tip_shape":ArrowTip.TIP_STYLE_ROUND
+        ).move_to([0, 0, 0]).shift(DOWN*2)
+        # self.wait(0.5)
+
+        # draw vector in (0,0) - a
+        vector_a = Arrow(
+            start=axes.c2p(0,0),
+            end=axes.c2p(5,3),
+            buff=0,
+            stroke_width=6,
+            color=dark_green,
+            tip_length=0.25,
+            tip_shape=StealthTip
+        )
+        # self.wait(0.5)
+
+        # draw vector in (0,0) - b
+        vector_b = Arrow(
+            start=axes.c2p(0,0),
+            end=axes.c2p(-3,5),
+            buff=0,
+            stroke_width=6,
+            color=dark_red,
+            tip_length=0.25,
+            tip_shape=StealthTip
+        )
+        # self.wait(0.5)
+
+        # add texts
+        a_text = MathTex(r"\overrightarrow{a} = (a_1, a_2)",color=BLACK).move_to(vector_a.get_end()+0.5*RIGHT+0.5*UP)
+        # self.wait(0.5)
+
+        b_text = MathTex(r"\overrightarrow{b} = (b_1, b_2)",color=BLACK).move_to(vector_b.get_end()+0.5*LEFT+0.5*UP)
+        # self.wait(0.5)
+
+        inner_product_text = MathTex(" \\langle \\vec{a}, \\vec{b} \\rangle = a_1 b_1 + a_2 b_2 = 0 ",color=BLACK).move_to(plane.get_center() + 0.75*DOWN)
+        # self.wait(0.5)
+
+        self.play(
+            Create(plane, run_time=0.2),
+            Create(axes, run_time=0.2),
+            GrowArrow(vector_a, run_time=0.3, rate_func=rush_from),
+            FadeIn(a_text, shift=UP*0.2),
+            GrowArrow(vector_b, run_time=0.3, rate_func=rush_from),
+            FadeIn(b_text, shift=UP*0.2),
+            FadeIn(inner_product_text, shift=UP*0.2),
+        )
+
+        self.wait(1)
+
+        self.play(
+            FadeOut(plane),
+            FadeOut(axes),
+            FadeOut(vector_a),
+            FadeOut(vector_b),
+            FadeOut(a_text),
+            FadeOut(b_text),
+            FadeOut(inner_product_text),
+        )
+
+    def scene1(self,):
+        """scene 1: title screen"""
+
+        style = {
+            "font_size": 85, "color": BLACK
+        }
+
+        title_up = Tex('Kinds of', 'Orthogonality',arg_separator=" ",**style).to_edge(UP)
+        title_up[1].set_color(GREEN_E)
+        title_down = Tex('in', 'Banach Spaces',arg_separator=" ",**style).move_to(title_up.get_center()+DOWN*0.75)
+        title_down[1].set_color(GREEN_E)
+        title_part = MathTex('part','\\text{ 2}',color=BLACK, font_size=70).move_to(title_down.get_center() + 0.75*DOWN)
+        
+        
+        # 1-2 : add image
+
+        star1 = ImageMobject("images/star_1_img.png").move_to(title_up.get_center()+ 6*LEFT + 0.5*DOWN )
+        self.add(star1)
+
+        star2 = ImageMobject("images/star_1_img.png").move_to(title_down.get_center()+ 5*RIGHT + 1.5*DOWN )
+        self.add(star2)
+
+        self.play(
+            Write(title_up),
+            Write(title_down),
+            Write(title_part),
+        )
+
+        # 1-3 : add shapes
+
+        # draw axes on top
+        self.scene1_SubScene1()
+
+        self.wait(1)
+
+        self.play(
+            Unwrite(title_up),
+            Unwrite(title_down),
+            Unwrite(title_part),
+        )
+
+        self.remove(star1)
+        self.remove(star2)
+
+    def scene2(self,):
+        warning_text_part1 = MathTex(
+            r"X \text{ is a Vector space over } \mathbb{K},",
+            r"\text{where } \mathbb{K} \text{ is } \mathbb{R} \text{ or } \mathbb{C}.",
+            color=BLACK,
+        )
+        warning_text_part2 = MathTex(
+            r"(X \, , d) \text{ is a Metric space } ",
+            # r"\text{where } \mathbb{K} \text{ is } \mathbb{R} \text{ or } \mathbb{C}.",
+            color=BLACK,
+        )
+        warning_text_part3 = MathTex(
+            r"(X \, , \|.\|) \text{ is a Normed space } ",
+            # r"\text{where } \mathbb{K} \text{ is } \mathbb{R} \text{ or } \mathbb{C}.",
+            color=BLACK,
+        )
+        warning_text = VGroup(warning_text_part1, warning_text_part2, warning_text_part3).arrange(DOWN,buff=0.2)
+        bg_rect = Rectangle(
+            width=config.frame_width, 
+            height=config.frame_height, 
+            stroke_width=0, 
+            fill_color=light_red, 
+            fill_opacity=0.2
+        )
+        self.add(bg_rect)
+        self.play(
+            FadeIn(bg_rect, run_time=0.5),
+        )
+        self.show_warning(warning_text,True)
+        self.play(
+            FadeOut(bg_rect), 
+        )
+        self.wait(0.5)
