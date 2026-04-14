@@ -105,7 +105,326 @@ class TitleScene(Scene):
 
         # self.scene1()
 
-        self.scene2()
+        # self.scene2()
+
+        topic_number = 0
+        title = self.scene3(topic_number,False)
+
+        self.scene4(title)
+
+    def scene4(self,title):
+        title.shift(0.5*DOWN)
+        # self.play(
+        #     Write(title),
+        # )
+        # self.wait(0.5)
+        # self.play(
+        #     FadeOut(title),
+        # )
+
+
+        dot_formula_text = MathTex(
+            r"\vec{a} \, \cdot \, \vec{b}",
+            r" = ",
+            r"\|a\| \,",
+            r" \|b\| \, \cos(\theta)",
+            color=BLACK,
+        ).scale(1.2).move_to(title.get_center()+0.3*DOWN+0.15*LEFT)
+
+        box = SurroundingRectangle(
+            dot_formula_text,
+            color=dark_pink,        
+            buff=0.2,    
+            # fill_color=WHITE,      
+            fill_opacity=0.2,    
+            stroke_width=3,    
+            corner_radius=0.15 
+        )
+
+        plane = NumberPlane(
+            y_range=[-8, 8, 1],
+            x_range=[-10, 10, 1],
+            background_line_style={"stroke_color": axes_background_color, "stroke_opacity": 0.5},
+            y_length=9,
+            x_length=15,
+        ).move_to([0, 0, 0]+DOWN)
+
+        axes = Axes(  # NumberLine
+            y_range=[-8, 8, 1],
+            y_length=9,
+            x_range=[-10, 10, 1],
+            x_length=15,
+            axis_config={"color": dark_blue, "include_ticks": False, "tip_length":0.25, "tip_shape":StealthTip} # "tip_shape":ArrowTip.TIP_STYLE_ROUND
+        ).move_to([0, 0, 0]+DOWN)
+
+        arrow1 = Arrow(
+            start=axes.c2p(0,0),
+            end=axes.c2p(8,3),
+            buff=0,
+            stroke_width=6,
+            color=dark_red,
+            tip_length=0.25,
+            tip_shape=StealthTip
+        )
+
+        a_text = MathTex(r"\vec{a}",color=dark_red).scale(1.1).move_to(arrow1.get_center()+0.5*DOWN)
+
+        arrow2 = Arrow(
+            start=axes.c2p(0,0),
+            end=axes.c2p(1,5),
+            buff=0,
+            stroke_width=6,
+            color=dark_green,
+            tip_length=0.25,
+            tip_shape=StealthTip
+        )
+
+        b_text = MathTex(r"\vec{b}",color=dark_green).scale(1.1).move_to(arrow2.get_center()+0.6*UP+0.2*LEFT)
+
+        arc_ab = Angle(arrow1, arrow2, radius=0.7, color=BLACK, other_angle=False)
+        tetha_text = MathTex(r"\theta",color=BLACK).scale(1.1).next_to(arc_ab,UP).shift(0.4*RIGHT)
+
+        x = (23*8)/73
+        y = (-8/3)*x + (23/3)
+        dashed = DashedLine(
+            arrow2.get_end(), 
+            axes.c2p(x,y), 
+            color=dark_orange,
+        )
+        temp_arrow = Arrow(
+            axes.c2p(x,y), 
+            arrow2.get_end(),
+        )
+        arc_orthagenal = RightAngle(arrow1, temp_arrow , color=BLACK, length=0.3, quadrant=(-1,1))
+
+        arrow3 = Arrow(
+            start=axes.c2p(0,0),
+            end=axes.c2p(x,y),
+            buff=0,
+            stroke_width=12,
+            color=dark_terquise,
+            tip_length=0.25,
+            tip_shape=StealthTip
+        )
+
+        dot_formula_part1 = MathTex(
+            r"\|a\|",
+            color=dark_red,
+        ).scale(1.4).to_corner(UL)
+
+        dot_formula_part2 = MathTex(
+            r"\times",
+            color=BLACK,
+        ).scale(1.4).next_to(dot_formula_part1,RIGHT,buff=0.3)
+
+        dot_formula_part3 = MathTex(
+            r"\|b\| \, \cos(\theta)",
+            color=dark_terquise,
+        ).scale(1.4).next_to(dot_formula_part2,RIGHT,buff=0.3)
+
+        self.play(
+            Write(dot_formula_text),
+        )
+        self.wait(0.5)
+
+        self.play(
+            Create(box),
+        )
+
+        dot_and_box = VGroup(dot_formula_text, box)
+        self.play(
+            dot_and_box.animate.scale(0.9).to_edge(DOWN),
+        )
+
+        self.play(
+            Create(plane),
+            Create(axes),
+        )
+        self.wait(0.5)
+
+        self.play(
+            GrowArrow(arrow1),
+            Write(a_text),
+            GrowArrow(arrow2),
+            Write(b_text),
+            Create(arc_ab),
+            Write(tetha_text),
+        )
+        self.wait(0.5)
+        self.play(
+            Create(dashed),
+            Create(arc_orthagenal),
+        )
+        self.wait(0.5)
+        self.play(
+            GrowArrow(arrow3),
+        )
+        self.wait(0.5)
+
+        a_copy = arrow1.copy()
+        angle_diff = PI/2 - a_copy.get_angle()
+        a_copy.rotate(angle_diff, about_point=a_copy.get_start()).scale(0.8).next_to(dot_formula_part1,DOWN,buff=0.5)
+        result_copy = arrow3.copy()
+        result_copy.rotate(-result_copy.get_angle() + PI/2, about_point=ORIGIN).next_to(dot_formula_part3,DOWN,buff=0.5)
+
+        self.play(
+            TransformFromCopy(dot_formula_text[2], dot_formula_part1),
+            TransformFromCopy(arrow1, a_copy),
+        )
+        self.wait(0.3)
+        self.play(
+            Write(dot_formula_part2),
+        )
+        times_copy = dot_formula_part2.copy().shift(2*DOWN)
+        self.wait(0.3)
+        self.play(
+            TransformFromCopy(dot_formula_part2, times_copy),
+        )
+        self.wait(0.3)
+        self.play(
+            TransformFromCopy(dot_formula_text[3], dot_formula_part3),
+            TransformFromCopy(arrow3, result_copy),
+        )
+        self.wait(1)
+
+        fade_out_list = [
+            a_copy,
+            times_copy,
+            result_copy,
+            dot_formula_part1,
+            dot_formula_part2,
+            dot_formula_part3,
+            dot_formula_text,
+            box,
+            arrow1,
+            a_text,
+            arrow2,
+            b_text,
+            arc_ab,
+            tetha_text,
+            arrow3,
+            dashed,
+            arc_orthagenal,
+            axes,
+        ]
+        self.play(
+            FadeOut(VGroup(*fade_out_list)),
+        )
+        self.play(
+            FadeOut(plane),
+        )
+        self.wait(1)
+
+
+    def scene3(self,topic_number,first_time=False):
+        """scene 3: show topics list"""
+
+        title = Tex(
+            "Topics We Will Discuss In this Video ...",
+            color=GOLD_A, font_size=60
+        ).to_edge(UP)
+
+        if first_time:
+
+            bg_rect = Rectangle(
+                width=10*config.frame_width, 
+                height=10*config.frame_height, 
+                stroke_width=0, 
+                fill_color=topics_backGround_color, 
+                fill_opacity=1
+            )
+            self.add(bg_rect)
+            self.play(
+                FadeIn(bg_rect, run_time=0.5),
+            )
+
+            self.play(
+                Write(title),
+            )
+            
+            img = ImageMobject("images/topics.png")
+            img.scale(2.65)
+
+            self.play(
+                FadeIn(img), 
+                run_time=1
+            )
+
+            self.camera.frame.save_state()
+
+
+            rect_1 = Rectangle(width=3, height=5).move_to(img.get_left() + RIGHT * 1.4 +0.6*UP).round_corners(radius=0.3)
+            rect_2 = Rectangle(width=3, height=5).move_to(img.get_left() + RIGHT * 4.3 +0.6*UP).round_corners(radius=0.3)
+            rect_3 = Rectangle(width=5, height=5).move_to(img.get_left() + RIGHT * 8 +0.6*UP).round_corners(radius=0.3)
+            rect_4 = Rectangle(width=4, height=5).move_to(img.get_left() + RIGHT * 12.5 +0.6*UP).round_corners(radius=0.3)
+
+            zoom_rects = [rect_1, rect_2, rect_3, rect_4]
+
+            for rect in zoom_rects:
+
+                rect.set_stroke(GOLD_A, 3)
+
+                self.play(Create(rect), run_time=0.3)
+
+                self.play(
+                    self.camera.frame.animate
+                    .move_to(rect.get_center())
+                    .set(width=rect.width).set(height=rect.height),  
+                    run_time=1,
+                    rate_func=smooth
+                )
+
+                self.play(FadeOut(rect))
+
+            self.play(
+                Restore(self.camera.frame),
+                run_time=1,
+                rate_func=smooth
+            )
+
+            self.wait(1)
+
+            self.play(
+                FadeOut(img), 
+                FadeOut(title),
+            )
+            self.play(
+                FadeOut(bg_rect,run_time=0.5),
+            )
+
+        items_list = [  r"Inner Products \\ From Shadows to Structure", 
+                        # "From Norms to Metrics", 
+                        # r"Cauchy Sequences \\ The Mystery of Nearness", 
+                        # "Banach Spaces", 
+                     ] # \\ The Kingdom of Completeness
+
+        selected_title = Tex(items_list[topic_number], color=BLACK, font_size=80)
+        selected_title.move_to(title.get_center())
+        
+        return selected_title
+
+    def scene2(self,):
+        warning_text = MathTex(
+            r"X \text{ is a vector space over } \mathbb{K},",
+            r"\text{where } \mathbb{K} \text{ is } \mathbb{R} \text{ or } \mathbb{C}.",
+            color=BLACK,
+        )
+        bg_rect = Rectangle(
+            width=config.frame_width, 
+            height=config.frame_height, 
+            stroke_width=0, 
+            fill_color=light_red, 
+            fill_opacity=0.2
+        )
+        self.add(bg_rect)
+        self.play(
+            FadeIn(bg_rect, run_time=0.5),
+        )
+        self.show_warning(warning_text,True)
+        self.play(
+            FadeOut(bg_rect), 
+        )
+        self.wait(0.5)
 
     def scene1_SubScene1(self,):
         plane = NumberPlane(
