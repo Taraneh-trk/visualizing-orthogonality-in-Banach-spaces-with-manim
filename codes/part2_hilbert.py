@@ -21,6 +21,17 @@ dark_not_green = "#46A602"
 axes_background_color = "#D3D3D3"
 topics_backGround_color = "#0D113EFF"
 
+def projection_point(arrow1, arrow2):
+    # unit vector along arrow1
+    v1 = arrow1.get_vector()
+    u1 = v1 / np.linalg.norm(v1)
+
+    # projection length
+    v2 = arrow2.get_vector()
+    proj_len = np.dot(v2, u1)
+
+    return arrow1.get_start() + proj_len * u1
+
 class TitleScene(Scene):
 
     def show_warning(self, body: MathTex,set_image=False,return_not_show=False):
@@ -171,30 +182,39 @@ class TitleScene(Scene):
 
         b_text = MathTex(r"\vec{b}",color=dark_green).scale(1.1).move_to(arrow2.get_center()+0.6*UP+0.2*LEFT)
 
-        arc_ab = Angle(arrow1, arrow2, radius=0.7, color=BLACK, other_angle=False)
-        tetha_text = MathTex(r"\theta",color=BLACK).scale(1.1).next_to(arc_ab,UP).shift(0.4*RIGHT)
-
-        x = (23*8)/73
-        y = (-8/3)*x + (23/3)
-        dashed = DashedLine(
-            arrow2.get_end(), 
-            axes.c2p(x,y), 
-            color=dark_orange,
+        # x = (23*8)/73
+        # y = (-8/3)*x + (23/3)
+        dashed = always_redraw(
+            lambda: DashedLine(
+                arrow2.get_end(),
+                projection_point(arrow1, arrow2),
+                color=dark_orange,
+                dash_length=0.15
+            )
         )
-        temp_arrow = Arrow(
-            axes.c2p(x,y), 
-            arrow2.get_end(),
+        # temp_arrow = Arrow(
+        #     axes.c2p(x,y), 
+        #     arrow2.get_end(),
+        # )
+        arc_orthagenal = always_redraw(
+            lambda: RightAngle(
+                arrow1,
+                Line(projection_point(arrow1,arrow2), arrow2.get_end()),
+                length=0.3,
+                color=BLACK
+            )
         )
-        arc_orthagenal = RightAngle(arrow1, temp_arrow , color=BLACK, length=0.3, quadrant=(-1,1))
 
-        arrow3 = Arrow(
-            start=axes.c2p(0,0),
-            end=axes.c2p(x,y),
-            buff=0,
-            stroke_width=12,
-            color=dark_terquise,
-            tip_length=0.25,
-            tip_shape=StealthTip
+        arrow3 = always_redraw(
+            lambda: Arrow(
+                start=arrow1.get_start(),
+                end=projection_point(arrow1,arrow2),
+                buff=0,
+                stroke_width=12,
+                color=dark_terquise,
+                tip_length=0.25,
+                tip_shape=StealthTip
+            )
         )
 
         dot_formula_part1 = MathTex(
@@ -238,9 +258,29 @@ class TitleScene(Scene):
             Write(a_text),
             GrowArrow(arrow2),
             Write(b_text),
+        )
+
+        arc_ab = always_redraw(lambda:
+            Angle(
+                arrow1,
+                arrow2,
+                radius=0.7,
+                color=BLACK,
+                other_angle=False
+            )
+        )
+        tetha_text = always_redraw(lambda:
+            MathTex(r"\theta", color=BLACK)
+                .scale(1.1)
+                .next_to(arc_ab, UP)
+                .shift(0.5*RIGHT)
+        )
+
+        self.play(
             Create(arc_ab),
             Write(tetha_text),
         )
+
         self.wait(0.5)
         self.play(
             Create(dashed),
@@ -285,24 +325,38 @@ class TitleScene(Scene):
         neg_text = MathTex(r"-",color=dark_purple).scale(1.2).move_to(sign_text.get_center())
         zero_text = MathTex(r"0",color=dark_purple).scale(1.2).move_to(sign_text.get_center())
 
+        theta_lower = MathTex(r"\theta < 90^\circ",color=BLACK).scale(1.5).to_corner(UR)
+        theta_equal = MathTex(r"\theta = 90^\circ",color=BLACK).scale(1.5).to_corner(UR)
+        theta_upper = MathTex(r"\theta > 90^\circ",color=BLACK).scale(1.5).to_corner(UR)
+
         self.play(
             line_result.animate.shift(1*RIGHT),
             Write(sign_text),
         )
-        self.wait(0.1)
+        self.wait(0.5)
+        self.play(
+            Write(theta_lower),
+        )
         self.play(
             FadeOut(sign_text),
             TransformFromCopy(dot_formula_part3[1] , pos_text),
             run_time=1.5,
         )
-        self.wait(0.1)
+        self.wait(0.5)
         self.play(
+            FadeTransform(theta_lower, theta_equal),
+            Rotate(arrow2, angle = (PI/2 + arrow1.get_angle() - arrow2.get_angle()),
+                about_point = axes.c2p(0,0),
+                run_time = 3),
             FadeOut(pos_text),
             TransformFromCopy(dot_formula_part3[1] , zero_text),
-            run_time=1.5,
         )
-        self.wait(0.1)
+        self.wait(0.5)
         self.play(
+            FadeTransform(theta_equal, theta_upper),
+            Rotate(arrow2, angle = (PI/6),
+                about_point = axes.c2p(0,0),
+                run_time = 3),
             FadeOut(zero_text),
             TransformFromCopy(dot_formula_part3[1] , neg_text),
             run_time=1.5,
@@ -315,6 +369,7 @@ class TitleScene(Scene):
             times_copy,
             line_result,
             neg_text,
+            theta_upper,
             dot_formula_part1,
             dot_formula_part2,
             dot_formula_part3,
@@ -353,7 +408,7 @@ class TitleScene(Scene):
         # )
 
         # dot product explanation from shape and a.b=||a|| ||b|| cos(theta)
-        self.scene4_SubScene1(title)
+        # self.scene4_SubScene1(title)
 
         # dot product calculate formula
         self.scene4_SubScene2(title)
