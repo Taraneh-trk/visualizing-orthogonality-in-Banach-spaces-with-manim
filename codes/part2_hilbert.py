@@ -34,6 +34,85 @@ def projection_point(arrow1, arrow2):
 
 class TitleScene(Scene):
 
+    def ask_question(self,body, return_notShow=False,set_image=False):
+        """Show message with box to ask a question. """
+
+        title_text = Text("🤔Question", color=dark_pink, font_size=36)
+
+        group = VGroup(title_text, body).arrange(DOWN, buff=0.3)
+
+        box = RoundedRectangle(
+            corner_radius=0.3,
+            color=dark_pink,
+            fill_color=light_pink,
+            fill_opacity=0.2,
+            width=group.width + 1,
+            height=group.height + 0.8
+        )
+        
+
+        box.move_to(group.get_center())
+
+        if return_notShow :
+            list_images = []
+            if set_image==True:
+                ex_mark_2 = ImageMobject("images/think_img.png").move_to(box.get_top()+ 0.1*UP ).scale(2.2)
+                # self.add(ex_mark_2)
+                self.wait(1)
+
+                ex_mark_1 = ImageMobject("images/find_img.png").to_edge(DR).shift(0.5*LEFT).scale(2)
+                # self.add(ex_mark_1)
+                list_images+=[ex_mark_2, ex_mark_1]
+            return group, box, *list_images
+        
+        if set_image==True:
+            ex_mark_2 = ImageMobject("images/think_img.png").move_to(box.get_top()+ 0.1*UP ).scale(2)
+            self.add(ex_mark_2)
+            self.wait(1)
+
+        self.play(Create(box), Write(group))
+
+        self.wait(1)
+        if set_image==True:
+            ex_mark_1 = ImageMobject("images/find_img.png").to_edge(DR).shift(0.5*LEFT).scale(2)
+            self.add(ex_mark_1)
+
+        self.wait(2)
+        self.play(FadeOut(group), FadeOut(box))
+
+        if set_image==True:
+            self.play(
+                FadeOut(ex_mark_2),
+                FadeOut(ex_mark_1)
+            )
+
+    def show_minorPoint(self,body,return_notShow):
+        """Show message with box to ask a question. """
+
+        title_text = Text("Note", color=dark_blue, font_size=36)
+
+        group = VGroup(title_text, body).arrange(DOWN, buff=0.3)
+
+        box = RoundedRectangle(
+            corner_radius=0.3,
+            color=dark_blue,
+            fill_color=light_blue,
+            fill_opacity=0.2,
+            width=group.width + 1,
+            height=group.height + 0.8
+        )
+        
+
+        box.move_to(group.get_center())
+
+        if return_notShow :
+            return group, box
+
+        self.play(Create(box), Write(group))
+        self.wait(2)
+        self.play(FadeOut(group), FadeOut(box))
+        return group, box
+
     def show_warning(self, body: MathTex,set_image=False,return_not_show=False):
         """Show warning message with box"""
 
@@ -395,7 +474,242 @@ class TitleScene(Scene):
         self.wait(1)
 
     def scene4_SubScene2(self, title):
-        ...
+        self.wait(1)
+        image = ImageMobject("images/graduate_brain_img_mini.png").scale(2.5).to_corner(DL)
+        self.add(image)
+        a_vector = MathTex(
+            r"\vec{a} = ( ",  #0
+            r"a_1 ",          #1
+            r", ",            #2
+            r"a_2 ",          #3
+            r", \dots , ",    #4
+            r"a_n ",        #5
+            r")",             #6
+            color=BLACK,
+        ).scale(1.3).move_to(title.get_center()+0.5*DOWN)
+
+        a_vector.set_color_by_tex(r"a_1 ",dark_orange)
+        a_vector.set_color_by_tex(r"a_2 ",dark_orange)
+        a_vector.set_color_by_tex(r"a_n ",dark_orange)
+
+        b_vector = MathTex(
+            r"\vec{b} = ( ",    #0
+            r"b_1 ",            #1
+            r", ",              #2
+            r"b_2 ",            #3
+            r", \dots , ",      #4
+            r"b_n ",            #5
+            r")",               #6
+            color=BLACK,
+        ).scale(1.3).next_to(a_vector,DOWN,buff=0.5)
+        b_vector.set_color_by_tex(r"b_1 ",dark_pink)
+        b_vector.set_color_by_tex(r"b_2 ",dark_pink)
+        b_vector.set_color_by_tex(r"b_n ",dark_pink)
+
+        dot_product_resultpart1 = MathTex(
+            r"\vec{a} \, \cdot \vec{b}",
+            color=BLACK
+        ).scale(1.3).next_to(b_vector,DOWN,buff=1)
+
+        dot_product_resultpart2 = MathTex(
+            r" = \sum_{i=1}^{n} a_i b_i",
+           color=BLACK,
+        ).scale(1.3).next_to(dot_product_resultpart1, RIGHT,buff=0.3)
+
+        VGroup(dot_product_resultpart1, dot_product_resultpart2).shift(1.5*LEFT)
+
+        dot_product_resultpart3 = MathTex(
+            r" = ",     #0
+            r"a_1 ",    #1
+            r"b_1",     #2
+            r" + ",     #3
+            r"a_2 ",    #4
+            r"b_2",     #5
+            r" + ",     #6
+            r"\dots",   #7
+            r" + ",     #8
+            r"a_n ",    #9
+            r"b_n",     #10
+            color=BLACK
+        ).scale(1.3).next_to(dot_product_resultpart1,DOWN,buff=1).shift(3*RIGHT)
+
+        dot_product_resultpart3.set_color_by_tex(r"a_1 ", dark_orange)
+        dot_product_resultpart3.set_color_by_tex(r"a_2 ", dark_orange)
+        dot_product_resultpart3.set_color_by_tex(r"a_n ", dark_orange)
+
+        dot_product_resultpart3.set_color_by_tex(r"b_1", dark_pink)
+        dot_product_resultpart3.set_color_by_tex(r"b_2", dark_pink)
+        dot_product_resultpart3.set_color_by_tex(r"b_n", dark_pink)
+
+
+        self.play(
+            Write(a_vector),
+        )
+        self.play(
+            Write(b_vector),
+        )
+        self.wait(0.5)
+        self.play(
+            Write(dot_product_resultpart1),
+        )
+        self.wait(0.5)
+        self.play(
+            Write(dot_product_resultpart2),
+        )
+        self.wait(0.5)
+        self.play(
+            Write(dot_product_resultpart3[0]),
+        )
+        self.play(
+            TransformFromCopy(a_vector[1] , dot_product_resultpart3[1]),
+            TransformFromCopy(b_vector[1] , dot_product_resultpart3[2]),
+            Write(dot_product_resultpart3[3]),
+        )
+        self.play(
+            TransformFromCopy(a_vector[3] , dot_product_resultpart3[4]),
+            TransformFromCopy(b_vector[3] , dot_product_resultpart3[5]),
+            Write(dot_product_resultpart3[6]),
+        )
+        self.play(
+            TransformFromCopy(VGroup(a_vector[4], b_vector[4]), dot_product_resultpart3[7]),
+            Write(dot_product_resultpart3[8]),
+        )
+        self.play(
+            TransformFromCopy(a_vector[5] , dot_product_resultpart3[9]),
+            TransformFromCopy(b_vector[5] , dot_product_resultpart3[10]),
+        )
+
+        self.wait(1)
+
+        fadeout_list = [
+            a_vector,
+            b_vector,
+            dot_product_resultpart1,
+            dot_product_resultpart2,
+            dot_product_resultpart3,
+        ]
+        self.play(
+            FadeOut(VGroup(*fadeout_list)),
+            FadeOut(image),
+        )
+        self.wait(1)
+
+    def scene4_SubScene0(self, title):
+
+        self.wait(1)
+        dotimage = ImageMobject("images\cute_dot_product.png").scale(1.1).to_edge(DOWN).shift(0.7*DOWN)
+        self.add(dotimage)
+
+        recall = Text(" Recall the definition of the dot product ", color=BLACK, font="Palatino Linotype", font_size=50)
+        recall_box = SurroundingRectangle(
+            recall,
+            color=dark_terquise,        
+            buff=0.3,    
+            # fill_color=WHITE,      
+            fill_opacity=0.2,    
+            stroke_width=3,    
+            corner_radius=0.15 
+        )
+
+        VGroup(recall, recall_box).shift(2.8*UP)
+
+
+        self.play(
+            Create(recall_box),
+            Write(recall),
+        )
+        self.wait(0.5)
+        self.play(
+            FadeOut(VGroup(recall, recall_box)),
+            FadeOut(dotimage),
+        )
+        self.wait(1)
+
+    def scene4_SubScene3(self, title):
+        
+        function_text = MathTex(r"\text{ Function }", color=BLACK).scale(2).shift(2*UP)
+        function_box = RoundedRectangle(
+            corner_radius=0.3,
+            color= dark_terquise,
+            fill_color=dark_terquise,
+            fill_opacity=0.2,
+            width=function_text.width + 2,
+            height=function_text.height + 5
+        ).move_to(function_text.get_center()+2*DOWN)
+
+        wheelimage = ImageMobject("images\wheel.png").scale(0.4).move_to(function_box.get_bottom()+2.2*UP)
+
+        a_vec_text = MathTex(r"\vec{a}",color =dark_pink).scale(1.3).to_edge(LEFT).shift(1*RIGHT+1*UP)
+        a_vec = Arrow(a_vec_text.get_right(), function_box.get_left()+1*UP, color=dark_pink)
+        b_vec_text = MathTex(r"\vec{b}",color=dark_purple).scale(1.3).to_edge(LEFT).shift(1*RIGHT+1*DOWN)
+        b_vec = Arrow(b_vec_text.get_right(), function_box.get_left()+1*DOWN, color=dark_purple)
+        in_text = MathTex(
+            r"c",
+            r"\in \mathbb{R}",
+            color=BLACK
+        ).scale(1.3).to_edge(RIGHT).shift(0.5*LEFT)
+        in_vec = Arrow(function_box.get_right(), in_text.get_left(), color=dark_green)
+        # brace = BraceBetweenPoints(in_text.get_left(),in_text.get_left(),color=dark_green).shift(0.2*DOWN)
+        # scaler_text = MathTex(r"\text{scaler}",color=BLACK).next_to(brace, DOWN, buff=0.5)
+
+
+        self.play(
+            Create(function_box),
+        )
+        self.add(wheelimage)
+        self.play(
+            Write(function_text),
+        )
+
+        self.play(
+            Write(a_vec_text),
+            GrowArrow(a_vec),
+        )
+        self.play(
+            Write(b_vec_text),
+            GrowArrow(b_vec),
+        )
+        self.play(
+            Write(in_text),
+            GrowArrow(in_vec),
+        )
+        self.wait(1)
+
+        fadeout_list = [
+            function_box,
+            function_text,
+            a_vec,
+            a_vec_text,
+            b_vec,
+            b_vec_text,
+            in_text,
+            in_vec,
+        ]
+        self.play(FadeOut(wheelimage))
+        self.play(
+            FadeOut(VGroup(*fadeout_list)),
+        )
+
+        self.wait(1)
+
+    def scene4_subScene4(self,title):
+        
+        question_tex = MathTex("\\text{ What happens if we try to generalize this ? }").set_color(BLACK)
+        question_group, question_box, image_1, image_2 = self.ask_question(question_tex,True,True)
+
+        group_GroupBoxQuetion = VGroup(question_group,question_box)
+        group_GroupBoxQuetion.shift(1.5*UP)
+        image_1.scale(1.2).shift(3.5*DOWN)
+        self.add(image_1)
+        self.play(
+            FadeIn(group_GroupBoxQuetion)
+        )
+        self.wait(1)
+        self.play(
+            FadeOut(group_GroupBoxQuetion),
+            FadeOut(image_1),
+        )
+        self.wait(1)
 
     def scene4(self,title):
         title.shift(0.5*DOWN)
@@ -407,11 +721,18 @@ class TitleScene(Scene):
         #     FadeOut(title),
         # )
 
+        # recall you remember what dor product is ? 
+        # self.scene4_SubScene0(title)
+
         # dot product explanation from shape and a.b=||a|| ||b|| cos(theta)
         # self.scene4_SubScene1(title)
 
         # dot product calculate formula
-        self.scene4_SubScene2(title)
+        # self.scene4_SubScene2(title)
+
+        # self.scene4_SubScene3(title)
+
+        self.scene4_subScene4(title)
 
 
     def scene3(self,topic_number,first_time=False):
