@@ -112,17 +112,7 @@ class TitleScene(Scene):
 
         self.scene4(title)
 
-    def scene4(self,title):
-        title.shift(0.5*DOWN)
-        # self.play(
-        #     Write(title),
-        # )
-        # self.wait(0.5)
-        # self.play(
-        #     FadeOut(title),
-        # )
-
-
+    def scene4_SubScene1(self,title):
         dot_formula_text = MathTex(
             r"\vec{a} \, \cdot \, \vec{b}",
             r" = ",
@@ -218,7 +208,8 @@ class TitleScene(Scene):
         ).scale(1.4).next_to(dot_formula_part1,RIGHT,buff=0.3)
 
         dot_formula_part3 = MathTex(
-            r"\|b\| \, \cos(\theta)",
+            r"\|b\| \, ",
+            r"\cos(\theta)",
             color=dark_terquise,
         ).scale(1.4).next_to(dot_formula_part2,RIGHT,buff=0.3)
 
@@ -264,12 +255,14 @@ class TitleScene(Scene):
         a_copy = arrow1.copy()
         angle_diff = PI/2 - a_copy.get_angle()
         a_copy.rotate(angle_diff, about_point=a_copy.get_start()).scale(0.8).next_to(dot_formula_part1,DOWN,buff=0.5)
+        line_a = Line(a_copy.get_start(),a_copy.get_end(),color=dark_red)
         result_copy = arrow3.copy()
         result_copy.rotate(-result_copy.get_angle() + PI/2, about_point=ORIGIN).next_to(dot_formula_part3,DOWN,buff=0.5)
+        line_result = Line(result_copy.get_start(),result_copy.get_end(),color=dark_terquise)
 
         self.play(
             TransformFromCopy(dot_formula_text[2], dot_formula_part1),
-            TransformFromCopy(arrow1, a_copy),
+            TransformFromCopy(arrow1, line_a),
         )
         self.wait(0.3)
         self.play(
@@ -283,14 +276,45 @@ class TitleScene(Scene):
         self.wait(0.3)
         self.play(
             TransformFromCopy(dot_formula_text[3], dot_formula_part3),
-            TransformFromCopy(arrow3, result_copy),
+            TransformFromCopy(arrow3, line_result),
         )
         self.wait(1)
 
+        sign_text = MathTex(r"Sign",color=dark_purple).scale(1.2).next_to(line_result,LEFT,buff=0.2).shift(0.2*DOWN)
+        pos_text = MathTex(r"+",color=dark_purple).scale(1.2).move_to(sign_text.get_center())
+        neg_text = MathTex(r"-",color=dark_purple).scale(1.2).move_to(sign_text.get_center())
+        zero_text = MathTex(r"0",color=dark_purple).scale(1.2).move_to(sign_text.get_center())
+
+        self.play(
+            line_result.animate.shift(1*RIGHT),
+            Write(sign_text),
+        )
+        self.wait(0.1)
+        self.play(
+            FadeOut(sign_text),
+            TransformFromCopy(dot_formula_part3[1] , pos_text),
+            run_time=1.5,
+        )
+        self.wait(0.1)
+        self.play(
+            FadeOut(pos_text),
+            TransformFromCopy(dot_formula_part3[1] , zero_text),
+            run_time=1.5,
+        )
+        self.wait(0.1)
+        self.play(
+            FadeOut(zero_text),
+            TransformFromCopy(dot_formula_part3[1] , neg_text),
+            run_time=1.5,
+        )
+
+        self.wait(1)
+
         fade_out_list = [
-            a_copy,
+            line_a,
             times_copy,
-            result_copy,
+            line_result,
+            neg_text,
             dot_formula_part1,
             dot_formula_part2,
             dot_formula_part3,
@@ -314,6 +338,25 @@ class TitleScene(Scene):
             FadeOut(plane),
         )
         self.wait(1)
+
+    def scene4_SubScene2(self, title):
+        ...
+
+    def scene4(self,title):
+        title.shift(0.5*DOWN)
+        # self.play(
+        #     Write(title),
+        # )
+        # self.wait(0.5)
+        # self.play(
+        #     FadeOut(title),
+        # )
+
+        # dot product explanation from shape and a.b=||a|| ||b|| cos(theta)
+        self.scene4_SubScene1(title)
+
+        # dot product calculate formula
+        self.scene4_SubScene2(title)
 
 
     def scene3(self,topic_number,first_time=False):
