@@ -34,6 +34,39 @@ def projection_point(arrow1, arrow2):
 
 class TitleScene(Scene):
 
+    def show_definition(self, definition: MathTex, total_title, retrun_notShow=False, what_is_defined=""):
+        """Show definition with box"""
+
+        title_text = Text(f"⚙️📃Definition {what_is_defined}", color=dark_green, font_size=36)
+
+        group = VGroup(title_text, definition).arrange(DOWN, buff=0.3)
+        
+        box = RoundedRectangle(
+            corner_radius=0.3,
+            color=dark_green,
+            fill_color=light_green,
+            fill_opacity=0.15,
+            width=group.width + 1,
+            height=group.height + 0.8
+        )
+
+        new_position = total_title.get_center() + DOWN * (box.height)
+        group.move_to(new_position)
+        if group.is_off_screen():
+            self.auto_adjust_position(group)
+        
+        box.move_to(group.get_center())
+
+        if box.is_off_screen():
+            self.auto_adjust_position(box)
+        
+        if retrun_notShow :
+            return group,box
+        
+        self.play(Create(box), Write(group))
+        self.wait(2)
+        return group, box
+
     def ask_question(self,body, return_notShow=False,set_image=False):
         """Show message with box to ask a question. """
 
@@ -711,6 +744,85 @@ class TitleScene(Scene):
         )
         self.wait(1)
 
+    def scene4_SubScene5(self,title):
+        title_inner_product = Tex("Inner product", color=BLACK, font_size=80).to_edge(UP)
+        self.play(
+            Write(title_inner_product),
+        )
+        def_inner_product_line1 = MathTex(
+            r"\text{An inner product on } X \text{ is a function(mapping) }",
+            r"\langle \cdot , \cdot \rangle : X \times X \to \mathbb{K}"
+        ).set_color(BLACK)
+
+        def_inner_product_line2 = MathTex(
+            r"\text{satisfying}"
+        ).set_color(BLACK)
+
+        # def_inner_product_line3 = MathTex(
+        #     r"\begin{aligned}",
+        #     # r"1.& \quad \|x\| \ge 0 \\"
+        #     r"1.& \quad \|x\| = 0 \iff x = 0 \\",
+        #     r"2.& \quad \|\lambda x\| = |\lambda| \, \|x\| \\",
+        #     r"3.& \quad \|x + y\| \le \|x\| + \|y\|",
+        #     r"\end{aligned}"
+        # ).set_color(BLACK).scale(0.85)
+
+        line1 = MathTex(r"IP1.\quad \langle x + y , z \rangle = \langle x , z \rangle + \langle y , z \rangle",color=BLACK)
+        line2 = MathTex(r"IP2.\quad \langle \lambda x , y \rangle = \lambda \langle x , y \rangle",color=BLACK)
+        line3 = MathTex(r"IP3.\quad \langle x , y \rangle = \overline{\langle y , x \rangle}",color=BLACK)
+        line4 = MathTex(r"IP4.\quad \langle x , x \rangle \ge 0",color=BLACK)
+        line5 = MathTex(r"\phantom{IP4.}\quad \langle x , x \rangle = 0 \iff x = 0",color=BLACK)
+
+        def_inner_product_line3 = VGroup(line1, line2, line3, line4, line5).arrange(DOWN, aligned_edge=LEFT, buff=0.4).set_color(BLACK).scale(0.9)
+
+        def_inner_product_line4 = MathTex(
+            r"\quad \text{for all vectors }",
+            r"x, y, z \in X \text{ and all scalars } \lambda \in \mathbb{K} ."
+            ).set_color(BLACK)
+
+        def_inner_product = VGroup(def_inner_product_line1, def_inner_product_line2, def_inner_product_line3,def_inner_product_line4).arrange(DOWN, buff=0.3).scale(0.9)
+
+        def_inner_product.next_to(title.get_center(), DOWN)
+
+        inner_product_group, inner_product_box = self.show_definition(def_inner_product, title,True)
+        inner_product_group.shift(3.5*UP)
+        inner_product_box.move_to(inner_product_group.get_center())
+        inner_product_box_and_text_group = VGroup(inner_product_group,inner_product_box)
+        inner_product_box_and_text_group.scale(0.9)
+
+        self.play(
+            Create(inner_product_box),
+            Write(inner_product_group),
+        )
+        self.wait(1)
+        for line in [line1, line2, line3,line4, line5]:
+            rect = SurroundingRectangle(
+                line,
+                color=dark_red,      
+                buff=0.2,  
+                fill_opacity=0,
+                stroke_width=3,
+                corner_radius=0.15,
+            )
+            self.play(
+                Create(rect), 
+            )
+            self.wait(1)
+            self.play(
+                Uncreate(rect), 
+            )
+
+        self.wait(1)
+        self.play(
+            FadeOut(VGroup(*[
+                inner_product_group,
+                inner_product_box,
+                title_inner_product,
+            ]))
+        )
+        self.wait(1)
+
+
     def scene4(self,title):
         title.shift(0.5*DOWN)
         # self.play(
@@ -732,7 +844,9 @@ class TitleScene(Scene):
 
         # self.scene4_SubScene3(title)
 
-        self.scene4_subScene4(title)
+        # self.scene4_subScene4(title)
+
+        self.scene4_SubScene5(title)
 
 
     def scene3(self,topic_number,first_time=False):
