@@ -230,10 +230,27 @@ class TitleScene(Scene):
 
         # self.scene2()
 
-        topic_number = 0
+        # topic_number = 0
+        # title = self.scene3(topic_number,False)
+
+        # self.scene4(title)
+
+        topic_number = 1
         title = self.scene3(topic_number,False)
 
-        self.scene4(title)
+        self.scene5(title)
+
+    def scene5(self, title):
+        title.shift(0.5*DOWN)
+        # self.play(
+        #     Write(title),
+        # )
+        # self.wait(0.5)
+        # self.play(
+        #     FadeOut(title),
+        # )
+
+        
 
     def scene4_SubScene1(self,title):
         dot_formula_text = MathTex(
@@ -1198,6 +1215,97 @@ class TitleScene(Scene):
             ]))
         )
         self.wait(1)
+
+    def scene4_SubScene8(self, title):
+        text_normed_space = MathTex(r"\text{Inner product space}",color=dark_green).move_to(title.get_center()+DOWN).scale(2)
+        text_normed_space_parts = MathTex(r"( \, ",r"X",r" \, \, , \, \, ",r"\langle . , . \rangle",r" \, )",color=dark_blue,arg_separator="  ").move_to(text_normed_space.get_center()+1.6*DOWN).scale(2)
+        rect_x = SurroundingRectangle(
+            text_normed_space_parts[1],
+            color=dark_pink,        
+            buff=0.2,          
+            fill_opacity=0,    
+            stroke_width=3,    
+            corner_radius=0.15 
+        )
+        text_vector_space = MathTex(r"\text{Vector space}",color=dark_pink).move_to(text_normed_space_parts.get_center()+2.6*DOWN+3*LEFT).scale(2)
+        rect_vec_x = SurroundingRectangle(
+            text_vector_space,
+            color=dark_pink,        
+            buff=0.2,          
+            fill_opacity=0,    
+            stroke_width=3,    
+            corner_radius=0.15 
+        )
+        VGroup(text_vector_space, rect_vec_x).shift(0.3*LEFT)
+        arrow_x = CurvedArrow(
+            start_point=text_normed_space_parts[1].get_left()+0.2*LEFT,
+            end_point=rect_vec_x.get_top()+0.2*UP,
+            angle=PI/2,
+            stroke_width=6,
+            color=dark_pink,
+            tip_length=0.25,
+            tip_shape=StealthTip
+        )
+        rect_d = SurroundingRectangle(
+            text_normed_space_parts[3],
+            color=dark_orange,        
+            buff=0.2,          
+            fill_opacity=0,    
+            stroke_width=3,    
+            corner_radius=0.15 
+        )
+        text_distance = MathTex(r"\text{Inner product}",color=dark_orange).move_to(text_normed_space_parts.get_center()+2.6*DOWN+3*RIGHT).scale(2)
+        rect_distance = SurroundingRectangle(
+            text_distance,
+            color=dark_orange,        
+            buff=0.2,          
+            fill_opacity=0,    
+            stroke_width=3,    
+            corner_radius=0.15 
+        )
+        arrow_d = CurvedArrow(
+            start_point=text_normed_space_parts[3].get_right()+0.2*RIGHT,
+            end_point=rect_distance.get_top()+0.2*UP,
+            angle=-PI/2,
+            stroke_width=6,
+            color=dark_orange,
+            tip_length=0.25,
+            tip_shape=StealthTip
+        )
+
+        self.play(
+            Write(text_normed_space),
+        )
+        self.wait(1)
+        self.play(
+            Write(text_normed_space_parts[::2]),
+        )
+        self.wait(1)
+        self.play(
+            Write(text_normed_space_parts[1]),
+            Create(rect_x),
+            Create(arrow_x),
+            Create(rect_vec_x),
+            Write(text_vector_space),
+        )
+        self.wait(1)
+        self.play(
+            Write(text_normed_space_parts[3]),
+            Create(rect_d),
+            Create(arrow_d),
+            Create(rect_distance),
+            Write(text_distance),
+        )
+        self.wait(1)
+
+        fade_out_list = [text_normed_space, text_normed_space_parts, rect_x, 
+                         arrow_x, rect_vec_x, text_vector_space,
+                         rect_d, arrow_d, rect_distance, text_distance]
+        self.play(
+            FadeOut(VGroup(*fade_out_list)),
+        )
+
+        self.wait(1)
         
 
     def scene4(self,title):
@@ -1227,7 +1335,9 @@ class TitleScene(Scene):
 
         # self.scene4_SubScene6(title)
 
-        self.scene4_SubScene7(title)
+        # self.scene4_SubScene7(title)
+
+        self.scene4_SubScene8(title)
 
 
     def scene3(self,topic_number,first_time=False):
@@ -1307,7 +1417,7 @@ class TitleScene(Scene):
             )
 
         items_list = [  r"Inner Products \\ From Shadows to Structure", 
-                        # "From Norms to Metrics", 
+                        "From Inner product to Norm", 
                         # r"Cauchy Sequences \\ The Mystery of Nearness", 
                         # "Banach Spaces", 
                      ] # \\ The Kingdom of Completeness
