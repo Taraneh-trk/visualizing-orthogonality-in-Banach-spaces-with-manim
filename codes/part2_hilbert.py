@@ -823,6 +823,318 @@ class TitleScene(Scene):
         self.wait(1)
 
 
+    def scene4_SubScene6(self, title):
+        title_inner_product = Tex("Point 1", color=dark_blue, font_size=80).to_edge(UP)
+        self.play(
+            Write(title_inner_product),
+        )
+
+        ip3 = MathTex(
+            r"IP3.\quad \langle x , y \rangle = ",
+            r"\overline{\langle y , x \rangle}",
+            color=BLACK
+        ).scale(1.4).next_to(title_inner_product, DOWN,buff=1)
+        bar_part = ip3[1][0]
+        box1 = SurroundingRectangle(
+            bar_part,
+            color=dark_pink,        
+            buff=0.1,    
+            fill_opacity=0,    
+            stroke_width=3,    
+            corner_radius=0.15 
+        )
+        ip3_text = MathTex(r"\text{Complex conjugation}",color=dark_pink).scale(1.4).next_to(ip3, DOWN,buff=1)
+        box2 = SurroundingRectangle(
+            ip3_text,
+            color=dark_pink,        
+            buff=0.2,    
+            fill_opacity=0,    
+            stroke_width=3,    
+            corner_radius=0.15 
+        )
+
+        note_text = MathTex(
+            r"\text{If } \mathbb{K} = \mathbb{R} \text{ ,then } \langle x , y \rangle = \langle y , x \rangle" , 
+            color=dark_green,
+        ).scale(1.4).next_to(ip3_text, DOWN,buff=1)
+
+        self.play(
+            Write(ip3),
+        )
+        self.play(
+            Create(box1),
+        )
+        self.play(
+            Create(box2),
+            Write(ip3_text),
+        )
+        self.wait(1)
+        self.play(
+            Write(note_text),
+        )
+        self.wait(1)
+        fadeout_list = [
+            ip3,
+            box1,
+            box2,
+            ip3_text,
+            note_text,
+        ]
+        self.play(
+            FadeOut(VGroup(*fadeout_list)),
+        )
+        self.wait(1)
+
+        title_inner_product2 = Tex("Point 2", color=dark_blue, font_size=80).to_edge(UP)
+        self.play(
+            TransformMatchingTex(title_inner_product, title_inner_product2),
+        )
+        self.wait(0.2)
+
+        ip1 = MathTex(r"IP1.\quad \langle x + y , z \rangle = \langle x , z \rangle + \langle y , z \rangle",color=BLACK).scale(1.4)
+        ip2 = MathTex(r"IP2.\quad \langle \lambda x , y \rangle = \lambda \langle x , y \rangle",color=BLACK).scale(1.4)
+
+        ip_group = VGroup(ip1,ip2).arrange(DOWN, aligned_edge=LEFT, buff=0.4).scale(0.9).next_to(title_inner_product2, DOWN,buff=0.6)
+
+        line1 = MathTex(
+            r"\quad \langle \alpha x + \beta y , z \rangle ",
+            r" = \langle \alpha x , z \rangle + \langle \beta y , z \rangle ",
+            r"\quad (IP1)",
+            color=dark_green,
+        )
+        # line2 = MathTex(
+        #     r" = \quad \langle \alpha x , z \rangle + \langle \beta y , z \rangle ",
+        #     r"\quad IP1.",
+        #     color=dark_green,
+        # )
+        line3 = MathTex(
+            r" = \alpha \langle x , z \rangle + \beta \langle y , z \rangle ",
+            r"\quad (IP2)",
+            color=dark_green,
+        )
+
+        line_group = VGroup(line1,line3).arrange(DOWN, aligned_edge=LEFT, buff=0.4).scale(0.9).next_to(ip2, DOWN,buff=0.6)
+        line3.shift(2.5*RIGHT)
+
+        conclusion = MathTex(
+            r"\text{Inner product is }",
+            r"\text{linear}",
+            r"\text{ in the }",
+            r"\text{first factor}",
+            r"\text{.}",
+            color=BLACK
+        ).scale(1.5).to_edge(DOWN)
+        conclusion.set_color_by_tex(r"\text{linear}", dark_red)
+        conclusion.set_color_by_tex(r"\text{first factor}", dark_red)
+
+        self.play(
+            Write(ip_group),
+        )
+        self.play(
+            Write(line1[0]),
+        )
+        self.play(
+            Write(line1[2]),
+        )
+        self.play(
+            Write(line1[1]),
+        )
+        self.play(
+            Write(line3[1]),
+        )
+        self.play(
+            Write(line3[0]),
+        )
+        self.wait(0.5)
+        self.play(
+            Write(conclusion),
+        )
+
+        fadeout_list = [
+            ip_group,
+            line1,
+            line3,
+            conclusion,
+        ]
+        self.play(
+            FadeOut(VGroup(*fadeout_list)),
+        )
+        self.wait(1)
+
+        title_inner_product3 = Tex("Point 3", color=dark_blue, font_size=80).to_edge(UP)
+        self.play(
+            TransformMatchingTex(title_inner_product2, title_inner_product3),
+        )
+        self.wait(0.2)
+
+        line1 = MathTex(
+            r"\langle  x , \alpha y + \beta z \rangle ",
+            r" = \overline{ \langle  \alpha y + \beta z , x \rangle } ",
+            r"\quad (IP3)",
+            color=dark_green,
+        )
+        line2 = MathTex(
+            r" = \overline{ \alpha \langle y , x \rangle + \beta \langle z , x \rangle } ",
+            r"\quad (IP1 - IP2)",
+            color=dark_green,
+        )
+        line3 = MathTex(
+            r" = \overline{ \alpha } \overline{ \langle y , x \rangle } + \overline{ \beta } \overline{ \langle z , x \rangle } ",
+            color=dark_green,
+        )
+        line4 = MathTex(
+            r" = \overline{ \alpha } \langle x , y \rangle + \overline{ \beta } \, \langle x , z \rangle",
+            r"\quad (IP3)",
+            color=dark_green,
+        )
+        line_group = VGroup(line1,line2,line3,line4).arrange(DOWN, aligned_edge=LEFT, buff=0.4).scale(1.2).next_to(title_inner_product3, DOWN,buff=0.6)
+        line2.shift(2.8*RIGHT)
+        line3.shift(3*RIGHT)
+        line4.shift(3*RIGHT)
+
+        conclusion2_part1 = MathTex(
+            r"\text{Inner product is }",
+            r"\text{conjugate linear}",
+            r"\text{ in the }",
+            r"\text{second factor}",
+            r"\text{.}",
+            color=BLACK
+        ).scale(1.1).to_edge(DOWN)
+        conclusion2_part1.set_color_by_tex(r"\text{conjugate linear}", dark_red)
+        conclusion2_part1.set_color_by_tex(r"\text{second factor}", dark_red)
+
+        conclusion2_part2 = MathTex(
+            r"\text{Inner product is }",
+            r"\text{semi-linear}",
+            r"\text{ in the }",
+            r"\text{second factor}",
+            r"\text{.}",
+            color=BLACK
+        ).scale(1.1).to_edge(DOWN)
+        conclusion2_part2.set_color_by_tex(r"\text{semi-linear}", dark_red)
+        conclusion2_part2.set_color_by_tex(r"\text{second factor}", dark_red)
+
+        conclusion2 = MathTex(
+            r"\text{Inner product is }",
+            r"\text{half-linear}",
+            r"\text{ in the }",
+            r"\text{second factor}",
+            r"\text{.}",
+            color=BLACK
+        ).scale(1.1).to_edge(DOWN)
+        conclusion2.set_color_by_tex(r"\text{half-linear}", dark_red)
+        conclusion2.set_color_by_tex(r"\text{second factor}", dark_red)
+
+        self.play(
+            Write(line1[0]),
+        )
+        self.play(
+            Write(line1[2]),
+        )
+        self.play(
+            Write(line1[1]),
+        )
+        self.play(
+            Write(line2[1]),
+        )
+        self.play(
+            Write(line2[0]),
+        )
+        self.play(
+            Write(line3),
+        )
+        self.play(
+            Write(line4[1]),
+        )
+        self.play(
+            Write(line4[0]),
+        )
+        self.wait(1)
+        self.play(
+            Write(conclusion2_part1),
+        )
+        self.wait(0.5)
+        self.play(
+            TransformMatchingTex(conclusion2_part1, conclusion2_part2),
+        )
+        self.wait(0.5)
+        self.play(
+            TransformMatchingTex(conclusion2_part2, conclusion2),
+        )
+        self.wait(0.5)
+        fadeout_list = [
+            line_group,
+            conclusion2,
+        ]
+        self.play(
+            FadeOut(VGroup(*fadeout_list)),
+        )
+        self.wait(1)
+
+        title_inner_product4 = Tex("Conclusion", color=dark_blue, font_size=80).to_edge(UP)
+        self.play(
+            TransformMatchingTex(title_inner_product3, title_inner_product4),
+        )
+        self.wait(0.2)
+        conclusion.scale(0.8).next_to(title_inner_product4,DOWN,buff=0.8)
+        conclusion2.next_to(conclusion,DOWN,buff=0.5)
+        result_part1 = MathTex(
+            r"1 \text{ times linear }",
+            color=dark_orange,
+        ).next_to(conclusion2,DOWN,buff=0.5)
+        result_part2 = MathTex(
+            r"\frac{1}{2} \text{ times linear }",
+            color=dark_orange,
+        ).next_to(result_part1,DOWN,buff=0.5)
+        result_part3 = MathTex(
+            r"1 \, \frac{1}{2} \text{ times linear }",
+            color=dark_orange,
+        ).next_to(conclusion2,DOWN,buff=0.5)
+        result_part4 = MathTex(
+            r"\text{Sesquilinear}",
+            color=dark_red,
+        ).scale(2).next_to(conclusion2,DOWN,buff=0.5)
+
+        self.play(
+            Write(conclusion),
+        )
+        self.play(
+            Write(conclusion2),
+        )
+        self.wait(0.5)
+        self.play(
+           TransformFromCopy(conclusion[1], result_part1),
+        )
+        self.wait(0.5)
+        self.play(
+           TransformFromCopy(conclusion2[1], result_part2),
+        )
+        self.wait(0.5)
+        self.play(
+           TransformMatchingTex(VGroup(result_part1, result_part2), result_part3),
+        )
+        self.wait(0.5)
+        self.play(
+           TransformMatchingTex(result_part3, result_part4),
+        )
+        self.wait(0.5)
+        
+        fadeout_list = [
+            title_inner_product4,
+            conclusion,
+            conclusion2,
+            # result_part1,
+            # result_part2,
+            # result_part3,
+            result_part4,
+
+        ]
+        self.play(
+            FadeOut(VGroup(*fadeout_list)),
+        )
+        self.wait(1)
+        
+
     def scene4(self,title):
         title.shift(0.5*DOWN)
         # self.play(
@@ -846,7 +1158,9 @@ class TitleScene(Scene):
 
         # self.scene4_subScene4(title)
 
-        self.scene4_SubScene5(title)
+        # self.scene4_SubScene5(title)
+
+        self.scene4_SubScene6(title)
 
 
     def scene3(self,topic_number,first_time=False):
