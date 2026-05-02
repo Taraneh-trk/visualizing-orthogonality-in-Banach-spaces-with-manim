@@ -1133,6 +1133,71 @@ class TitleScene(Scene):
             FadeOut(VGroup(*fadeout_list)),
         )
         self.wait(1)
+
+    def scene4_SubScene7(self, title):
+        title_example = Tex("Example", color=dark_purple, font_size=80).to_edge(UP)
+        self.play(
+            Write(title_example),
+        )
+
+        exmaple1_part1 = MathTex(
+            r"\text{Euclidean inner product : } \langle \cdot, \cdot \rangle : \mathbb{K}^n \times \mathbb{K}^n \to \mathbb{K}",
+            color=dark_blue
+        )
+        exmaple1_part2 = MathTex(
+            r"\langle (w_1, \ldots, w_n), (z_1, \ldots, z_n) \rangle = w_1\overline{z_1} + \cdots + w_n\overline{z_n}.",
+            color=dark_blue
+        )
+        exmaple1_group = VGroup(exmaple1_part1, exmaple1_part2).arrange(DOWN,buff=0.5).scale(1.2).next_to(title_example,DOWN,buff=0.9)
+
+        box1 = SurroundingRectangle(
+            exmaple1_group,
+            color=dark_purple,        
+            buff=0.3,    
+            fill_opacity=0.1,    
+            stroke_width=3,    
+            corner_radius=0.15 
+        )
+
+        exmaple2_part1 = MathTex(
+            r"\langle \cdot, \cdot \rangle : C([-1,1]) \times C([-1,1]) \to \mathbb{R}",
+            color=dark_green
+        )
+        exmaple2_part2 = MathTex(
+            r"\langle f, g \rangle = \int_{-1}^{1} f(x)g(x) \, dx.",
+            color=dark_green
+        )
+        exmaple2_group = VGroup(exmaple2_part1, exmaple2_part2).arrange(DOWN,buff=0.5).scale(1.2).next_to(exmaple1_group,DOWN,buff=0.9)
+
+        box2 = SurroundingRectangle(
+            exmaple2_group,
+            color=dark_purple,        
+            buff=0.3,    
+            fill_opacity=0.1,    
+            stroke_width=3,    
+            corner_radius=0.15 
+        )
+
+        self.play(
+            Create(box1),
+            Write(exmaple1_group),
+        )
+        self.wait(1)
+        self.play(
+            Create(box2),
+            Write(exmaple2_group),
+        )
+        self.wait(1)
+        self.play(
+            FadeOut(VGroup(*[
+                title_example,
+                exmaple1_group,
+                box1,
+                exmaple2_group,
+                box2,
+            ]))
+        )
+        self.wait(1)
         
 
     def scene4(self,title):
@@ -1160,7 +1225,9 @@ class TitleScene(Scene):
 
         # self.scene4_SubScene5(title)
 
-        self.scene4_SubScene6(title)
+        # self.scene4_SubScene6(title)
+
+        self.scene4_SubScene7(title)
 
 
     def scene3(self,topic_number,first_time=False):
