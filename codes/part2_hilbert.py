@@ -240,6 +240,190 @@ class TitleScene(Scene):
 
         self.scene5(title)
 
+    def scene5_SubScene0(self, title):
+        x_def = MathTex(
+            r"y \in X",
+            color=BLACK
+        ).scale(1.2).to_corner(UL)
+        norm_def_from_inner_product = MathTex(
+            r"\|y\|",
+            r" = ",
+            r"\sqrt{\langle y , y \rangle}",
+            color=BLACK
+        ).scale(1.2).next_to(x_def,RIGHT,buff=1).shift(0.1*UP)
+
+        norm_def_box = SurroundingRectangle(
+            norm_def_from_inner_product,
+            color=dark_orange,        
+            buff=0.2,          
+            fill_opacity=0.1,    
+            stroke_width=3,    
+            corner_radius=0.15 
+        )
+
+        self.play(
+            Write(x_def),
+        )
+        self.play(
+            Create(norm_def_box),
+            Write(norm_def_from_inner_product),
+        )
+        self.wait(0.5)
+        self.play(
+            FadeOut(x_def),
+            VGroup(norm_def_box, norm_def_from_inner_product).animate.scale(1.2).to_corner(UL),
+        )
+        self.wait(0.5)
+
+        line1_n1 = MathTex(
+            r"\| y \| = 0 ",r"\;\Leftrightarrow\;",r" y = 0",
+            color=dark_green,
+        ).scale(1.6)
+        line2_n1 = MathTex(
+            r"\| y \| = 0",
+            r"\;\Leftrightarrow\;",
+            r" \sqrt{\langle y , y \rangle} = 0",
+            color=BLACK
+        )
+        line3_n1 = MathTex(
+            r"\;\Leftrightarrow\; \langle y , y \rangle = 0",
+            color=BLACK
+        )
+        line4_n1 = MathTex(
+            r"\;\Leftrightarrow\; y = 0",
+            r"\quad (IP4) ",
+            color=BLACK
+        )
+
+        n1_proof = VGroup(line2_n1, line3_n1, line4_n1).arrange(DOWN,buff=0.4,aligned_edge=LEFT).scale(1.5)
+        line3_n1.shift(2.5*RIGHT)
+        line4_n1.shift(2.5*RIGHT)
+        n1_proof_box = SurroundingRectangle(
+            n1_proof,
+            color=dark_green,        
+            buff=0.5,          
+            fill_opacity=0.1,    
+            stroke_width=3,    
+            corner_radius=0.15 
+        )
+        line1_n1.next_to(norm_def_box,RIGHT,buff=1)
+        VGroup(n1_proof, n1_proof_box).next_to(line1_n1,DOWN,buff=1)
+
+        self.play(
+            Create(n1_proof_box),
+            Write(line1_n1),
+        )
+        self.wait(0.5)
+        self.play(
+            TransformFromCopy(line1_n1[0], line2_n1[0]),
+        )
+        self.play(
+            Write(line2_n1[1]),
+            TransformFromCopy(norm_def_from_inner_product, line2_n1[2]),
+        )
+        self.wait(0.5)
+        self.play(
+            Write(line3_n1),
+        )
+        self.wait(0.5)
+        self.play(
+            Write(line4_n1[1]),
+        )
+        self.play(
+            Write(line4_n1[0]),
+        )
+        self.wait(1)
+
+        self.play(
+            FadeOut(VGroup(line1_n1, n1_proof, n1_proof_box)),
+        )
+
+        self.wait(1)
+
+        line1_n2 = MathTex(
+            r"\| \alpha \, y \| ",
+            r"= | \alpha | \| y \| ",
+            color=dark_green,
+        ).scale(1.6)
+        
+        line2_n2 = MathTex(
+            r"\| \alpha \, y \|",
+            r" = \sqrt{\langle \alpha \, y , \alpha \, y \rangle}",
+            color=BLACK,
+        )
+        line3_n2 = MathTex(
+            r" = \sqrt{\alpha \langle y , \alpha \, y \rangle}",
+            r"\quad (IP2)",
+            color=BLACK,
+        )
+        line4_n2 = MathTex(
+            r" = \sqrt{\alpha \overline{\alpha} \langle y , y \rangle}",
+            r"\quad \text{(Point 1-2)}",
+            color=BLACK,
+        )
+        line5_n2 = MathTex(
+            r" = \sqrt{| \alpha |^2 \langle y , y \rangle}",
+            r" = | \alpha | \, \| y \|",
+            color=BLACK,
+        )
+
+        n2_proof = VGroup(line2_n2, line3_n2, line4_n2, line5_n2).arrange(DOWN,buff=0.4,aligned_edge=LEFT).scale(1.2)
+        line3_n2.shift(2*RIGHT)
+        line4_n2.shift(2*RIGHT)
+        line5_n2.shift(2*RIGHT)
+        n2_proof_box = SurroundingRectangle(
+            n2_proof,
+            color=dark_green,        
+            buff=0.5,          
+            fill_opacity=0.1,    
+            stroke_width=3,    
+            corner_radius=0.15 
+        )
+        line1_n2.next_to(norm_def_box,RIGHT,buff=1)
+        VGroup(n2_proof, n2_proof_box).next_to(line1_n2, DOWN,buff=1)
+
+        self.play(
+            Write(line1_n2),
+        )
+        self.wait(0.5)
+        self.play(
+            Create(n2_proof_box),
+            TransformFromCopy(line1_n2[0], line2_n2[0]),
+        )
+        self.wait(0.5)
+        self.play(
+            TransformFromCopy(norm_def_from_inner_product, line2_n2[1]),
+        )
+        self.wait(0.5)
+        self.play(
+            Write(line3_n2[1]),
+        )
+        self.play(
+            Write(line3_n2[0]),
+        )
+        self.wait(0.5)
+        self.play(
+            Write(line4_n2[1]),
+        )
+        self.play(
+            Write(line4_n2[0]),
+        )
+        self.wait(0.5)
+        self.play(
+            Write(line5_n2[0]),
+        )
+        self.play(
+            Write(line5_n2[1]),
+        )
+        self.wait(1)
+
+        self.play(
+            FadeOut(VGroup(line1_n2, n2_proof, n2_proof_box)),
+        )
+
+        self.wait(1)
+
+
     def scene5(self, title):
         title.shift(0.5*DOWN)
         # self.play(
@@ -249,6 +433,8 @@ class TitleScene(Scene):
         # self.play(
         #     FadeOut(title),
         # )
+
+        self.scene5_SubScene0(title)
 
         
 
