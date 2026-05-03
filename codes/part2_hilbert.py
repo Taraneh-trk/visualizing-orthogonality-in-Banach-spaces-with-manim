@@ -670,7 +670,244 @@ class TitleScene(Scene):
         self.wait(1)
 
     def scene5_SubScene3(self, title):
-        ...
+        paralle_text_part2 = MathTex(
+            r"\|x + y\|^2 + \|x - y\|^2 = 2(\|x\|^2 + \|y\|^2)",
+            color=BLACK
+        ).scale(1.3)
+        paralle_text_part1 = MathTex(
+            r"\text{Parallelogram Equality}",
+            color=dark_terquise
+        ).scale(1.4)
+
+        p_group = VGroup(paralle_text_part1, paralle_text_part2).arrange(DOWN,buff=0.5)
+
+        box1 = SurroundingRectangle(
+            p_group,
+            color=dark_terquise,        
+            buff=0.3,    
+            fill_opacity=0.1,    
+            stroke_width=3,    
+            corner_radius=0.15 
+        )
+
+        p_group_all = VGroup(p_group, box1)
+        p_group_all.to_edge(UP)
+
+        self.play(
+            Create(box1),
+            Write(p_group),
+        )
+        self.wait(1)
+
+        line1 = MathTex(
+            r"\|x + y\|^2 + \|x - y\|^2 ",
+            r"= \langle x + y, x + y \rangle + \langle x - y, x - y \rangle",
+            color=BLACK
+        )
+
+        line2 = MathTex(
+            r"= \|x\|^2 + \|y\|^2 + \langle x, y \rangle + \langle y, x \rangle",
+            color=BLACK
+        )
+
+        line3 = MathTex(
+            r"+ \|x\|^2 + \|y\|^2 - \langle x, y \rangle - \langle y, x \rangle",
+            color=BLACK
+        )
+
+        line4 = MathTex(
+            r"= 2(\|x\|^2 + \|y\|^2) \, . ",
+            color=BLACK
+        )
+
+        proof_text = VGroup(line1, line2, line3, line4).arrange(DOWN, aligned_edge=LEFT)
+        line2.shift(3.5*RIGHT)
+        line3.shift(4*RIGHT)
+        line4.shift(3.5*RIGHT)
+
+        square = Square(side_length=0.3, color=BLACK, fill_opacity=0).move_to(line4.get_center()+2.2*RIGHT+1.1*DOWN)
+
+        box2 = SurroundingRectangle(
+            proof_text,
+            color=dark_purple,        
+            buff=0.3,    
+            fill_opacity=0.1,    
+            stroke_width=3,    
+            corner_radius=0.15 
+        )
+
+        VGroup(proof_text, box2).shift(1*DOWN)
+
+        self.play(
+            Create(box2),
+            Write(line1[0]),
+        )
+        self.wait(0.5)
+        self.play(
+            Write(line1[1]),
+        )
+        self.wait(0.5)
+        self.play(
+            Write(line2),
+        )
+        self.play(
+            Write(line3),
+        )
+        self.wait(0.5)
+        self.play(
+            Write(line4),
+            Create(square),
+        )
+
+        self.wait(1)
+
+        self.play(
+            FadeOut(VGroup(*[
+                proof_text,
+                box2,
+                square,
+            ])),
+        )
+
+        self.wait(1)
+
+        plane = NumberPlane(
+            y_range=[-6, 7, 1],
+            x_range=[-8, 8, 1],
+            background_line_style={"stroke_color": axes_background_color, "stroke_opacity": 0.5},
+            y_length=8,
+            x_length=13,
+        ).move_to([0, 0, 0]+3*DOWN)
+
+        # draw axes on top
+        axes = Axes(  # NumberLine
+            y_range=[-6, 7, 1],
+            y_length=8,
+            x_range=[-8, 8, 1],
+            x_length=13,
+            axis_config={"color": dark_blue, "include_ticks": False, "tip_length":0.25, "tip_shape":StealthTip} # "tip_shape":ArrowTip.TIP_STYLE_ROUND
+        ).move_to([0, 0, 0]+3*DOWN)
+        self.play(
+            p_group_all.animate.shift(0.2*UP),
+            Create(plane),
+            Create(axes)
+        )
+        self.wait(0.5)
+
+        arrow1 = Arrow(
+            start=axes.c2p(0,0),
+            end=axes.c2p(6,1),
+            buff=0,
+            stroke_width=6,
+            color=dark_red,
+            tip_length=0.25,
+            tip_shape=StealthTip
+        )
+
+        arrow_1_top = Arrow(
+            start=axes.c2p(1,3),
+            end=axes.c2p(7,4),
+            buff=0,
+            stroke_width=4,
+            color=dark_red,
+            tip_length=0.15,
+            tip_shape=StealthTip
+        )
+
+        a_text = MathTex(r"\vec{x}",color=dark_red).scale(1.1).move_to(arrow1.get_center()+0.5*DOWN)
+
+        arrow2 = Arrow(
+            start=axes.c2p(0,0),
+            end=axes.c2p(1,3),
+            buff=0,
+            stroke_width=6,
+            color=dark_green,
+            tip_length=0.25,
+            tip_shape=StealthTip
+        )
+
+        arrow_2_right = Arrow(
+            start=axes.c2p(6,1),
+            end=axes.c2p(7,4),
+            buff=0,
+            stroke_width=4,
+            color=dark_green,
+            tip_length=0.15,
+            tip_shape=StealthTip
+        )
+
+        b_text = MathTex(r"\vec{y}",color=dark_green).scale(1.1).move_to(arrow2.get_center()+0.6*UP+0.2*LEFT)
+
+        arrow_sum = Arrow(
+            start=axes.c2p(0,0),
+            end=axes.c2p(7,4),
+            buff=0,
+            stroke_width=4,
+            color=dark_purple,
+            tip_length=0.15,
+            tip_shape=StealthTip
+        )
+        sum_text = MathTex(r"\vec{x} + \vec{y}",color=dark_purple).scale(1.0).move_to(arrow_sum.get_center()+0.5*DOWN+0.3*RIGHT)
+
+        arrow_diff = Arrow(
+            start=axes.c2p(1,3),
+            end=axes.c2p(6,1),
+            buff=0,
+            stroke_width=4,
+            color=dark_orange,
+            tip_length=0.15,
+            tip_shape=StealthTip
+        )
+        diff_text = MathTex(r"\vec{x} - \vec{y}",color=dark_orange).scale(1.0).move_to(arrow_diff.get_center()+0.5*UP+0.3*LEFT)
+
+        self.play(
+            GrowArrow(arrow1),
+            Write(a_text),
+        )
+        # self.wait(0.5)
+        self.play(
+            GrowArrow(arrow2),
+            Write(b_text),
+        )
+
+        self.play(
+            GrowArrow(arrow_1_top),
+        )
+        self.play(
+            GrowArrow(arrow_2_right),
+        )
+        self.wait(0.5)
+
+        self.play(
+            GrowArrow(arrow_sum),
+            Write(sum_text),
+        )
+        self.play(
+            Create(arrow_diff),
+            Write(diff_text),
+        )
+
+        self.wait(1)
+
+        self.play(
+            FadeOut(VGroup(*[
+                plane, 
+                axes,
+                arrow1,
+                arrow2,
+                arrow_1_top,
+                arrow_2_right,
+                arrow_diff,
+                arrow_sum,
+                sum_text,
+                diff_text,
+                a_text,
+                b_text,
+                p_group_all,
+            ])),
+        )
+
+        self.wait(1)
 
     def scene5(self, title):
         title.shift(0.5*DOWN)
