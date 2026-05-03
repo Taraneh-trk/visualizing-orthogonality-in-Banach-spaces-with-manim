@@ -909,6 +909,49 @@ class TitleScene(Scene):
 
         self.wait(1)
 
+    def scene5_SubScene4(self, title):
+        circle_metric = Circle(4,dark_pink,fill_color=dark_pink,fill_opacity=0.1)
+        text_metric_space = MathTex(r"\text{Metric space}",color=dark_pink).scale(2).move_to(circle_metric.get_center()+2.3*UP)
+
+        circle_norm = Circle(2.8,dark_purple,fill_color=dark_purple,fill_opacity=0.1).shift(1*DOWN)
+        text_norm_space = MathTex(r"\text{Normed space}",color=dark_purple).scale(1.5).move_to(circle_norm.get_center()+1.3*UP)
+
+        circle_banach = Circle(1.8,dark_orange,fill_color=dark_orange,fill_opacity=0.1).shift(1.8*DOWN)
+        text_banach_space_part1 = MathTex(r"\text{Inner product} ",color=dark_orange)
+        text_banach_space_part2 = MathTex(r"\text{space} ",color=dark_orange)
+        text_banach_space = VGroup(text_banach_space_part1, text_banach_space_part2).arrange(DOWN,buff=0.2).move_to(circle_banach.get_center()+0.2*UP)
+
+        
+        self.play(
+            Write(text_norm_space),
+            Create(circle_norm),
+        )
+        self.wait(0.5)
+        self.play(
+            Write(text_banach_space),
+            TransformFromCopy(circle_norm, circle_banach),
+        )
+        self.wait(0.5)
+        self.play(
+            Write(text_metric_space),
+            TransformFromCopy(circle_norm, circle_metric),
+        )
+        self.wait(1)
+
+        fade_out_list = [
+            circle_metric,
+            text_metric_space,
+            text_norm_space,
+            circle_norm,
+            circle_banach,
+            text_banach_space,
+        ]
+        self.play(
+            FadeOut(VGroup(*fade_out_list)),
+        )
+
+        self.wait(1)
+
     def scene5(self, title):
         title.shift(0.5*DOWN)
         # self.play(
@@ -925,7 +968,9 @@ class TitleScene(Scene):
 
         # self.scene5_SubScene2(title)
 
-        self.scene5_SubScene3(title)
+        # self.scene5_SubScene3(title)
+
+        self.scene5_SubScene4(title)
 
     def scene4_SubScene1(self,title):
         dot_formula_text = MathTex(
