@@ -527,6 +527,149 @@ class TitleScene(Scene):
         self.wait(1)
 
     def scene5_SubScene1(self, title):
+        inner_text = MathTex(
+            r"\text{Inner product }",
+            r" \Longrightarrow ",
+            r"\text{ Norm}",
+            color=BLACK
+        )
+        back_text = MathTex(
+            r" \Longleftarrow ",
+            color=BLACK
+        ).move_to(inner_text[1].get_center()+0.5*DOWN)
+
+        title_example_group = VGroup(inner_text, back_text).move_to(title.get_center()) #aligned_edge=
+        
+        cross_image = ImageMobject("images/red_cross.png").scale(0.7).move_to(back_text.get_center())
+
+        back_box = SurroundingRectangle(
+            back_text,
+            color=dark_red,        
+            buff=0.3,          
+            fill_opacity=0.1,    
+            stroke_width=3,    
+            corner_radius=0.15 
+        )
+
+        exmaple1_part1 = MathTex(
+            r"\text{Euclidean inner product  } ",
+            color=dark_blue
+        )
+        ep3 = MathTex(
+            r"\langle (w_1, \ldots, w_n), (z_1, \ldots, z_n) \rangle = w_1\overline{z_1} + \cdots + w_n\overline{z_n}.",
+            color=dark_blue,
+        )
+        exmaple1_part2 = MathTex(
+            r"\text{Euclidean Norm  }",
+            color=dark_green
+        )
+        ep4 = MathTex(
+            r"\|x\| = (\xi_1 \overline{\xi_1} + \cdots + \xi_n \overline{\xi_n})^{1/2} = (|\xi_1|^2 + \cdots + |\xi_n|^2)^{1/2}",
+            color=dark_green,
+        )
+        exmaple1_group = VGroup(exmaple1_part1, ep3, exmaple1_part2, ep4).arrange(DOWN,buff=0.5).scale(1).next_to(title_example_group,DOWN,buff=1.5)
+
+        box1 = SurroundingRectangle(
+            exmaple1_group,
+            color=dark_pink,        
+            buff=0.3,    
+            fill_opacity=0.1,    
+            stroke_width=3,    
+            corner_radius=0.15 
+        )
+
+        self.play(
+            Write(inner_text),
+        )
+        self.wait(0.5)
+        self.play(
+            Create(box1),
+            Write(exmaple1_part1),
+            Write(ep3),
+        )
+        self.wait(0.5)
+        self.play(
+            Write(exmaple1_part2),
+            Write(ep4),
+        )
+        self.wait(0.5)
+        self.play(
+            FadeOut(exmaple1_group),
+            FadeOut(box1),
+        )
+        self.wait(0.5)
+        self.play(
+            Write(back_text),
+        )
+        self.wait(0.5)
+        self.add(cross_image)
+        self.wait(0.5)
+
+        exmaple1_part1 = MathTex(
+            r"\text{The } L^1 \text{ Norm is not induced by an inner product.  } ",
+            color=dark_blue
+        )
+        ep3 = MathTex(
+            r"\text{The } L^{\infty} \text{ Norm is not induced by an inner product.  } ",
+            color=dark_blue,
+        )
+        exmaple1_part2 = MathTex(
+            r"\text{The } L^{P} \text{ Norm (where } P \ne 2 \text{ ) } ",
+            color=dark_red
+        ).scale(1.3)
+        ep4 = MathTex(
+            r"\text{is not induced by an inner product. }",
+            color=dark_red
+        ).scale(1.3)
+        
+        exmaple1_group = VGroup(exmaple1_part1, ep3, exmaple1_part2, ep4).arrange(DOWN,buff=0.5).scale(1).next_to(title_example_group,DOWN,buff=1.5)
+
+        box1 = SurroundingRectangle(
+            exmaple1_group,
+            color=dark_pink,        
+            buff=0.3,    
+            fill_opacity=0.1,    
+            stroke_width=3,    
+            corner_radius=0.15 
+        )
+
+        self.play(
+            Create(box1),
+            Write(exmaple1_group),
+        )
+        self.wait(1)
+
+        self.play(
+            FadeOut(VGroup(*[
+                box1,
+                exmaple1_group,
+                inner_text,
+                back_text,
+            ])),
+            FadeOut(cross_image),
+        )
+
+        self.wait(1)
+
+    def scene5_SubScene2(self, title):
+        question_tex = MathTex(r"\text{ Which norms come from an inner product ? }").set_color(BLACK)
+        question_group, question_box, image_1, image_2 = self.ask_question(question_tex,True,True)
+
+        group_GroupBoxQuetion = VGroup(question_group,question_box)
+        group_GroupBoxQuetion.shift(1.5*UP)
+        image_1.scale(1.2).shift(3.5*DOWN)
+        self.add(image_1)
+        self.play(
+            FadeIn(group_GroupBoxQuetion)
+        )
+        self.wait(1)
+        self.play(
+            FadeOut(group_GroupBoxQuetion),
+            FadeOut(image_1),
+        )
+        self.wait(1)
+
+    def scene5_SubScene3(self, title):
         ...
 
     def scene5(self, title):
@@ -539,11 +682,13 @@ class TitleScene(Scene):
         #     FadeOut(title),
         # )
 
-        self.scene5_SubScene0(title)
+        # self.scene5_SubScene0(title)
 
-        self.scene5_SubScene1(title)
+        # self.scene5_SubScene1(title)
 
-        
+        # self.scene5_SubScene2(title)
+
+        self.scene5_SubScene3(title)
 
     def scene4_SubScene1(self,title):
         dot_formula_text = MathTex(
