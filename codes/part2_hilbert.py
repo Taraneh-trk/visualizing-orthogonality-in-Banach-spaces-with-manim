@@ -241,6 +241,10 @@ class TitleScene(Scene):
         self.scene5(title)
 
     def scene5_SubScene0(self, title):
+
+        book_image = ImageMobject("images/book_brain.png").scale(1.6).to_corner(DL).shift(0.4*LEFT)
+        self.add(book_image)
+
         x_def = MathTex(
             r"y \in X",
             color=BLACK
@@ -423,6 +427,107 @@ class TitleScene(Scene):
 
         self.wait(1)
 
+        line1_n3 = MathTex(
+            r"\| x + y \| ",
+            r"\le \| x \| +  \| y \| ",
+            color=dark_green,
+        ).scale(1.6)
+
+        line2_n3 = MathTex(
+            r"\| x + y \|^2 ",
+            color=BLACK,
+        )
+
+        line3_n3 = MathTex(
+            r" = \|x\|^2 + ",
+            r"\langle x ,y \rangle + \langle y , x \rangle ",
+            r"+ \|y\|^2",
+            r"\quad \text{(Point 1-2)}",
+            color=BLACK,
+        )
+
+        line4_n3_0 = MathTex(
+            r"\quad  \text{Triangle inequality for numbers}",
+            color=dark_red,
+        )
+
+        line4_n3 = MathTex(
+            r"\le \|x\|^2 + 2 \, | \langle x ,y \rangle | + \|y\|^2",
+            color=BLACK,
+        )
+
+        line5_n3 = MathTex(
+            r"\le \|x\|^2 + 2 \, \|x\| \, \|y\| + \|y\|^2",
+            r"\quad \text{Schwarz inequality}",
+            color=BLACK,
+        )
+
+        line6_n3 = MathTex(
+            r" = ( \|x\| + \|y\| )^2",
+            color=BLACK,
+        )
+
+        n3_proof = VGroup(line2_n3, line3_n3, line4_n3_0, line4_n3, line5_n3, line6_n3).arrange(DOWN,buff=0.4,aligned_edge=LEFT) #.scale(1.2)
+        # line3_n3.shift(2*RIGHT)
+        # line4_n3.shift(2*RIGHT)
+        # line5_n3.shift(2*RIGHT)
+        n3_proof_box = SurroundingRectangle(
+            n3_proof,
+            color=dark_green,        
+            buff=0.3,          
+            fill_opacity=0.1,    
+            stroke_width=3,    
+            corner_radius=0.15 
+        )
+        line1_n3.next_to(norm_def_box,RIGHT,buff=1)
+        VGroup(n3_proof, n3_proof_box).next_to(line1_n3, DOWN,buff=0.5).shift(1.5*LEFT)
+
+        self.play(
+            Write(line1_n3),
+        )
+        self.wait(0.5)
+        self.play(
+            Create(n3_proof_box),
+            TransformFromCopy(line1_n3[0], line2_n3[0]),
+        )
+        self.wait(0.5)
+        self.play(
+            Write(line3_n3[3]),
+        )
+        self.play(
+            Write(line3_n3[:3]),
+        )
+        self.wait(0.5)
+        line3_n3[1].set_color(dark_red)
+        self.play(
+            Write(line4_n3_0),
+        )
+        self.play(
+            Write(line4_n3),
+        )
+        self.wait(0.5)
+        self.play(
+            Write(line5_n3[1]),
+        )
+        self.play(
+            Write(line5_n3[0]),
+        )
+        self.wait(0.5)
+        self.play(
+            Write(line6_n3),
+        )
+        
+        self.wait(1)
+
+        self.play(
+            FadeOut(VGroup(line1_n3, n3_proof, n3_proof_box,norm_def_box , norm_def_from_inner_product)),
+            FadeOut(book_image),
+        )
+
+        self.wait(1)
+
+    def scene5_SubScene1(self, title):
+        ...
 
     def scene5(self, title):
         title.shift(0.5*DOWN)
@@ -435,6 +540,8 @@ class TitleScene(Scene):
         # )
 
         self.scene5_SubScene0(title)
+
+        self.scene5_SubScene1(title)
 
         
 
