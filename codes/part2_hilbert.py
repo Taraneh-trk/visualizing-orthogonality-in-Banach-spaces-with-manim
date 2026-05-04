@@ -46,7 +46,7 @@ class TitleScene(Scene):
             color=dark_green,
             fill_color=light_green,
             fill_opacity=0.15,
-            width=group.width + 1,
+            width=group.width + 0.6,
             height=group.height + 0.8
         )
 
@@ -235,10 +235,233 @@ class TitleScene(Scene):
 
         # self.scene4(title)
 
-        topic_number = 1
+        # topic_number = 1
+        # title = self.scene3(topic_number,False)
+
+        # self.scene5(title)
+
+        topic_number = 2
         title = self.scene3(topic_number,False)
 
-        self.scene5(title)
+        self.scene6(title)
+
+    def scene6_SubScene0(self, title):
+
+        # inner_product_text = MathTex(
+        #     r"\text{Inner product}",
+        #     color=BLACK
+        # ).scale(1.2).to_edge(LEFT).shift(0.2*RIGHT)
+        # box1 = SurroundingRectangle(
+        #     inner_product_text,
+        #     color=dark_orange,        
+        #     buff=0.3,    
+        #     fill_opacity=0.1,    
+        #     stroke_width=3,    
+        #     corner_radius=0.15 
+        # )
+
+        # norm_text = MathTex(
+        #     r"\text{Norm}",
+        #     color=BLACK
+        # ).scale(1.2)
+        # box2 = SurroundingRectangle(
+        #     norm_text,
+        #     color=dark_green,        
+        #     buff=0.3,    
+        #     fill_opacity=0.1,    
+        #     stroke_width=3,    
+        #     corner_radius=0.15 
+        # )
+        # arrow1 = Arrow(
+        #     start=box1.get_right()+0.1*RIGHT,
+        #     end=box2.get_left()+0.1*LEFT,
+        #     buff=0,
+        #     stroke_width=6,
+        #     color=dark_red,
+        #     tip_length=0.25,
+        #     tip_shape=StealthTip
+        # )
+        # inner_to_norm_text = MathTex(
+        #     r"\|x\| = \sqrt{\langle x , x \rangle}",
+        #     color=BLACK
+        # ).scale(1.6).move_to(arrow1.get_center()+2.5*UP)
+        # box4 = SurroundingRectangle(
+        #     inner_to_norm_text,
+        #     color=dark_red,        
+        #     buff=0.3,    
+        #     fill_opacity=0.1,    
+        #     stroke_width=3,    
+        #     corner_radius=0.15 
+        # )
+
+        # metric_text = MathTex(
+        #     r"\text{Metric}",
+        #     color=BLACK
+        # ).scale(1.2).to_edge(RIGHT).shift(0.4*LEFT)
+        # box3 = SurroundingRectangle(
+        #     metric_text,
+        #     color=dark_pink,        
+        #     buff=0.3,    
+        #     fill_opacity=0.1,    
+        #     stroke_width=3,    
+        #     corner_radius=0.15 
+        # )
+        # arrow2 = Arrow(
+        #     start=box2.get_right()+0.1*RIGHT,
+        #     end=box3.get_left()+0.1*LEFT,
+        #     buff=0,
+        #     stroke_width=6,
+        #     color=dark_terquise,
+        #     tip_length=0.25,
+        #     tip_shape=StealthTip
+        # )
+        # norm_to_metric_text = MathTex(
+        #     r"d(x,y) = \|x-y\|",
+        #     color=BLACK
+        # ).scale(1.6).move_to(arrow2.get_center()+2.5*DOWN)
+        # box5 = SurroundingRectangle(
+        #     norm_to_metric_text,
+        #     color=dark_terquise,        
+        #     buff=0.3,    
+        #     fill_opacity=0.1,    
+        #     stroke_width=3,    
+        #     corner_radius=0.15 
+        # )
+
+        # self.play(
+        #     Create(box1),
+        #     Write(inner_product_text),
+        # )
+        # self.play(
+        #     GrowArrow(arrow1),
+        # )
+        # self.play(
+        #     Create(box2),
+        #     Write(norm_text),
+        # )
+        # self.play(
+        #     Create(box4),
+        #     Write(inner_to_norm_text),
+        # )
+        # self.play(
+        #     GrowArrow(arrow2),
+        # )
+        # self.play(
+        #     Create(box3),
+        #     Write(metric_text),
+        # )
+        # self.play(
+        #     Create(box5),
+        #     Write(norm_to_metric_text),
+        # )
+
+        # self.wait(1)
+
+        # self.play(
+        #     FadeOut(VGroup(*[
+        #         box3,
+        #         metric_text,
+        #         box2,
+        #         norm_text,
+        #         box1,
+        #         inner_product_text,
+        #         arrow1,
+        #         arrow2,
+        #         box4,
+        #         inner_to_norm_text,
+        #         box5,
+        #         norm_to_metric_text,
+        #     ]))
+        # )
+
+        # self.wait(1)
+
+        title_hilbert = Tex("Hilbert space", color=BLACK, font_size=80)
+        title_hilbert.move_to(title.get_center())
+        self.play(Write(title_hilbert))
+
+        part1 = MathTex(
+            r"\text{A Hilbert space is an inner product space } (X,\langle . ,. \rangle) ",
+            # r"d(x,y)=\|x-y\|.",
+            color=BLACK
+        )
+        part2 = MathTex(
+            r"\text{ which is complete with respect to the metric}",
+            # r"d(x,y)=\|x-y\|.",
+            color=BLACK
+        )
+        part3 = MathTex(
+            r"\text{induced by its inner product .}",
+            # r"d(x,y)=\|x-y\|.",
+            color=BLACK
+        )
+        banach_definition = VGroup(part1, part2, part3).arrange(DOWN,buff=0.2)
+
+        group, box = self.show_definition(banach_definition,title,True)
+        banach_group = VGroup(group, box).scale(1.15)
+
+        self.play(
+            Create(box),
+            Write(group),
+        )
+
+        self.wait(1)
+
+        self.play(
+            FadeOut(banach_group),
+        )
+
+    def scene6_SubScene1(self, title):
+        book_image = ImageMobject("images/book_brain.png").scale(2).to_corner(DL).shift(0.4*LEFT+0.5*DOWN)
+        self.add(book_image)
+
+        norm_space = MathTex(r"(X\, , \langle . , . \rangle)",r"+",r"\text{Complete}",r"\text{ w.r.t }",r"\text{inner product induced metric}",color=BLACK).scale(1.1).move_to(title.get_center()+2*DOWN)
+        norm_space.set_color_by_tex(r"(X\, , \langle . , . \rangle)",color=dark_pink)
+        norm_space.set_color_by_tex(r"\text{Complete}",color=dark_pink)
+        brace = BraceBetweenPoints(norm_space.get_left()+0.5*DOWN, norm_space.get_right()+0.5*DOWN).set_color(dark_orange)
+        banach_space = MathTex(r"\text{Hilbert space}",color=dark_pink).scale(2).next_to(brace,DOWN)
+
+        self.play(
+            Write(norm_space[0]),
+        )
+        self.play(
+            Write(norm_space[1:]),
+        )
+        self.play(
+            GrowFromCenter(brace, run_time=0.8),
+        )
+        self.play(
+            Write(banach_space),
+        )
+        self.wait(1)
+        fade_out_list = [
+            norm_space,
+            banach_space,
+            brace,
+        ]
+        self.play(
+            FadeOut(VGroup(*fade_out_list)),
+            FadeOut(book_image),
+        )
+
+    def scene6_SubScene1(self, title):
+        ...
+
+    def scene6(self, title):
+        title.shift(0.5*DOWN)
+        # self.play(
+        #     Write(title),
+        # )
+        # self.wait(0.5)
+        # self.play(
+        #     FadeOut(title),
+        # )
+
+        # self.scene6_SubScene0(title)
+
+        # self.scene6_SubScene1(title)
+
+        self.scene6_SubScene2(title)
 
     def scene5_SubScene0(self, title):
 
@@ -2138,7 +2361,7 @@ class TitleScene(Scene):
 
         items_list = [  r"Inner Products \\ From Shadows to Structure", 
                         "From Inner product to Norm", 
-                        # r"Cauchy Sequences \\ The Mystery of Nearness", 
+                        r"Hilbert spaces \\ The Kingdom of Completeness", 
                         # "Banach Spaces", 
                      ] # \\ The Kingdom of Completeness
 
