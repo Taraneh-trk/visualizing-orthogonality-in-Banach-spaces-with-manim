@@ -444,8 +444,235 @@ class TitleScene(Scene):
             FadeOut(book_image),
         )
 
-    def scene6_SubScene1(self, title):
-        ...
+    def scene6_SubScene2(self, title):
+
+        metric_circle = Ellipse(
+            width=14, height=8,
+            color=dark_pink,
+            stroke_width=4,
+            # fill_opacity = 0.01,
+        )
+        
+        norm_circle = Ellipse(
+            width=12, height=6,
+            color=dark_purple,
+            stroke_width=4,
+            # fill_opacity = 0.01,
+        ).shift(DOWN * 0.3)
+        
+        banach_circle = Ellipse(
+            width=7, height=4,
+            color=dark_terquise,
+            stroke_width=4,
+            # fill_opacity = 0.01,
+        ).shift(RIGHT * 1.8+0.8*DOWN)
+        
+        inner_circle = Ellipse(
+            width=7, height=4,
+            color=dark_orange,
+            stroke_width=4,
+            # fill_opacity = 0.01,
+        ).shift(LEFT * 1.8+0.8*DOWN)
+        
+        # hilbert_circle = Circle(
+        #     radius=1.5,
+        #     color=dark_green,
+        #     stroke_width=3
+        # ).shift(UP * 0.2)
+        
+        # متن‌ها
+        metric_text = Text(" Metric space ", font_size=60, color=dark_pink).move_to(UP * 3.2)
+        
+        norm_text = Text(" Normed space ", font_size=48, color=dark_purple).move_to(UP * 1.8)
+        
+        banach_text = Text(" Banach space ", font_size=36, color=dark_terquise).move_to(RIGHT * 3.5 + 0.8*DOWN)
+        
+        inner_text = Text(" Inner product\n      space ", font_size=36, color=dark_orange, line_spacing=0.8).move_to(LEFT * 3.5 + 0.8*DOWN)
+        
+        hilbert_text = Text(" Hilbert space ", font_size=36, color=dark_green).move_to(DOWN * 0.5)
+
+        intersection = Intersection(banach_circle, inner_circle, color=dark_green, fill_opacity=0.1)
+
+        diff_banach = Difference(banach_circle, inner_circle, color=dark_terquise, fill_opacity=0.1)
+        
+        diff_inner = Difference(inner_circle, banach_circle, color=dark_orange, fill_opacity=0.1)
+
+        self.play(
+            Create(metric_circle),
+            Write(metric_text),
+        )
+        self.wait(0.5)
+        self.play(
+            Create(norm_circle),
+            Write(norm_text),
+        )
+        self.wait(0.5)
+        self.play(
+            Create(inner_circle),
+            Write(inner_text),
+        )
+        self.wait(0.5)
+        self.play(
+            Create(banach_circle),
+            Write(banach_text),
+        )
+        self.wait(0.5)
+        self.play(
+            Create(intersection),
+            Write(hilbert_text),
+        )
+        self.wait(1)
+        
+        self.play(
+            FadeOut(VGroup(*[
+                metric_circle,
+                norm_circle,
+                banach_circle,
+                inner_circle,
+                metric_text,
+                norm_text,
+                banach_text,
+                inner_text,
+                hilbert_text,
+                intersection,
+            ]))
+        )
+        self.wait(1)
+
+    def scene6_SubScene3(self, title):
+        plane = NumberPlane(
+            y_range=[-6, 10, 1],
+            x_range=[-10, 10, 1],
+            background_line_style={
+                "stroke_color": GRAY,
+                "stroke_opacity": 0.5
+            },
+            y_length=10,
+            x_length=15,
+        ).move_to(DOWN)
+        self.play(Create(plane))
+
+        title_example1 = Tex(
+            "Example",
+            color=dark_green, font_size=80
+        ).to_edge(UP)
+        self.play(
+            Write(title_example1),
+        )
+
+        space_c_1_1 = MathTex(r"\text{Space } C( [-1, 1] )",color=dark_pink).scale(1.5).move_to(title.get_center()+3*LEFT+1*DOWN)
+        definition_text = MathTex(r"g,",r"f : [-1, 1] \to \mathbb{R}",color=BLACK).scale(1.3).next_to(space_c_1_1,DOWN)
+        
+        banach_space = MathTex(r"\text{Banach space}",color=BLACK).scale(1.2).next_to(definition_text,DOWN,buff=0.5)
+        image_cross = ImageMobject("images/red_cross.png").scale(1.2).move_to(banach_space.get_center())
+
+        box1 = SurroundingRectangle(
+            banach_space,
+            color=dark_red,        
+            buff=0.3,    
+            fill_opacity=0.1,    
+            stroke_width=3,    
+            corner_radius=0.15 
+        )
+        hilbert_space = MathTex(r"\text{Hilbert space}",color=BLACK).scale(1.2).next_to(banach_space,RIGHT,buff=3)
+        image_cross2 = ImageMobject("images/red_cross.png").scale(1.2).move_to(hilbert_space.get_center())
+        box2 = SurroundingRectangle(
+            hilbert_space,
+            color=dark_red,        
+            buff=0.3,    
+            fill_opacity=0.1,    
+            stroke_width=3,    
+            corner_radius=0.15 
+        )
+        arrow1 = Arrow(
+            start=box1.get_right()+0.1*RIGHT,
+            end=box2.get_left()+0.1*LEFT,
+            buff=0,
+            stroke_width=6,
+            color=dark_red,
+            tip_length=0.25,
+            tip_shape=StealthTip
+        )
+
+        self.play(
+            Write(space_c_1_1),
+            Write(definition_text),
+        )
+        self.wait(0.5)
+        self.play(
+            Create(box1),
+            Write(banach_space),
+        )
+        self.wait(0.5)
+        self.add(image_cross)
+        self.wait(0.5)
+        self.play(
+            GrowArrow(arrow1),
+            Create(box2),
+            Write(hilbert_space),
+        )
+        self.wait(0.5)
+        self.add(image_cross2)
+        self.wait(0.5)
+
+        space_l_2_1 = MathTex(r"\text{Space } L^2( [-1, 1] )",color=dark_pink).scale(1.5).move_to(box1.get_center()+1.5*DOWN)
+        l2_norm = MathTex(
+            r"\|f\| = (\int_{-1}^{1} |f(x)|^2 \, dx)^{\frac{1}{2}}",
+            color=dark_orange,
+        ).next_to(space_l_2_1, RIGHT,buff=1.5)
+
+        hil2_space = MathTex(r"\text{Hilbert space}",color=BLACK).scale(1.2).next_to(space_l_2_1,DOWN,buff=0.5)
+        box3 = SurroundingRectangle(
+            hil2_space,
+            color=dark_green,        
+            buff=0.3,    
+            fill_opacity=0.1,    
+            stroke_width=3,    
+            corner_radius=0.15 
+        )
+        image_check = ImageMobject("images/tik .png").scale(0.1).next_to(hil2_space,RIGHT).shift(0.2*UP)
+        self.play(
+            Write(space_l_2_1),
+        )
+        self.wait(0.5)
+        self.play(
+            Write(l2_norm),
+        )
+        self.wait(0.5)
+        self.play(
+            Create(box3),
+            Write(hil2_space),
+        )
+        self.wait(0.5)
+        self.add(image_check)
+        self.wait(1)
+
+        self.play(
+            FadeOut(VGroup(*[
+                title_example1,
+                space_c_1_1,
+                space_l_2_1,
+                definition_text,
+                banach_space,
+                hil2_space,
+                hilbert_space,
+                box1,
+                box2,
+                box3,
+                arrow1,
+                l2_norm,
+            ])),
+            FadeOut(image_check),
+            FadeOut(image_cross),
+            FadeOut(image_cross2),
+        )
+        self.play(
+            FadeOut(plane),
+        )
+        self.wait(1)
+
+    def hilbert_animation(self, title):
+        ...    
 
     def scene6(self, title):
         title.shift(0.5*DOWN)
@@ -457,11 +684,15 @@ class TitleScene(Scene):
         #     FadeOut(title),
         # )
 
+        self.hilbert_animation(title)
+
         # self.scene6_SubScene0(title)
 
         # self.scene6_SubScene1(title)
 
-        self.scene6_SubScene2(title)
+        # self.scene6_SubScene2(title)
+
+        # self.scene6_SubScene3(title)
 
     def scene5_SubScene0(self, title):
 
