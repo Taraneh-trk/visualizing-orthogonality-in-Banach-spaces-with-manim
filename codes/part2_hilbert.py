@@ -251,6 +251,9 @@ class TitleScene(Scene):
         self.scene7(title)
 
     def scene7_SubScene0(self, title):
+        self.wait(1)
+        image = ImageMobject("images/graduate_brain_img_mini.png").scale(3).to_corner(DL)
+        self.add(image)
         or_in_hil_titlepart1 = Tex("Orthogonality in", color=BLACK, font_size=80)
         or_in_hil_titlepart2 = Tex("an inner product space", color=BLACK, font_size=80)
         or_in_hil_title = VGroup(or_in_hil_titlepart1, or_in_hil_titlepart2).arrange(DOWN, buff=0.3)
@@ -258,6 +261,54 @@ class TitleScene(Scene):
 
         self.play(
             Write(or_in_hil_title),
+        )
+        self.wait(1)
+        self.play(
+            FadeOut(image),
+            FadeOut(or_in_hil_title),
+        )
+        self.wait(1)
+
+    def scene7_SubScene1(self, title):
+        self.play(
+            Write(title),
+        )
+
+        orth_part0 = MathTex(
+            r"\text{An element }x \text{ of an inner product space } X",
+            color=BLACK,
+        )
+        orth_part1 = MathTex(
+            r"\text{ is said to be orthogonal to an element } y \in X \text{ if}",
+            color=BLACK,
+        )
+        orth_part2 = MathTex(
+            r"\langle x , y \rangle = 0",
+            color=BLACK,
+        )
+        orth_part3 = MathTex(
+            r"\text{We also say that } x \text{ and } y \text{ are orthogonal, and we write }",
+            color=BLACK,
+        )
+        orth_part4 = MathTex(
+            r"x \perp y .",
+            color=BLACK,
+        )
+        orth_def = VGroup(orth_part0, orth_part1, orth_part2, orth_part3, orth_part4).arrange(DOWN)
+
+        group, box = self.show_definition(orth_def,title ,True)
+        def_group = VGroup(group, box).scale(1.1).shift(1*UP)
+
+        self.play(
+            Create(box),
+            Write(group),
+        )
+        self.wait(1)
+
+        self.play(
+            FadeOut(title),
+            FadeOut(group),
+            FadeOut(box),
         )
         self.wait(1)
 
@@ -272,7 +323,9 @@ class TitleScene(Scene):
         #     FadeOut(title),
         # )
         
-        self.scene7_SubScene0(title)
+        # self.scene7_SubScene0(title)
+
+        self.scene7_SubScene1(title)
 
     def scene6_SubScene0(self, title):
 
