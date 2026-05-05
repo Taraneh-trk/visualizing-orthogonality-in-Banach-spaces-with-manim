@@ -240,10 +240,39 @@ class TitleScene(Scene):
 
         # self.scene5(title)
 
-        topic_number = 2
+        # topic_number = 2
+        # title = self.scene3(topic_number,False)
+
+        # self.scene6(title)
+
+        topic_number = 3
         title = self.scene3(topic_number,False)
 
-        self.scene6(title)
+        self.scene7(title)
+
+    def scene7_SubScene0(self, title):
+        or_in_hil_titlepart1 = Tex("Orthogonality in", color=BLACK, font_size=80)
+        or_in_hil_titlepart2 = Tex("an inner product space", color=BLACK, font_size=80)
+        or_in_hil_title = VGroup(or_in_hil_titlepart1, or_in_hil_titlepart2).arrange(DOWN, buff=0.3)
+        or_in_hil_title.move_to(title.get_center()+0.5*DOWN)
+
+        self.play(
+            Write(or_in_hil_title),
+        )
+        self.wait(1)
+
+    def scene7(self, title):
+
+        # title.shift(0.5*DOWN)
+        # self.play(
+        #     Write(title),
+        # )
+        # self.wait(0.5)
+        # self.play(
+        #     FadeOut(title),
+        # )
+        
+        self.scene7_SubScene0(title)
 
     def scene6_SubScene0(self, title):
 
@@ -672,7 +701,71 @@ class TitleScene(Scene):
         self.wait(1)
 
     def hilbert_animation(self, title):
-        ...    
+        plane = NumberPlane(
+            y_range=[-6, 10, 1],
+            x_range=[-10, 10, 1],
+            background_line_style={
+                "stroke_color": GRAY,
+                "stroke_opacity": 0.5
+            },
+            y_length=10,
+            x_length=15,
+        ).move_to(DOWN)
+
+        image = ImageMobject("images/david_hilbert.png").scale(0.35)
+
+        name_text = Text("David Hilbert",color=BLACK,font="mistral",font_size=75).next_to(image,UP,buff=0.3)
+        date_text = Text("1862 – 1943",color=BLACK,font="mistral",font_size=75).next_to(image,DOWN,buff=0.3)
+        text2 = Text("Hilbert’s \n23 Problems",color=dark_orange,font="mistral",font_size=65).next_to(image,RIGHT,buff=0.3).shift(1*UP)
+        text4 = Text("We must know\nwe will know",color=dark_red,font="mistral",font_size=65).next_to(image,RIGHT,buff=0.1).shift(1.7*DOWN)
+        text1 = Text("Hilbert spaces",color=dark_pink,font="mistral",font_size=65).next_to(image,LEFT,buff=0.3).shift(1*UP)
+        text3 = Text("Quantum \nmechanics",color=dark_terquise,font="mistral",font_size=65).next_to(image,LEFT,buff=0.3).shift(1*DOWN)
+
+
+        self.play(
+            Create(plane),
+        )
+        self.wait(0.5)
+        self.add(image)
+        self.wait(1)
+        self.play(
+            Write(name_text),
+            Write(date_text),
+        )
+        self.wait(1)
+        self.play(
+            Write(text1),
+        )
+        self.wait(1)
+        self.play(
+            Write(text2),
+        )
+        self.wait(1)
+        self.play(
+            Write(text3),
+        )
+        self.wait(1)
+        self.play(
+            Write(text4),
+        )
+        self.wait(1)
+
+        self.play(
+            FadeOut(VGroup(*[
+                name_text,
+                date_text,
+                text1,
+                text2,
+                text3,
+                text4,
+            ])),
+            FadeOut(image),
+        )
+        self.play(
+            FadeOut(plane),
+        )
+        self.wait(1)
+
 
     def scene6(self, title):
         title.shift(0.5*DOWN)
@@ -2593,7 +2686,7 @@ class TitleScene(Scene):
         items_list = [  r"Inner Products \\ From Shadows to Structure", 
                         "From Inner product to Norm", 
                         r"Hilbert spaces \\ The Kingdom of Completeness", 
-                        # "Banach Spaces", 
+                        "Orthogonality", 
                      ] # \\ The Kingdom of Completeness
 
         selected_title = Tex(items_list[topic_number], color=BLACK, font_size=80)
