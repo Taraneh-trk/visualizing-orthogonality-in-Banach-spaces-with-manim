@@ -800,9 +800,105 @@ class TitleScene(Scene):
     def scene8_SubScene6(self, title):
         ...
 
+    def scene8_SubScene7(self, title):
+        title_orth = Tex("Isosceles Orthogonality", color=BLACK, font_size=80).to_edge(UP)
+
+        year_text = Tex("1945 - Robert C. James",color=BLACK,font_size=65).next_to(title_orth, DOWN,buff=0.5)
+
+        robert_def_part1 = MathTex(
+            r"\text{Two elements } x \text{ and } y \text{ in a Banach space } X \text{ are said to}",
+            color=BLACK,
+        )
+        robert_def_part2 = MathTex(
+            r"\text{be orthogonal in the sense of Isosceles if and only if}",
+            color=BLACK,
+        )
+        robert_def_part3 = MathTex(
+            r"\|x + y \| = \|x - y\|",
+            color=BLACK,
+        )
+        robert_def_part4 = MathTex(
+            r"\text{and denote it by } x \perp_{I} y.",
+            color=BLACK,
+        )
+        robert_def = VGroup(robert_def_part1, robert_def_part2, robert_def_part3, robert_def_part4).arrange(DOWN,buff=0.3)
+        group, box = self.show_definition(robert_def, title_orth, True)
+        VGroup(group, box).scale(1.1).shift(1*UP)
+
+        self.play(
+            Write(title_orth),
+        )
+        self.wait(0.5)
+        self.play(
+            Write(year_text),
+        )
+        self.wait(0.5)
+        self.play(
+            FadeOut(year_text),
+        )
+        self.play(
+            Create(box),
+            Write(group),
+        )
+        self.wait(1)
+        self.play(
+            FadeOut(title_orth),
+            FadeOut(group),
+            FadeOut(box),
+        )
+        self.wait(1)
+
+    def scene8_SubScene10(self, title):
+        title_orth = Tex("Pythagorean Orthogonality", color=BLACK, font_size=80).to_edge(UP)
+
+        year_text = Tex("1945 - Robert C. James",color=BLACK,font_size=65).next_to(title_orth, DOWN,buff=0.5)
+
+        robert_def_part1 = MathTex(
+            r"\text{Two elements } x \text{ and } y \text{ in a Banach space } X \text{ are said to}",
+            color=BLACK,
+        )
+        robert_def_part2 = MathTex(
+            r"\text{be orthogonal in the sense of Pythagorean if and only if}",
+            color=BLACK,
+        )
+        robert_def_part3 = MathTex(
+            r"\|x - y \|^2 = \|x\|^2 + \|y\|^2",
+            color=BLACK,
+        )
+        robert_def_part4 = MathTex(
+            r"\text{and denote it by } x \perp_{P} y.",
+            color=BLACK,
+        )
+        robert_def = VGroup(robert_def_part1, robert_def_part2, robert_def_part3, robert_def_part4).arrange(DOWN,buff=0.3)
+        group, box = self.show_definition(robert_def, title_orth, True)
+        VGroup(group, box).scale(1.1).shift(1*UP)
+
+        self.play(
+            Write(title_orth),
+        )
+        self.wait(0.5)
+        self.play(
+            Write(year_text),
+        )
+        self.wait(0.5)
+        self.play(
+            FadeOut(year_text),
+        )
+        self.play(
+            Create(box),
+            Write(group),
+        )
+        self.wait(1)
+        self.play(
+            FadeOut(title_orth),
+            FadeOut(group),
+            FadeOut(box),
+        )
+        self.wait(1)
+
     def scene8(self, title):
 
-        # roberts
+        ########## roberts
 
         # self.scene8_SubScene0(title)
 
@@ -812,13 +908,29 @@ class TitleScene(Scene):
 
         # self.scene8_SubScene3(title)
 
-        # birkhof
+        ########## birkhof
 
         # self.scene8_SubScene4(title)
 
-        self.scene8_SubScene5(title)
+        # self.scene8_SubScene5(title)
 
         # self.scene8_SubScene6(title)
+
+        ########## isosceles
+
+        # self.scene8_SubScene7(title)
+
+        # self.scene8_SubScene8(title)
+
+        # self.scene8_SubScene9(title)
+
+        ########## pythagorean
+
+        self.scene8_SubScene10(title)
+
+        # self.scene8_SubScene11(title)
+
+        # self.scene8_SubScene12(title)
 
     def scene7_SubScene0(self, title):
         self.wait(1)
