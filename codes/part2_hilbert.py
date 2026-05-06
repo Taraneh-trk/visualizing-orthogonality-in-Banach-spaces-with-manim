@@ -248,7 +248,577 @@ class TitleScene(Scene):
         topic_number = 3
         title = self.scene3(topic_number,False)
 
-        self.scene7(title)
+        # self.scene7(title)
+
+        self.scene8(title)
+
+    def scene8_SubScene0(self, title):
+        self.wait(1)
+        image = ImageMobject("images/graduate_brain_img_mini.png").scale(3).to_corner(DL)
+        self.add(image)
+        or_in_hil_titlepart1 = Tex("Orthogonality in", color=BLACK, font_size=80)
+        or_in_hil_titlepart2 = Tex("Normed space - Banach space", color=BLACK, font_size=80)
+        or_in_hil_title = VGroup(or_in_hil_titlepart1, or_in_hil_titlepart2).arrange(DOWN, buff=0.3)
+        or_in_hil_title.move_to(title.get_center()+0.5*DOWN)
+
+        self.play(
+            Write(or_in_hil_title),
+        )
+        self.wait(1)
+        self.play(
+            FadeOut(image),
+            FadeOut(or_in_hil_title),
+        )
+        self.wait(1)
+
+    def scene8_SubScene1(self, title):
+        title_orth = Tex("Roberts Orthogonality", color=BLACK, font_size=80).to_edge(UP)
+
+        year_text = Tex("1934 - B. D. Roberts",color=BLACK,font_size=65).next_to(title_orth, DOWN,buff=0.5)
+
+        robert_def_part1 = MathTex(
+            r"\text{Two elements } x \text{ and } y \text{ in a Banach space } X \text{ are said to}",
+            color=BLACK,
+        )
+        robert_def_part2 = MathTex(
+            r"\text{be orthogonal in the sense of Roberts if and only if}",
+            color=BLACK,
+        )
+        robert_def_part3 = MathTex(
+            r"\|x + ky\| = \|x - ky\| \quad \text{for all } k \in \mathbb{R}",
+            color=BLACK,
+        )
+        robert_def_part4 = MathTex(
+            r"\text{and denote it by } x \perp_R y.",
+            color=BLACK,
+        )
+        robert_def = VGroup(robert_def_part1, robert_def_part2, robert_def_part3, robert_def_part4).arrange(DOWN,buff=0.3)
+        group, box = self.show_definition(robert_def, title_orth, True)
+        VGroup(group, box).scale(1.1).shift(1*UP)
+
+        self.play(
+            Write(title_orth),
+        )
+        self.wait(0.5)
+        self.play(
+            Write(year_text),
+        )
+        self.wait(0.5)
+        self.play(
+            FadeOut(year_text),
+        )
+        self.play(
+            Create(box),
+            Write(group),
+        )
+        self.wait(1)
+        self.play(
+            FadeOut(title_orth),
+            FadeOut(group),
+            FadeOut(box),
+        )
+        self.wait(1)
+
+    def scene8_SubScene2(self, title):
+        self.wait(0.5)
+        image = ImageMobject("images/book_brain.png").scale(2).to_corner(DL)
+        self.add(image)
+
+        title_orth = Tex("Roberts Orthogonality", color=dark_blue, font_size=60).to_corner(UL)
+
+        plane = NumberPlane(
+            y_range=[-1, 11, 1],
+            x_range=[-4, 10, 1],
+            background_line_style={"stroke_color": axes_background_color, "stroke_opacity": 0.5},
+            y_length=7,
+            x_length=9,
+        ).move_to([0, 0, 0] + 0.5 * DOWN)
+
+        axes = Axes(
+            y_range=[-1, 11, 1],
+            y_length=7,
+            x_range=[-4, 10, 1],
+            x_length=9,
+            axis_config={"color": dark_blue, "include_ticks": False, "tip_length": 0.25, "tip_shape": StealthTip}
+        ).move_to([0, 0, 0] + 0.5 * DOWN)
+
+        arrow1 = Arrow(
+            start=axes.c2p(0, 0),
+            end=axes.c2p(7, 2),
+            buff=0,
+            stroke_width=6,
+            color=dark_red,
+            tip_length=0.25,
+            tip_shape=StealthTip
+        )
+
+        arrow3 = Arrow(
+            start=axes.c2p(0, 0),
+            end=axes.c2p(-1, 5),
+            buff=0,
+            stroke_width=6,
+            color=dark_green,
+            tip_length=0.25,
+            tip_shape=StealthTip
+        )
+
+        arrow2 = Arrow(
+            start=axes.c2p(0, 0),
+            end=axes.c2p(-0.6, 3),
+            buff=0,
+            stroke_width=6,
+            color=dark_purple,
+            tip_length=0.25,
+            tip_shape=StealthTip
+        )
+
+        arc_orthogonal = RightAngle(
+            arrow1,
+            arrow3,
+            length=0.3,
+            color=BLACK
+        )
+
+        a_text = MathTex(r"\vec{x}", color=dark_red).scale(1.2).next_to(
+            axes.c2p(7, 2), direction=DOWN + RIGHT, buff=0.15
+        )
+
+        b_text = MathTex(r"\vec{y}", color=dark_purple).scale(1.2).next_to(
+            axes.c2p(-0.6, 3), direction=LEFT, buff=0.15
+        )
+
+        bk_text = MathTex(r"k\,\vec{y}", color=dark_green).scale(1.2).next_to(
+            axes.c2p(-1, 5), direction=LEFT, buff=0.15
+        )
+
+        corner = (6, 7)
+
+        side3 = DashedLine(
+            axes.c2p(7, 2),
+            axes.c2p(*corner),
+            color=dark_green,
+            stroke_width=4,
+            dash_length=0.15
+        )
+
+        side4 = DashedLine(
+            axes.c2p(-1, 5),
+            axes.c2p(*corner),
+            color=dark_red,
+            stroke_width=4,
+            dash_length=0.15
+        )
+
+        dashed1 = Arrow(
+            start=axes.c2p(0, 0),
+            end=axes.c2p(*corner),
+            buff=0,
+            stroke_width=4,
+            color=dark_orange,
+            tip_length=0.25,
+            tip_shape=StealthTip
+        )
+        dashed2 = Arrow(
+            start=axes.c2p(-1, 5),
+            end=axes.c2p(7, 2),
+            buff=0,
+            stroke_width=4,
+            color=dark_pink,
+            tip_length=0.25,
+            tip_shape=StealthTip
+        )
+
+        diag_text1 = MathTex(r"\vec{x} + k\,\vec{y}", color=dark_orange).scale(1.1).next_to(
+            axes.c2p(*corner), direction=RIGHT, buff=0.15
+        )
+        diag_text2 = MathTex(r"\vec{x} - k\,\vec{y}", color=dark_pink).scale(1.1).next_to(
+            axes.c2p(7, 2), direction=RIGHT, buff=0.15
+        ).shift(0.2*UP)
+
+        all_shapes = VGroup(*[
+            plane,
+            axes,
+            arrow1,
+            arrow2,
+            arrow3,
+            dashed1,
+            dashed2,
+            side3,
+            side4,
+            a_text,
+            b_text,
+            bk_text,
+            diag_text1,
+            diag_text2,
+            arc_orthogonal
+        ]).shift(2*RIGHT)
+
+        roberts = MathTex(
+            r"\|x + ky\| ",r"= ",r"\|x - ky\|",
+            color = BLACK,
+        )
+        roberts.set_color_by_tex(r"\|x + ky\| ",dark_orange)
+        roberts.set_color_by_tex(r"\|x - ky\|",dark_pink)
+        box1 = SurroundingRectangle(
+            roberts,
+            color=dark_blue,        
+            buff=0.2,    
+            fill_opacity=0.1,    
+            stroke_width=3,    
+            corner_radius=0.15 
+        )
+        VGroup(roberts, box1).scale(1.2).to_corner(UL).shift(1*DOWN)
+
+        self.play(
+            Write(title_orth),
+            Create(box1),
+            Write(roberts),
+        )
+        self.play(
+            Create(plane),
+            Create(axes),
+        )
+        self.play(
+            GrowArrow(arrow1),
+            Write(a_text),
+        )
+        self.play(
+            GrowArrow(arrow2),
+            Write(b_text),
+        )
+        self.play(
+            Create(arc_orthogonal),
+        )
+        self.wait(0.5)
+        self.play(
+            GrowArrow(arrow3),
+            Write(bk_text),
+        )
+        self.play(
+            Create(side3),
+            Create(side4),
+        )
+        self.play(
+            GrowArrow(dashed1),
+            Write(diag_text1),
+        )
+        self.play(
+            GrowArrow(dashed2),
+            Write(diag_text2),
+        )
+        self.wait(1)
+        self.play(
+            FadeOut(title_orth),
+            FadeOut(all_shapes),
+            FadeOut(roberts),
+            FadeOut(box1),
+            FadeOut(image),
+        )
+        self.wait(1)
+
+    def scene8_SubScene3(self, title):
+        ...
+
+    def scene8_SubScene4(self, title):
+        title_orth = Tex("Birkhoff-James Orthogonality", color=BLACK, font_size=80).to_edge(UP)
+
+        year_text = Tex("1935 - George David Birkhoff",color=BLACK,font_size=65).next_to(title_orth, DOWN,buff=0.5)
+        """
+        wo elements x and y of X are said to be orthogonal in
+        the sense of Birkhoff if and only if ‖x‖ ≤ ‖x + λy‖ , ∀λ ∈ R
+        """
+        robert_def_part1 = MathTex(
+            r"\text{Two elements } x \text{ and } y \text{ in a Banach space } X \text{ are said to}",
+            color=BLACK,
+        )
+        robert_def_part2 = MathTex(
+            r"\text{be orthogonal in the sense of Birkhoff-James if and only if}",
+            color=BLACK,
+        )
+        robert_def_part3 = MathTex(
+            r"\|x\| \le \|x + \lambda y\| \quad \text{for all } \lambda \in \mathbb{R}",
+            color=BLACK,
+        )
+        robert_def_part4 = MathTex(
+            r"\text{and denote it by } x \perp_{BJ} y.",
+            color=BLACK,
+        )
+        robert_def = VGroup(robert_def_part1, robert_def_part2, robert_def_part3, robert_def_part4).arrange(DOWN,buff=0.3)
+        group, box = self.show_definition(robert_def, title_orth, True)
+        VGroup(group, box).scale(1).shift(1*UP)
+
+        self.play(
+            Write(title_orth),
+        )
+        self.wait(0.5)
+        self.play(
+            Write(year_text),
+        )
+        self.wait(0.5)
+        self.play(
+            FadeOut(year_text),
+        )
+        self.play(
+            Create(box),
+            Write(group),
+        )
+        self.wait(1)
+        self.play(
+            FadeOut(title_orth),
+            FadeOut(group),
+            FadeOut(box),
+        )
+        self.wait(1)
+
+    def scene8_SubScene5(self, title):
+        self.wait(0.5)
+        image = ImageMobject("images/book_brain.png").scale(2).to_corner(DL)
+        self.add(image)
+
+        title_orth = Tex("Birkhoff-James Orthogonality", color=dark_blue, font_size=60).to_corner(UL).shift(0.15*UP)
+
+        plane = NumberPlane(
+            y_range=[-5, 7, 1],
+            x_range=[-4, 8, 1],
+            background_line_style={"stroke_color": axes_background_color, "stroke_opacity": 0.5},
+            y_length=7,
+            x_length=9,
+        ).move_to([0, 0, 0] + 0.5 * DOWN)
+
+        axes = Axes(
+            y_range=[-5, 7, 1],
+            y_length=7,
+            x_range=[-4, 8, 1],
+            x_length=9,
+            axis_config={"color": dark_blue, "include_ticks": False, "tip_length": 0.25, "tip_shape": StealthTip}
+        ).move_to([0, 0, 0] + 0.5 * DOWN)
+
+        x_point = np.array([3, 0, 0])  # نقطه ساده روی محور x
+        arrow_x = Arrow(
+            start=axes.c2p(0, 0),
+            end=axes.c2p(3, 0),
+            buff=0,
+            stroke_width=6,
+            color=dark_red,
+            tip_length=0.25,
+            tip_shape=StealthTip
+        )
+
+        circle = Circle(
+            radius=3 * axes.x_axis.unit_size,
+            color=dark_orange,
+            stroke_width=4
+        ).move_to(axes.c2p(0, 0))
+
+        dot_x = Dot(
+            axes.c2p(3, 0),
+            color=dark_green,
+            radius=0.12,
+        )
+
+        arrow_y = Arrow(
+            start=axes.c2p(0, 0),
+            end=axes.c2p(0, 2),
+            buff=0,
+            stroke_width=3,
+            color=dark_pink,
+            tip_length=0.25,
+            tip_shape=StealthTip
+        )
+
+        tangent_line = DashedLine(
+            start=axes.c2p(3, -7),
+            end=axes.c2p(3, 7),
+            color=dark_purple,
+            stroke_width=3,
+            dash_length=0.15
+        )
+
+        arc_orthogonal = RightAngle(
+            arrow_y,
+            arrow_x,
+            length=0.3,
+            color=BLACK,
+            # quadrant=(1,-1)
+        )
+
+        x_text = MathTex(r"\vec{x}", color=dark_red).scale(1.2).next_to(
+            axes.c2p(1.5, 0), direction=UP, buff=0.1
+        )
+
+        y_text = MathTex(r"\vec{y}", color=dark_pink).scale(1.2).next_to(
+            axes.c2p(-0.35, 2), direction=UP, buff=0.1
+        )
+
+        radius_text = MathTex(r"\|\vec{x}\|", color=dark_red).scale(1.0).next_to(
+            axes.c2p(1.5, 0), direction=DOWN, buff=0.1
+        )
+
+        tangent_text = MathTex(r"\vec{x} + \lambda \vec{y}", color=dark_purple).scale(1.0).next_to(
+            axes.c2p(3, 5), direction=RIGHT, buff=0.15
+        )
+
+        # moving_dot = Dot(
+        #     # axes.c2p(0, 0),
+        #     axes.c2p(3, 6),
+        #     color=dark_green,
+        #     radius=0.12,
+        # )
+
+        all_shapes = VGroup(*[
+            plane,
+            axes,
+            circle,
+            arrow_x,
+            arrow_y,
+            tangent_line,
+            # dot_x,
+            x_text,
+            y_text,
+            radius_text,
+            tangent_text,
+            arc_orthogonal
+        ]).shift(2*RIGHT)
+
+        dot_x.shift(2*RIGHT)
+
+        moving_arrow = always_redraw(
+            lambda: Arrow(
+                start=axes.c2p(0, 0),
+                end=dot_x.get_center(),
+                buff=0,
+                stroke_width=6,
+                color=dark_terquise,
+                tip_length=0.25,
+                tip_shape=StealthTip
+            )
+        )
+
+        moving_label = always_redraw(
+            lambda: MathTex(r"\vec{x} + \lambda \vec{y}", color=dark_terquise).scale(1.0).next_to(
+                dot_x.get_center(), direction=RIGHT, buff=0.25
+            )
+        )
+
+        roberts = MathTex(
+            r"\|\vec{x}\| ",r"\le ",r"\|\vec{x} + \lambda \vec{y}\|",
+            color = BLACK,
+        )
+        roberts.set_color_by_tex(r"\|\vec{x}\| ",dark_red)
+        roberts.set_color_by_tex(r"\|\vec{x} + \lambda \vec{y}\|",dark_purple)
+        box1 = SurroundingRectangle(
+            roberts,
+            color=dark_blue,        
+            buff=0.2,    
+            fill_opacity=0.1,    
+            stroke_width=3,    
+            corner_radius=0.15 
+        )
+        VGroup(roberts, box1).scale(1.2).to_corner(UL).shift(1*DOWN)
+
+        self.play(
+            Write(title_orth),
+            Create(box1),
+            Write(roberts),
+        )
+        self.play(
+            Create(plane),
+            Create(axes),
+        )
+        self.play(
+            FadeIn(dot_x),
+        )
+        self.play(
+            GrowArrow(arrow_x),
+            Write(x_text),
+        )
+        self.wait(0.3)
+        self.play(
+            TransformFromCopy(roberts[0], radius_text),
+        )
+        self.wait(0.3)
+        self.play(
+            Create(circle),
+        )
+        self.wait(0.5)
+        self.play(
+            GrowArrow(arrow_y),
+            Write(y_text),
+        )
+        self.play(
+            Create(arc_orthogonal),
+        )
+        self.wait(0.5)
+        self.play(
+            Create(tangent_line),
+            Write(tangent_text),
+        )
+        self.wait(0.5)
+        self.play(
+            FadeIn(moving_arrow),
+            Write(moving_label),
+        )
+        self.wait(0.5)
+
+        self.play(
+            dot_x.animate.move_to(axes.c2p(3, 6)),
+            run_time=3,
+            rate_func=smooth
+        )
+        self.wait(0.5)
+
+        self.play(
+            dot_x.animate.move_to(axes.c2p(3, -5)),
+            run_time=3,
+            rate_func=smooth
+        )
+        self.wait(0.5)
+
+        self.play(
+            dot_x.animate.move_to(axes.c2p(3, 0)),
+            run_time=2,
+            rate_func=smooth
+        )
+        self.wait(1)
+
+        self.play(
+            FadeOut(dot_x),
+            FadeOut(moving_arrow),
+            FadeOut(moving_label),
+        )
+        self.wait(1.5)
+        self.play(
+            FadeOut(title_orth),
+            FadeOut(all_shapes),
+            FadeOut(roberts),
+            FadeOut(box1),
+            FadeOut(image),
+        )
+        self.wait(1)
+
+
+    def scene8_SubScene6(self, title):
+        ...
+
+    def scene8(self, title):
+
+        # roberts
+
+        # self.scene8_SubScene0(title)
+
+        # self.scene8_SubScene1(title)
+
+        # self.scene8_SubScene2(title)
+
+        # self.scene8_SubScene3(title)
+
+        # birkhof
+
+        # self.scene8_SubScene4(title)
+
+        self.scene8_SubScene5(title)
+
+        # self.scene8_SubScene6(title)
 
     def scene7_SubScene0(self, title):
         self.wait(1)
