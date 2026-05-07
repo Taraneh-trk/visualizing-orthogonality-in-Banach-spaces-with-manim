@@ -517,7 +517,260 @@ class TitleScene(Scene):
         self.wait(1)
 
     def scene8_SubScene3(self, title):
-        ...
+        title_orth = Tex("Roberts Orthogonality", color=BLACK, font_size=70).to_edge(UP)
+
+        roberts = MathTex(
+            r"\|x + ky\| ",r"= ",r"\|x - ky\|",r"\quad \text{ for all } k \in \mathbb{K}",
+            color = BLACK,
+        )
+        box1 = SurroundingRectangle(
+            roberts,
+            color=dark_blue,        
+            buff=0.2,    
+            fill_opacity=0.1,    
+            stroke_width=3,    
+            corner_radius=0.15 
+        )
+        VGroup(roberts, box1).scale(1.2).next_to(title_orth,DOWN,buff=0.5)
+        restrictive = Text("Restrictive",font_size=60,color=dark_red).next_to(box1,DOWN, buff=0.5)
+        restrictive2 = Text("In some cases, there may not exist any pair of non-zero \nvectors that are orthogonal in the Roberts sense.",font_size=40,color=dark_green).next_to(restrictive,DOWN, buff=0.3)
+
+        self.play(
+            FadeIn(title_orth),
+        )
+        self.play(
+            Create(box1),
+            Write(roberts),
+        )
+        self.wait(0.5)
+        self.play(
+            Write(restrictive),
+        )
+        self.wait(0.5)
+        self.play(
+            Write(restrictive2),
+        )
+        self.wait(1.5)
+        self.play(
+            FadeOut(restrictive),
+            FadeOut(restrictive2),
+        )
+
+        example1_part1 = MathTex(
+            r"T = \{\, f : [0,1] \to \mathbb{R} \mid f(x) = ax^2 + bx,\; a,b \in \mathbb{R} \,\}.",
+            color=BLACK,
+        )
+        example1_part2 = MathTex(
+            r"\|ax^2 + bx\| = \max_{x \in (0,1)} |ax^2 + bx|.",
+            color=BLACK,
+        )
+        example1_part3 = MathTex(
+            r"\text{Two elements of T are orthogonal by Roberts' definition }",
+            color=BLACK,
+        )
+        example1_part4 = MathTex(
+            r"\Longleftrightarrow",
+            color=BLACK,
+        )
+        example1_part5 = MathTex(
+            r"\text{one of them is zero.}",
+            color=BLACK,
+        )
+        text_example = Text("Example",font_size=40,color=dark_purple)
+
+        example = VGroup(*[
+            text_example,
+            example1_part1,
+            example1_part2,
+            example1_part3,
+            example1_part4,
+            example1_part5,
+        ]).arrange(DOWN,buff=0.3).next_to(box1, DOWN, buff=1).shift(0.6*UP)
+        
+        box2 = SurroundingRectangle(
+            example,
+            color=dark_purple,        
+            buff=0.2,    
+            fill_opacity=0.1,    
+            stroke_width=3,    
+            corner_radius=0.15 
+        )
+
+        self.play(
+            Create(box2),
+            Write(text_example),
+            Write(example1_part1),
+        )
+        self.wait(0.5)
+        self.play(
+            Write(example1_part2),
+        )
+        self.wait(0.5)
+        self.play(
+            Write(example1_part3),
+        )
+        self.play(
+            Write(example1_part4),
+        )
+        self.play(
+            Write(example1_part5),
+        )
+        self.wait(1)
+
+        self.play(
+            FadeOut(VGroup(*[
+                example,
+                box2,
+            ])),
+        )
+        self.wait(1)
+
+        # proof and counterexample
+
+
+        headers = [
+            (r"\text{Symmetry}", dark_pink),
+            (r"\text{Homogeneity}", dark_purple),
+            (r"\text{Additivity}", dark_terquise),
+            (r"\text{Scalar Existence}", dark_green),
+        ]
+
+        col_labels = [MathTex(h).set_color(color) for h, color in headers]
+
+        cross = MathTex(r"\Large \times").set_color(RED)
+        check = MathTex(r"\Large \checkmark").set_color(GREEN)
+        
+        row = [
+            MathTex(r"\Large \checkmark").set_color(GREEN),
+            MathTex(r"\Large \checkmark").set_color(GREEN),
+            MathTex(r"\Large \times").set_color(RED),
+            MathTex(r"\Large \times").set_color(RED),
+        ]
+        
+        row_label = MathTex(r"\text{Roberts}", color=BLACK)
+
+        table = MobjectTable(
+            [row],
+            row_labels=[row_label],
+            col_labels=col_labels,
+            include_outer_lines=True,
+            line_config={"stroke_width": 3, "color": GRAY},
+            h_buff=0.3,
+        )
+
+        table.scale(1).next_to(box1,DOWN,buff=0.5)
+
+        self.play(
+            Create(table),
+            run_time = 3,
+        )
+        self.wait(1)
+
+
+
+
+    def define_properties(self, title):
+        start = MathTex(
+            r"\text{For all } x,y,z \in X \text{ and , For all } \alpha,\beta \in \mathbb{K} ",
+            color=BLACK
+        ).scale(1.2)
+        sym = MathTex(
+            r"\text{Symmetry }",r"\text{: If } x \perp y,\ \text{then } y \perp x.",
+            color=BLACK,
+        ).scale(1.2)
+        sym.set_color_by_tex(r"\text{Symmetry }", dark_pink)
+        boxsym = SurroundingRectangle(
+            sym,
+            color=dark_pink,        
+            buff=0.2,    
+            fill_opacity=0.1,    
+            stroke_width=3,    
+            corner_radius=0.15 
+        )
+
+        homo = MathTex(
+            r"\text{Homogeneity }",r"\text{: If } x \perp y,\ \text{then } (\alpha x) \perp (\beta y).",
+            color=BLACK,
+        ).scale(1.2)
+        homo.set_color_by_tex(r"\text{Homogeneity }", dark_purple)
+        boxhomo = SurroundingRectangle(
+            homo,
+            color=dark_purple,        
+            buff=0.2,    
+            fill_opacity=0.1,    
+            stroke_width=3,    
+            corner_radius=0.15 
+        )
+
+        add = MathTex(
+            r"\text{Additivity }",r"\text{: If } x \perp y \ \text{and}\ x \perp z \ \text{, then } x \perp (y+z).",
+            color=BLACK,
+        ).scale(1.1)
+        add.set_color_by_tex(r"\text{Additivity }", dark_terquise)
+        boxadd = SurroundingRectangle(
+            add,
+            color=dark_terquise,        
+            buff=0.2,    
+            fill_opacity=0.1,    
+            stroke_width=3,    
+            corner_radius=0.15 
+        )
+
+        scaler1 = MathTex(
+            r"\text{Scalar Existence Property }",r"\text{: There exists } a \in \mathbb{K} ",
+            color=BLACK,
+        ).scale(1.1)
+        scaler1.set_color_by_tex(r"\text{Scalar Existence Property }", dark_green)
+        scaler2 = MathTex(
+            r"\text{ such that } x \perp (ax + y).",
+            color=BLACK,
+        ).scale(1.1)
+        boxscaler = SurroundingRectangle(
+            VGroup(scaler1, scaler2).arrange(DOWN,buff=0.2),
+            color=dark_green,        
+            buff=0.2,    
+            fill_opacity=0.1,    
+            stroke_width=3,    
+            corner_radius=0.15 
+        )
+
+        all = VGroup(*[
+            start,
+            VGroup(sym, boxsym),
+            VGroup(homo, boxhomo),
+            VGroup(add, boxadd),
+            VGroup(VGroup(scaler1, scaler2), boxscaler),
+        ]).arrange(DOWN,buff=0.5)
+
+        self.play(
+            Write(start),
+        )
+        self.wait(0.5)
+        self.play(
+            Create(boxsym),
+            Write(sym),
+        )
+        self.wait(0.5)
+        self.play(
+            Create(boxhomo),
+            Write(homo),
+        )
+        self.wait(0.5)
+        self.play(
+            Create(boxadd),
+            Write(add),
+        )
+        self.wait(0.5)
+        self.play(
+            Create(boxscaler),
+            Write(VGroup(scaler1, scaler2)),
+        )
+
+        self.wait(1)
+
+        self.play(
+            FadeOut(all),
+        )
 
     def scene8_SubScene4(self, title):
         title_orth = Tex("Birkhoff-James Orthogonality", color=BLACK, font_size=80).to_edge(UP)
@@ -536,7 +789,7 @@ class TitleScene(Scene):
             color=BLACK,
         )
         robert_def_part3 = MathTex(
-            r"\|x\| \le \|x + \lambda y\| \quad \text{for all } \lambda \in \mathbb{R}",
+            r"\|x\| \le \|x + \lambda y\| \quad \text{for all } \lambda \in \mathbb{k}",
             color=BLACK,
         )
         robert_def_part4 = MathTex(
@@ -795,10 +1048,6 @@ class TitleScene(Scene):
             FadeOut(image),
         )
         self.wait(1)
-
-
-    def scene8_SubScene6(self, title):
-        ...
 
     def scene8_SubScene7(self, title):
         title_orth = Tex("Isosceles Orthogonality", color=BLACK, font_size=80).to_edge(UP)
@@ -1230,6 +1479,206 @@ class TitleScene(Scene):
         )
         self.wait(1)
 
+    def scene8_SubScene6(self, title):
+        title_orth = Tex("Birkhoff-James Orthogonality", color=BLACK, font_size=70).to_edge(UP)
+
+        roberts = MathTex(
+            r"\|x\| ",r"\le ",r"\|x + \lambda y\|",r"\quad \text{ for all } \lambda \in \mathbb{K}",
+            color = BLACK,
+        )
+        box1 = SurroundingRectangle(
+            roberts,
+            color=dark_blue,        
+            buff=0.2,    
+            fill_opacity=0.1,    
+            stroke_width=3,    
+            corner_radius=0.15 
+        )
+        
+        self.play(
+            FadeIn(title_orth),
+        )
+        self.play(
+            Create(box1),
+            Write(roberts),
+        )
+        self.wait(0.5)
+
+        # proof and counterexample
+
+
+        headers = [
+            (r"\text{Symmetry}", dark_pink),
+            (r"\text{Homogeneity}", dark_purple),
+            (r"\text{Additivity}", dark_terquise),
+            (r"\text{Scalar Existence}", dark_green),
+        ]
+
+        col_labels = [MathTex(h).set_color(color) for h, color in headers]
+
+        cross = MathTex(r"\Large \times").set_color(RED)
+        check = MathTex(r"\Large \checkmark").set_color(GREEN)
+        
+        row = [
+            MathTex(r"\Large \times").set_color(RED),
+            MathTex(r"\Large \checkmark").set_color(GREEN),
+            MathTex(r"\Large \times").set_color(RED),
+            MathTex(r"\Large \checkmark").set_color(GREEN),
+        ]
+        
+        row_label = MathTex(r"\text{Birkhoff}", color=BLACK)
+
+        table = MobjectTable(
+            [row],
+            row_labels=[row_label],
+            col_labels=col_labels,
+            include_outer_lines=True,
+            line_config={"stroke_width": 3, "color": GRAY},
+            h_buff=0.3,
+        )
+
+        table.scale(1).next_to(box1,DOWN,buff=0.5)
+
+        self.play(
+            Create(table),
+            run_time = 3,
+        )
+        self.wait(1)
+
+    def scene8_SubScene9(self, title):
+        title_orth = Tex("Isosceles Orthogonality", color=BLACK, font_size=70).to_edge(UP)
+
+        roberts = MathTex(
+            r"\|x + y\| ",r"= ",r"\|x - y\|",
+            color = BLACK,
+        )
+        box1 = SurroundingRectangle(
+            roberts,
+            color=dark_blue,        
+            buff=0.2,    
+            fill_opacity=0.1,    
+            stroke_width=3,    
+            corner_radius=0.15 
+        )
+        
+        self.play(
+            FadeIn(title_orth),
+        )
+        self.play(
+            Create(box1),
+            Write(roberts),
+        )
+        self.wait(0.5)
+
+        # proof and counterexample
+
+
+        headers = [
+            (r"\text{Symmetry}", dark_pink),
+            (r"\text{Homogeneity}", dark_purple),
+            (r"\text{Additivity}", dark_terquise),
+            (r"\text{Scalar Existence}", dark_green),
+        ]
+
+        col_labels = [MathTex(h).set_color(color) for h, color in headers]
+
+        cross = MathTex(r"\Large \times").set_color(RED)
+        check = MathTex(r"\Large \checkmark").set_color(GREEN)
+        
+        row = [
+            MathTex(r"\Large \checkmark").set_color(GREEN),
+            MathTex(r"\Large \times").set_color(RED),
+            MathTex(r"\Large \times").set_color(RED),
+            MathTex(r"\Large \checkmark").set_color(GREEN),
+        ]
+        
+        row_label = MathTex(r"\text{Isosceles}", color=BLACK)
+
+        table = MobjectTable(
+            [row],
+            row_labels=[row_label],
+            col_labels=col_labels,
+            include_outer_lines=True,
+            line_config={"stroke_width": 3, "color": GRAY},
+            h_buff=0.3,
+        )
+
+        table.scale(1).next_to(box1,DOWN,buff=0.5)
+
+        self.play(
+            Create(table),
+            run_time = 3,
+        )
+        self.wait(1)
+
+
+    def scene8_SubScene12(self, title):
+        title_orth = Tex("Pythagorean Orthogonality", color=BLACK, font_size=70).to_edge(UP)
+
+        roberts = MathTex(
+            r"\|x + y\|^2 ",r"= ",r"\|x\|^2 + \|y\|^2",
+            color = BLACK,
+        )
+        box1 = SurroundingRectangle(
+            roberts,
+            color=dark_blue,        
+            buff=0.2,    
+            fill_opacity=0.1,    
+            stroke_width=3,    
+            corner_radius=0.15 
+        )
+        
+        self.play(
+            FadeIn(title_orth),
+        )
+        self.play(
+            Create(box1),
+            Write(roberts),
+        )
+        self.wait(0.5)
+
+        # proof and counterexample
+
+
+        headers = [
+            (r"\text{Symmetry}", dark_pink),
+            (r"\text{Homogeneity}", dark_purple),
+            (r"\text{Additivity}", dark_terquise),
+            (r"\text{Scalar Existence}", dark_green),
+        ]
+
+        col_labels = [MathTex(h).set_color(color) for h, color in headers]
+
+        cross = MathTex(r"\Large \times").set_color(RED)
+        check = MathTex(r"\Large \checkmark").set_color(GREEN)
+        
+        row = [
+            MathTex(r"\Large \checkmark").set_color(GREEN),
+            MathTex(r"\Large \times").set_color(RED),
+            MathTex(r"\Large \times").set_color(RED),
+            MathTex(r"\Large \times").set_color(RED),
+        ]
+        
+        row_label = MathTex(r"\text{Pythagorean}", color=BLACK)
+
+        table = MobjectTable(
+            [row],
+            row_labels=[row_label],
+            col_labels=col_labels,
+            include_outer_lines=True,
+            line_config={"stroke_width": 3, "color": GRAY},
+            h_buff=0.3,
+        )
+
+        table.scale(1).next_to(box1,DOWN,buff=0.5)
+
+        self.play(
+            Create(table),
+            run_time = 3,
+        )
+        self.wait(1)
+
+
     def scene8(self, title):
 
         ########## roberts
@@ -1240,7 +1689,9 @@ class TitleScene(Scene):
 
         # self.scene8_SubScene2(title)
 
-        # self.scene8_SubScene3(title)
+        # self.define_properties(title)
+
+        self.scene8_SubScene3(title)
 
         ########## birkhof
 
@@ -1262,7 +1713,7 @@ class TitleScene(Scene):
 
         # self.scene8_SubScene10(title)
 
-        self.scene8_SubScene11(title)
+        # self.scene8_SubScene11(title)
 
         # self.scene8_SubScene12(title)
 
