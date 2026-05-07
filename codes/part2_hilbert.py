@@ -862,7 +862,7 @@ class TitleScene(Scene):
             color=BLACK,
         )
         robert_def_part3 = MathTex(
-            r"\|x - y \|^2 = \|x\|^2 + \|y\|^2",
+            r"\|x + y \|^2 = \|x\|^2 + \|y\|^2",
             color=BLACK,
         )
         robert_def_part4 = MathTex(
@@ -896,6 +896,340 @@ class TitleScene(Scene):
         )
         self.wait(1)
 
+    def scene8_SubScene8(self, title):
+        self.wait(0.5)
+        image = ImageMobject("images/book_brain.png").scale(2).to_corner(DL)
+        self.add(image)
+
+        title_orth = Tex("Isosceles Orthogonality", color=dark_blue, font_size=60).to_corner(UL).shift(0.15*UP)
+
+        plane = NumberPlane(
+            y_range=[-5, 7, 1],
+            x_range=[-4, 8, 1],
+            background_line_style={"stroke_color": axes_background_color, "stroke_opacity": 0.5},
+            y_length=8,
+            x_length=8,
+        ).move_to([0, 0, 0] + 0.5 * DOWN)
+
+        axes = Axes(
+            y_range=[-5, 7, 1],
+            y_length=8,
+            x_range=[-4, 8, 1],
+            x_length=8,
+            axis_config={"color": dark_blue, "include_ticks": False, "tip_length": 0.25, "tip_shape": StealthTip}
+        ).move_to([0, 0, 0] + 0.5 * DOWN)
+
+        x_point = np.array([3, 0, 0])
+        arrow_x = Arrow(
+            start=axes.c2p(0, 0),
+            end=axes.c2p(4, 2),
+            buff=0,
+            stroke_width=6,
+            color=dark_green,
+            tip_length=0.25,
+            tip_shape=StealthTip
+        )
+
+        arrow_x_inv = Arrow(
+            start=axes.c2p(0, 0),
+            end=axes.c2p(-4, -2),
+            buff=0,
+            stroke_width=6,
+            color=dark_green,
+            tip_length=0.25,
+            tip_shape=StealthTip
+        )
+
+        arrow_y = Arrow(
+            start=axes.c2p(0, 0),
+            end=axes.c2p(-2, 4),
+            buff=0,
+            stroke_width=3,
+            color=dark_pink,
+            tip_length=0.25,
+            tip_shape=StealthTip
+        )
+
+        tangent_line1 = Arrow(
+            start=arrow_y.get_end(),
+            end=arrow_x.get_end(),
+            buff=0,
+            stroke_width=4,
+            color=dark_red,
+            tip_length=0.25,
+            tip_shape=StealthTip
+        )
+        tangent_line2 = Arrow(
+            start=arrow_x_inv.get_end(),
+            end=arrow_y.get_end(),
+            buff=0,
+            stroke_width=4,
+            color=dark_purple,
+            tip_length=0.25,
+            tip_shape=StealthTip
+        )
+
+        arc_orthogonal = RightAngle(
+            arrow_y,
+            arrow_x,
+            length=0.3,
+            color=BLACK,
+            # quadrant=(1,-1)
+        )
+
+        x_text = MathTex(r"\vec{x}", color=dark_green).scale(1.0).next_to(
+            arrow_x.get_center(), direction=DOWN, buff=0.15
+        )
+
+        y_text = MathTex(r"\vec{y}", color=dark_pink).scale(1.0).next_to(
+            arrow_y, direction=UP, buff=0.1
+        )
+
+        x_inv_text = MathTex(r" - \vec{x}", color=dark_green).scale(1.0).next_to(
+            arrow_x_inv.get_center(), direction=DOWN, buff=0.15
+        )
+
+        tangent_text1 = MathTex(r"\vec{x} - \vec{y}", color=dark_red).scale(1.0).next_to(
+            tangent_line1.get_center(), direction=UR , buff=0.15
+        )
+
+        tangent_text2= MathTex(r"\vec{x} + \vec{y}", color=dark_purple).scale(1.0).next_to(
+            tangent_line2.get_center(), direction=UL , buff=0.15
+        )
+
+        mark1_1 = Line(ORIGIN, 0.2*UP, color=BLACK, stroke_width=5).rotate(
+            tangent_line1.get_angle()
+        ).move_to(tangent_line1.point_from_proportion(0.5))
+
+        mark2_1 = Line(ORIGIN, 0.2*UP, color=BLACK, stroke_width=5).rotate(
+            tangent_line2.get_angle()
+        ).scale(1.2).move_to(tangent_line2.point_from_proportion(0.5))
+
+        equality_marks = VGroup(mark1_1, mark2_1)
+
+        all_shapes = VGroup(*[
+            plane,
+            axes,
+            arrow_x,
+            arrow_x_inv,
+            arrow_y,
+            tangent_line1,
+            tangent_line2,
+            x_text,
+            y_text,
+            x_inv_text,
+            tangent_text1,
+            tangent_text2,
+            arc_orthogonal,
+            equality_marks,
+        ]).shift(2*RIGHT)
+
+        roberts = MathTex(
+            r"\|\vec{x} - \vec{y}\| ",r"= ",r"\|\vec{x} + \vec{y}\|",
+            color = BLACK, 
+        )
+        roberts.set_color_by_tex(r"\|\vec{x} - \vec{y}\| ",dark_red)
+        roberts.set_color_by_tex(r"\|\vec{x} + \vec{y}\|",dark_purple)
+        box1 = SurroundingRectangle(
+            roberts,
+            color=dark_blue,        
+            buff=0.2,    
+            fill_opacity=0.1,    
+            stroke_width=3,    
+            corner_radius=0.15 
+        )
+        VGroup(roberts, box1).scale(1.2).to_corner(UL).shift(1*DOWN)
+
+        self.play(
+            Write(title_orth),
+            Create(box1),
+            Write(roberts),
+        )
+        self.play(
+            Create(plane),
+            Create(axes),
+        )
+        self.play(
+            GrowArrow(arrow_x),
+            Write(x_text),
+        )
+        self.wait(0.3)
+        self.play(
+            GrowArrow(arrow_y),
+            Write(y_text),
+        )
+        self.play(
+            Create(arc_orthogonal),
+        )
+        self.wait(0.5)
+        self.play(
+            GrowArrow(arrow_x_inv),
+            Write(x_inv_text),
+        )
+        self.wait(0.5)
+        self.play(
+            GrowArrow(tangent_line1),
+            Write(tangent_text1),
+        )
+        self.wait(0.5)
+        self.play(
+            GrowArrow(tangent_line2),
+            Write(tangent_text2),
+        )
+        self.wait(0.5)
+        self.play(
+            Create(equality_marks),
+        )
+
+        self.wait(1.5)
+        self.play(
+            FadeOut(title_orth),
+            FadeOut(all_shapes),
+            FadeOut(roberts),
+            FadeOut(box1),
+            FadeOut(image),
+        )
+        self.wait(1)
+
+    def scene8_SubScene11(self, title):
+        self.wait(0.5)
+        image = ImageMobject("images/book_brain.png").scale(2).to_corner(DL)
+        self.add(image)
+
+        title_orth = Tex("Pythagorean Orthogonality", color=dark_blue, font_size=60).to_corner(UL).shift(0.15*UP)
+
+        plane = NumberPlane(
+            y_range=[-5, 7, 1],
+            x_range=[-4, 8, 1],
+            background_line_style={"stroke_color": axes_background_color, "stroke_opacity": 0.5},
+            y_length=8,
+            x_length=8,
+        ).move_to([0, 0, 0] + 1.5 * DOWN)
+
+        axes = Axes(
+            y_range=[-5, 7, 1],
+            y_length=8,
+            x_range=[-4, 8, 1],
+            x_length=8,
+            axis_config={"color": dark_blue, "include_ticks": False, "tip_length": 0.25, "tip_shape": StealthTip}
+        ).move_to([0, 0, 0] + 1.5 * DOWN)
+
+        arrow_x = Arrow(
+            start=axes.c2p(0, 0),
+            end=axes.c2p(4, 0),
+            buff=0,
+            stroke_width=6,
+            color=dark_green,
+            tip_length=0.25,
+            tip_shape=StealthTip
+        )
+
+        arrow_y = Arrow(
+            start=axes.c2p(4, 0),
+            end=axes.c2p(4, 3),
+            buff=0,
+            stroke_width=6,
+            color=dark_pink,
+            tip_length=0.25,
+            tip_shape=StealthTip
+        )
+
+        arrow_sum = Arrow(
+            start=axes.c2p(0, 0),
+            end=axes.c2p(4, 3),
+            buff=0,
+            stroke_width=3,
+            color=dark_purple,
+            tip_length=0.25,
+            tip_shape=StealthTip
+        )
+
+        arc_orthogonal = RightAngle(
+            arrow_y,
+            arrow_x,
+            length=0.3,
+            color=BLACK,
+            quadrant=(1,-1)
+        )
+
+        x_text = MathTex(r"\vec{x}", color=dark_green).scale(1.0).next_to(
+            arrow_x.get_center(), direction=DOWN, buff=0.15
+        )
+
+        y_text = MathTex(r"\vec{y}", color=dark_pink).scale(1.0).next_to(
+            arrow_y, direction=UP, buff=0.1
+        )
+
+        x_sum = MathTex(r" \vec{x} + \vec{y}", color=dark_purple).scale(1.0).next_to(
+            arrow_sum.get_center()+0.4*LEFT, direction=UP, buff=0.15
+        )
+
+        all_shapes = VGroup(*[
+            plane,
+            axes,
+            arrow_x,
+            arrow_sum,
+            arrow_y,
+            x_text,
+            y_text,
+            x_sum,
+            arc_orthogonal,
+        ]).shift(2*RIGHT)
+
+        roberts = MathTex(
+            r"\|\vec{x} + \vec{y}\|^2 ",r" = ",r"\|\vec{x}\|^2",r" + ",r"\|\vec{y}\|^2",
+            color = BLACK, 
+        )
+        roberts.set_color_by_tex(r"\|\vec{x} + \vec{y}\|^2 ",dark_purple)
+        roberts.set_color_by_tex(r"\|\vec{x}\|^2",dark_green)
+        roberts.set_color_by_tex(r"\|\vec{y}\|^2",dark_pink)
+        box1 = SurroundingRectangle(
+            roberts,
+            color=dark_blue,        
+            buff=0.2,    
+            fill_opacity=0.1,    
+            stroke_width=3,    
+            corner_radius=0.15 
+        )
+        VGroup(roberts, box1).scale(1.2).to_corner(UL).shift(1*DOWN)
+
+        self.play(
+            Write(title_orth),
+            Create(box1),
+            Write(roberts),
+        )
+        self.play(
+            Create(plane),
+            Create(axes),
+        )
+        self.play(
+            GrowArrow(arrow_x),
+            Write(x_text),
+        )
+        self.wait(0.3)
+        self.play(
+            GrowArrow(arrow_y),
+            Write(y_text),
+        )
+        self.play(
+            Create(arc_orthogonal),
+        )
+        self.wait(0.5)
+        self.play(
+            GrowArrow(arrow_sum),
+            Write(x_sum),
+        )
+
+        self.wait(1.5)
+        self.play(
+            FadeOut(title_orth),
+            FadeOut(all_shapes),
+            FadeOut(roberts),
+            FadeOut(box1),
+            FadeOut(image),
+        )
+        self.wait(1)
+
     def scene8(self, title):
 
         ########## roberts
@@ -926,9 +1260,9 @@ class TitleScene(Scene):
 
         ########## pythagorean
 
-        self.scene8_SubScene10(title)
+        # self.scene8_SubScene10(title)
 
-        # self.scene8_SubScene11(title)
+        self.scene8_SubScene11(title)
 
         # self.scene8_SubScene12(title)
 
