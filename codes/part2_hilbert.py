@@ -626,6 +626,264 @@ class TitleScene(Scene):
         self.wait(1)
 
         # proof and counterexample
+        # sym
+        # 1. Symmetry - Title
+        symmetry_title = MathTex(r"\text{Symmetry}",color=dark_pink)
+        
+        # Symmetry - Statement
+        symmetry_statement = MathTex(
+            r"\text{If } x \perp_R y \text{, then } y \perp_R x",
+            color=BLACK,
+        )
+        
+        # Symmetry - Proof step 1
+        symmetry_proof1 = MathTex(
+            r"\|x + \lambda y\| = \|x - \lambda y\|",
+            r"\Longleftrightarrow",
+            r"|\lambda| \left\|\frac{x}{\lambda} + y\right\| = |\lambda| \left\|\frac{x}{\lambda} - y\right\|",
+            color=BLACK,
+        )
+        
+        # Symmetry - Proof step 2
+        # symmetry_proof2 = MathTex(
+        #     r"|\lambda| \left\|\frac{x}{\lambda} + y\right\| = |\lambda| \left\|\frac{x}{\lambda} - y\right\|",
+        #     color=BLACK,
+        # )
+        
+        # Symmetry - Proof step 3
+        symmetry_proof3 = MathTex(
+            r"\Longleftrightarrow",
+            r"\left\|y + \frac{1}{\lambda}x\right\| = \left\|y - \frac{1}{\lambda}x\right\|",
+            r"\quad \text{Let } \mu = \frac{1}{\lambda}",
+            color=BLACK,
+        )
+        symmetry_proof3.set_color_by_tex(r"\text{Let } \mu = \frac{1}{\lambda}",dark_pink)
+        
+        # Symmetry - Proof step 4
+        # symmetry_proof4 = MathTex(
+        #     r"\text{Let } \mu = \frac{1}{\lambda}",
+        #     color=dark_pink,
+        # )
+        
+        # Symmetry - Proof step 5
+        symmetry_proof5 = MathTex(
+            r"\forall \mu \neq 0: \|y + \mu x\| = \|y - \mu x\|",
+            # r"\longleftrightarrow",
+            r"\quad \therefore y \perp_R x \quad . \blacksquare",
+            color=BLACK,
+        )
+        
+        # Symmetry - Conclusion
+        # symmetry_conclusion = MathTex(
+        #     r"\therefore y \perp_R x \quad . \blacksquare",
+        #     color=BLACK,
+        # )
+
+        sym = VGroup(*[
+            symmetry_title,
+            symmetry_statement,
+            symmetry_proof1,
+            # symmetry_proof2,
+            symmetry_proof3,
+            # symmetry_proof4,
+            symmetry_proof5,
+            # symmetry_conclusion,
+        ]).arrange(DOWN,buff=0.3).next_to(box1,DOWN,buff=0.3)
+
+        self.play(
+            Write(sym),
+        )
+        self.wait(1)
+        self.play(
+            FadeOut(sym),
+        )
+
+        homogeneity_title = MathTex(r"\text{Homogeneity}",color=dark_purple)
+        
+        # Homogeneity - Statement
+        homogeneity_statement = MathTex(
+            r"\text{If } x \perp_R y \text{, then } (\alpha x) \perp_R (\beta y) \text{ for } \alpha, \beta \neq 0",
+            color=BLACK,
+        )
+        
+        # Homogeneity - Proof step 1
+        homogeneity_proof1 = MathTex(
+            r"\|\alpha x + \mu(\beta y)\| = \|\alpha x - \mu(\beta y)\|",
+            color=BLACK,
+        )
+        
+        # Homogeneity - Proof step 2
+        homogeneity_proof2 = MathTex(
+            r"|\alpha| \cdot \left\|x + \frac{\mu\beta}{\alpha}y\right\| = |\alpha| \cdot \left\|x - \frac{\mu\beta}{\alpha}y\right\|",
+            r"\quad \text{Let } \lambda = \frac{\mu\beta}{\alpha}",
+            color=BLACK,
+        )
+        homogeneity_proof2.set_color_by_tex(r"\quad \text{Let } \lambda = \frac{\mu\beta}{\alpha}",dark_purple)
+        
+        # Homogeneity - Proof step 3
+        # homogeneity_proof3 = MathTex(
+        #     r"\|\alpha x - (\mu\beta)y\| = |\alpha| \cdot \left\|x - \frac{\mu\beta}{\alpha}y\right\|"
+        # )
+        
+        # Homogeneity - Proof step 4
+        # homogeneity_proof4 = MathTex(
+        #     r"\text{Let } \lambda = \frac{\mu\beta}{\alpha}",
+        #     color=dark_purple,
+        # )
+        
+        # Homogeneity - Conclusion
+        homogeneity_conclusion = MathTex(
+            r"\text{Since } x \perp_R y \text{, equality holds} \quad . \blacksquare",
+            color=BLACK,
+        )
+
+        homo = VGroup(*[
+            homogeneity_title,
+            homogeneity_statement,
+            homogeneity_proof1,
+            homogeneity_proof2,
+            # homogeneity_proof3,
+            # homogeneity_proof4,
+            # homogeneity_proof5,
+            homogeneity_conclusion,
+        ]).arrange(DOWN,buff=0.3).next_to(box1,DOWN,buff=0.3)
+
+        self.play(
+            Write(homo),
+        )
+        self.wait(1)
+        self.play(
+            FadeOut(homo),
+        )
+
+        nonadditivity_title = MathTex(r"\text{Non-Additivity Counterexample}",color=dark_terquise)
+
+        # Non-Additivity - Space
+        nonadditivity_space = MathTex(
+            r"\text{Space: } \mathbb{R}^3 \text{ with } \ell^\infty \text{ norm: } \|(v_1,v_2,v_3)\|_\infty = \max(|v_1|,|v_2|,|v_3|)",
+            color=BLACK,
+        )
+
+        # Non-Additivity - Vectors
+        nonadditivity_vectors = MathTex(
+            r"x = (1,1,1), \quad y = (1,-1,0), \quad z = (1,0,-1)",
+            color=BLACK,
+        )
+
+        # Check x ⊥_R y - Title
+        check_xy_title = MathTex(
+            r"\text{Check } x \perp_R y:",
+            color=BLACK,
+        )
+
+        # Check x ⊥_R y - Step 1
+        check_xy_step1 = MathTex(
+            r"\|x - \lambda y\|_\infty = \max(|1-\lambda|, |1+\lambda|, |1|)",
+            color=BLACK,
+        )
+
+        # Check x ⊥_R y - Step 2
+        check_xy_step2 = MathTex(
+            r"\|x + \lambda y\|_\infty = \max(|1+\lambda|, |1-\lambda|, |1|)",
+            color=BLACK,
+        )
+
+        # Check x ⊥_R y - Conclusion
+        # check_xy_conclusion = MathTex(
+        #     r"\text{Equal, so } x \perp_R y"
+        # )
+
+        # Check x ⊥_R z - Title
+        check_xz_title = MathTex(
+            r"\text{Check } x \perp_R z:",
+            color=BLACK,
+        )
+
+        # Check x ⊥_R z - Step 1
+        check_xz_step1 = MathTex(
+            r"\|x - \lambda z\|_\infty = \max(|1-\lambda|, |1|, |1+\lambda|)",
+            color=BLACK,
+        )
+
+        # Check x ⊥_R z - Step 2
+        check_xz_step2 = MathTex(
+            r"\|x + \lambda z\|_\infty = \max(|1+\lambda|, |1|, |1-\lambda|)",
+            color=BLACK,
+        )
+
+        # Check x ⊥_R z - Conclusion
+        # check_xz_conclusion = MathTex(
+        #     r"\therefore x \perp_R z"
+        # )
+
+        # Check x ⊥_R (y+z) - Title
+        # check_xyz_title = MathTex(r"\text{Check } x \perp_R (y+z):")
+
+        # Sum y+z
+        # sum_yz = MathTex(
+        #     r"y + z = (2,-1,-1)"
+        # )
+
+        # Check for λ=1 - Step 1
+        # check_lambda1_step1 = MathTex(
+        #     r"x - 1(y+z) = (1-2, 1-(-1), 1-(-1)) = (-1,2,2)"
+        # )
+
+        # Check for λ=1 - Norm 1
+        check_lambda1_norm1 = MathTex(
+            r"\|x - (y+z)\|_\infty = 2",
+            r"\quad \|x + (y+z)\|_\infty = 3",
+            color=BLACK,
+        )
+
+        # Check for λ=1 - Step 2
+        # check_lambda1_step2 = MathTex(
+        #     r"x + 1(y+z) = (1+2, 1+(-1), 1+(-1)) = (3,0,0)"
+        # )
+
+        # Check for λ=1 - Norm 2
+        # check_lambda1_norm2 = MathTex(
+        #     r"\|x + (y+z)\|_\infty = 3"
+        # )
+
+        # Inequality
+        inequality = MathTex(
+            r"2 \neq 3",
+            color=dark_terquise,
+        )
+
+        # Final conclusion
+        # final_conclusion = MathTex(
+        #     r"\therefore x \not\perp_R (y+z) \quad \text{(Additivity fails)}"
+        # )
+
+        add = VGroup(*[
+            nonadditivity_title,
+            nonadditivity_space,
+            nonadditivity_vectors,
+            VGroup(*[
+                VGroup(*[
+                    check_xy_title,
+                    check_xy_step1,
+                    check_xy_step2,
+                ]).arrange(DOWN,buff=0.2).scale(0.5).shift(1*LEFT),
+                VGroup(*[
+                    check_xz_title,
+                    check_xz_step1,
+                    check_xz_step2,
+                ]).arrange(DOWN,buff=0.2).scale(0.5).shift(1*LEFT),
+            ]).arrange(RIGHT,buff=0.5),
+            check_lambda1_norm1,
+            inequality,
+        ]).arrange(DOWN,buff=0.3).next_to(box1,DOWN,buff=0.3)
+
+        self.play(
+            Write(add),
+        )
+        self.wait(1)
+        self.play(
+            FadeOut(add),
+        )
 
 
         headers = [
@@ -666,7 +924,16 @@ class TitleScene(Scene):
         )
         self.wait(1)
 
+        self.play(
+            FadeOut(table),
+            FadeOut(VGroup(*[
+                box1,
+                roberts,
+                title_orth,
+            ])),
+        )
 
+        self.wait(1)
 
 
     def define_properties(self, title):
@@ -1485,7 +1752,7 @@ class TitleScene(Scene):
         roberts = MathTex(
             r"\|x\| ",r"\le ",r"\|x + \lambda y\|",r"\quad \text{ for all } \lambda \in \mathbb{K}",
             color = BLACK,
-        )
+        ).next_to(title_orth,DOWN,buff=0.5)
         box1 = SurroundingRectangle(
             roberts,
             color=dark_blue,        
@@ -1505,7 +1772,361 @@ class TitleScene(Scene):
         self.wait(0.5)
 
         # proof and counterexample
+        nonsymmetry_title = MathTex(r"\text{Non-Symmetry Counterexample}",color=dark_pink)
 
+        # Space definition
+        nonsymmetry_space = MathTex(
+            r"\text{Space: } \mathbb{R}^2 \text{ with } \ell^1 \text{ norm: } \|(u,v)\|_1 = |u| + |v|",
+            color=BLACK,
+        )
+
+        # Vectors
+        nonsymmetry_vectors = MathTex(
+            r"x = (1,0), \quad y = (1,1)",
+            color=BLACK,
+        )
+
+        # Part 1 title
+        part1_title = MathTex(
+            r"\text{Part 1: Show } x \perp_{BJ} y",
+            color=BLACK,
+        )
+
+        # Part 1 - norm of x
+        part1_norm_x = MathTex(
+            r"\|x\|_1 = \|(1,0)\|_1 = |1| + |0| = 1",
+            color=BLACK,
+        )
+
+        # Part 1 - norm of x + λy
+        part1_norm_sum = MathTex(
+            r"\|x + \lambda y\|_1 = \|(1+\lambda, \lambda)\|_1 = |1+\lambda| + |\lambda|",
+            color=BLACK,
+        )
+
+        # Part 1 - inequality
+        part1_inequality = MathTex(
+            r"1 \leq |1+\lambda| + |\lambda| \quad \forall \lambda \in \mathbb{R}",
+            color=BLACK,
+        )
+
+        # Part 1 - conclusion
+        # part1_conclusion = MathTex(r"\therefore x \perp_{BJ} y")
+
+        # Part 2 title
+        part2_title = MathTex(
+            r"\text{Part 2: Show } y \not\perp_{BJ} x",
+            color=BLACK,
+        )
+
+        # Part 2 - norm of y
+        part2_norm_y = MathTex(
+            r"\|y\|_1 = \|(1,1)\|_1 = |1| + |1| = 2",
+            color=BLACK,
+        )
+
+        # Part 2 - norm of y + λx
+        part2_norm_sum = MathTex(
+            r"\|y + \lambda x\|_1 = \|(1+\lambda, 1)\|_1 = |1+\lambda| + 1",
+            color=BLACK,
+        )
+
+        # Part 2 - required condition
+        part2_condition = MathTex(
+            r"2 \leq |1+\lambda| + 1 \iff 1 \leq |1+\lambda|",
+            color=BLACK,
+        )
+
+        # Part 2 - counterexample
+        part2_counter = MathTex(
+            r"\text{For } \lambda = -1: \quad |1+(-1)| = 0",
+            color=dark_pink,
+        )
+
+        # Part 2 - inequality fails
+        # part2_fails = MathTex(r"1 \leq 0 \quad \text{(False)}")
+
+        # Part 2 - conclusion
+        # part2_conclusion = MathTex(r"\therefore y \not\perp_{BJ} x")
+
+        sym = VGroup(*[
+            nonsymmetry_title,
+            nonsymmetry_space,
+            nonsymmetry_vectors,
+            VGroup(*[
+                VGroup(*[
+                    part1_title,
+                    part1_norm_x,
+                    part1_norm_sum,
+                    part1_inequality,
+                ]).arrange(DOWN,buff=0.2).scale(0.7).shift(2*LEFT),
+                VGroup(*[
+                    part2_title,
+                    part2_norm_y,
+                    part2_norm_sum,
+                    part2_condition,
+                ]).arrange(DOWN,buff=0.2).scale(0.7).shift(2*LEFT),
+            ]).arrange(RIGHT,buff=0.5),
+            part2_counter,
+        ]).arrange(DOWN,buff=0.3).next_to(box1,DOWN,buff=0.3)
+
+        self.play(
+            Write(sym),
+        )
+        self.wait(1)
+        self.play(
+            FadeOut(sym),
+        )
+
+        homogeneity_title = MathTex(r"\text{Homogeneity Proof}",color=dark_purple)
+
+        # Statement
+        homogeneity_statement = MathTex(
+            r"\text{If } x \perp_{BJ} y, \text{ then } (\alpha x) \perp_{BJ} (\beta y) \quad \forall \alpha, \beta \in \mathbb{R}",
+            color=BLACK,
+        )
+
+        # Assumption
+        homogeneity_assumption = MathTex(
+            r"\text{Assume } x \perp_{BJ} y: \quad \|x\| \leq \|x + \lambda y\| \quad \forall \lambda \in \mathbb{R}",
+            color=BLACK,
+        )
+
+        # Goal
+        homogeneity_goal = MathTex(
+            r"\text{Goal: Show } \|\alpha x\| \leq \|\alpha x + \mu(\beta y)\| \quad \forall \mu \in \mathbb{R}",
+            color=BLACK,
+        )
+
+        # Case 1 title
+        # case1_title = MathTex(
+        #     r"\text{Case 1: } \alpha \neq 0",
+        #     color=BLACK,
+        # )
+
+        # Case 1 - rewrite
+        case1_rewrite = MathTex(
+            r"\text{Case 1: } \alpha \neq 0",
+            r"\quad \|\alpha x + \mu\beta y\| = |\alpha| \cdot \left\|x + \frac{\mu\beta}{\alpha}y\right\|",
+            color=BLACK,
+        )
+
+        # Case 1 - substitution
+        # case1_substitution = MathTex(
+        #     r"\text{Let } \lambda_0 = \frac{\mu\beta}{\alpha}",
+        #     color=BLACK,
+        # )
+
+        # Case 1 - apply assumption
+        case1_apply = MathTex(
+            r"\|x\| \leq \|x + \lambda_0 y\|",
+            r"\quad (\text{Let } \lambda_0 = \frac{\mu\beta}{\alpha})",
+            r"\Longleftrightarrow",
+            r"|\alpha| \|x\| \leq |\alpha| \|x + \lambda_0 y\|",
+            r"\quad \therefore \|\alpha x\| \leq \|\alpha x + \mu\beta y\|",
+            color=BLACK,
+        )
+        case1_apply.set_color_by_tex(r"\quad (\text{Let } \lambda_0 = \frac{\mu\beta}{\alpha})",dark_purple)
+        case1_apply.set_color_by_tex(r"quad \therefore \|\alpha x\| \leq \|\alpha x + \mu\beta y\|",dark_purple)
+
+        # Case 1 - multiply
+        # case1_multiply = MathTex(
+        #     r"|\alpha| \|x\| \leq |\alpha| \|x + \lambda_0 y\|",
+        #     color=BLACK,
+        # )
+
+        # Case 1 - conclusion
+        # case1_conclusion = MathTex(
+        #     r"\|\alpha x\| \leq \|\alpha x + \mu\beta y\|",
+        #     color=dark_purple,
+        # )
+
+        # Case 2 title
+        # case2_title = MathTex(
+        #     r"\text{Case 2: } \alpha = 0",
+        #     color=BLACK,
+        # )
+
+        # Case 2 - simplification
+        case2_simplification = MathTex(
+            r"\text{Case 2: } \alpha = 0",
+            r"\quad \|0\| \leq \|0 + \mu(\beta y)\| = \|\mu\beta y\|",
+            # r"\quad 0 \leq \|\mu\beta y\| \quad \text{(Always true by norm properties)}",
+            color=BLACK,
+        )
+
+        # Case 2 - always true
+        case2_true = MathTex(
+            r"0 \leq \|\mu\beta y\| \quad \text{(Always true by norm properties)} \quad .\blacksquare",
+            color=BLACK,
+        )
+
+        homo = VGroup(*[
+            homogeneity_title,
+            homogeneity_statement,
+            homogeneity_assumption,
+            # homogeneity_goal,
+            VGroup(*[
+                VGroup(*[
+                    # case1_title,
+                    case1_rewrite,
+                    # case1_substitution,
+                    case1_apply,
+                    # case1_conclusion,
+                ]).arrange(DOWN,buff=0.2).scale(0.7).shift(2*LEFT),
+                VGroup(*[
+                    # case2_title,
+                    case2_simplification,
+                    case2_true,
+                ]).arrange(DOWN,buff=0.2).scale(0.7).shift(2*LEFT),
+            ]).arrange(DOWN,buff=0.3),
+        ]).arrange(DOWN,buff=0.3).next_to(box1,DOWN,buff=0.3)
+
+        self.play(
+            Write(homo),
+        )
+        self.wait(1)
+        self.play(
+            FadeOut(homo),
+        )
+
+        nonadditivity_title_bj = MathTex(r"\text{Non-Additivity Counterexample}",color=dark_terquise)
+
+        # Space
+        nonadditivity_space_bj = MathTex(
+            r"\text{Space: } \mathbb{R}^2 \text{ with } \ell^1 \text{ norm},",
+            r"\quad x = (1,0), \quad y = (1,1), \quad z = (1,-1)",
+            color=BLACK,
+        )
+
+        # Vectors
+        # nonadditivity_vectors_bj = MathTex(
+        #     r"x = (1,0), \quad y = (1,1), \quad z = (1,-1)",
+        #     color=BLACK,
+        # )
+
+        # Part 1 - x ⊥ y (reference)
+        nonadditivity_part1 = MathTex(
+            r"\text{Part 1: } x \perp_{BJ} y",
+            color=BLACK,
+        )
+        non_part1_2 = MathTex(
+            r"\quad \text{(shown earlier)}",
+            color=BLACK,
+        )
+
+        # Part 2 title
+        nonadditivity_part2_title = MathTex(
+            r"\text{Part 2: Show } x \perp_{BJ} z",
+            color=BLACK,
+        )
+
+        # Part 2 - norm of x
+        nonadditivity_part2_norm_x = MathTex(
+            r"\|x\|_1 = 1",
+            r"\quad , \|x + \lambda z\|_1 = \|(1+\lambda, -\lambda)\|_1 = |1+\lambda| + |\lambda|",
+            # r"1 \leq |1+\lambda| + |\lambda| \quad \text{(Always true)}",
+            color=BLACK,
+        )
+
+        # Part 2 - norm of x + λz
+        # nonadditivity_part2_norm_sum = MathTex(
+        #     r"\|x + \lambda z\|_1 = \|(1+\lambda, -\lambda)\|_1 = |1+\lambda| + |\lambda|"
+        # )
+
+        # Part 2 - inequality
+        nonadditivity_part2_inequality = MathTex(
+            r"1 \leq |1+\lambda| + |\lambda| \quad \text{(Always true)}",
+            color=BLACK,
+        )
+
+        # Part 2 - conclusion
+        # nonadditivity_part2_conclusion = MathTex(
+        #     r"\therefore x \perp_{BJ} z",
+        #     color=BLACK,
+        # )
+
+        # Part 3 title
+        # nonadditivity_part3_title = MathTex(
+        #     r"\text{Show } x \not\perp_{BJ} (y+z)",
+        #     color=BLACK,
+        # )
+
+        # Part 3 - sum
+        # nonadditivity_part3_sum = MathTex(
+        #     r"y + z = (1,1) + (1,-1) = (2,0)"
+        # )
+
+        # Part 3 - norm of x
+        # nonadditivity_part3_norm_x = MathTex(r"\|x\|_1 = 1")
+
+        # Part 3 - norm of x + λ(y+z)
+        nonadditivity_part3_norm_sum = MathTex(
+            r"\text{Show } x \not\perp_{BJ} (y+z) : ",
+            r"\quad  \|x + \lambda(y+z)\|_1 = \|(1+2\lambda, 0)\|_1 = |1+2\lambda|",
+            # r"\quad (\text{Required: } 1 \leq |1+2\lambda|)",
+            color=BLACK,
+        )
+
+        # Part 3 - required condition
+        # nonadditivity_part3_condition = MathTex(
+        #     r"\text{Required: } 1 \leq |1+2\lambda|",
+        #     color=BLACK,
+        # )
+
+        # Part 3 - counterexample
+        nonadditivity_part3_counter = MathTex(
+            r"(\text{Required: } 1 \leq |1+2\lambda|)",
+            r"\quad  \text{For } \lambda = -\frac{1}{2}: \quad |1+2(-\frac{1}{2})| = 0",
+            color=BLACK,
+        )
+
+        # Part 3 - inequality fails
+        # nonadditivity_part3_fails = MathTex(
+        #     r"1 \leq 0 \quad \text{(False)}",
+        #     color=BLACK,
+        # )
+
+        # Part 3 - conclusion
+        # nonadditivity_part3_conclusion = MathTex(
+        #     r"\therefore x \not\perp_{BJ} (y+z)",
+        #     color=BLACK,
+        # )
+
+        add = VGroup(*[
+            nonadditivity_title_bj,
+            nonadditivity_space_bj,
+            # nonadditivity_vectors_bj,
+            # homogeneity_goal,
+            VGroup(*[
+                VGroup(*[
+                    nonadditivity_part1,
+                    non_part1_2,
+                    # case1_rewrite,
+                    # case1_substitution,
+                    # case1_apply,
+                    # case1_conclusion,
+                ]).arrange(DOWN,buff=0.2).scale(0.7).shift(2*LEFT),
+                VGroup(*[
+                    nonadditivity_part2_title,
+                    nonadditivity_part2_norm_x,
+                    nonadditivity_part2_inequality,
+                ]).arrange(DOWN,buff=0.3).scale(0.6).shift(2*LEFT),
+            ]).arrange(RIGHT,buff=1),
+            VGroup(*[
+                # nonadditivity_part3_title,
+                nonadditivity_part3_norm_sum,
+                nonadditivity_part3_counter,
+            ]).arrange(DOWN,buff=0.2).scale(0.8),
+        ]).arrange(DOWN,buff=0.3).next_to(box1,DOWN,buff=0.3)
+
+        self.play(
+            Write(add),
+        )
+        self.wait(1)
+        self.play(
+            FadeOut(add),
+        )
 
         headers = [
             (r"\text{Symmetry}", dark_pink),
@@ -1544,6 +2165,13 @@ class TitleScene(Scene):
             run_time = 3,
         )
         self.wait(1)
+        self.play(
+            FadeOut(table),
+            FadeOut(title_orth),
+            FadeOut(box1),
+            FadeOut(roberts),
+        )
+        self.wait(1)
 
     def scene8_SubScene9(self, title):
         title_orth = Tex("Isosceles Orthogonality", color=BLACK, font_size=70).to_edge(UP)
@@ -1551,7 +2179,7 @@ class TitleScene(Scene):
         roberts = MathTex(
             r"\|x + y\| ",r"= ",r"\|x - y\|",
             color = BLACK,
-        )
+        ).next_to(title_orth,DOWN,buff=0.5)
         box1 = SurroundingRectangle(
             roberts,
             color=dark_blue,        
@@ -1572,6 +2200,311 @@ class TitleScene(Scene):
 
         # proof and counterexample
 
+        symmetry_title = MathTex(
+            r"\text{Symmetry Proof}",
+            color=dark_pink,
+        )
+
+        # Statement
+        symmetry_statement = MathTex(
+            r"\text{If } x \perp_I y, \text{ then } y \perp_I x",
+            color=BLACK,
+        )
+
+        # Assumption
+        symmetry_assumption = MathTex(
+            r"\text{Assume } x \perp_I y: \quad \|x + y\| = \|x - y\|",
+            color=BLACK,
+        )
+
+        # Goal
+        symmetry_goal = MathTex(
+            r"\text{Goal: Show } \|y + x\| = \|y - x\|",
+            color=BLACK,
+        )
+
+        # Left side
+        symmetry_left = MathTex(
+            r"\|y + x\| = \|x + y\| \quad \text{(commutativity of vector addition)}",
+            color=BLACK,
+        )
+
+        # Right side - step 1
+        symmetry_right = MathTex(
+            r"\|y - x\| = \|-(x - y)\| = \|x - y\|",
+            r"\quad \text{(norm property)}",
+            color=BLACK,
+        )
+
+        # Right side - step 2
+        # symmetry_right_2 = MathTex(
+        #     r"\|-(x - y)\| = \|x - y\| \quad \text{(norm property: } \|-v\| = \|v\|\text{)}",
+        #     color=BLACK,
+        # )
+
+        # Combine
+        symmetry_combine = MathTex(
+            r"\|y + x\| = \|x + y\| = \|x - y\| = \|y - x\|",
+            r"\quad . \blacksquare",
+            color=BLACK,
+        )
+
+        # Conclusion
+        # symmetry_conclusion = MathTex(
+        #     r"\therefore y \perp_I x",
+        #     color=BLACK,
+        # )
+
+        sym = VGroup(*[
+            symmetry_title,
+            symmetry_statement,
+            symmetry_assumption,
+            symmetry_goal,
+            VGroup(*[
+                VGroup(*[
+                    symmetry_left,
+                ]).arrange(DOWN,buff=0.2).scale(0.7).shift(2*LEFT),
+                VGroup(*[
+                    symmetry_right,
+                ]).arrange(DOWN,buff=0.2).scale(0.7).shift(2*LEFT),
+            ]).arrange(DOWN,buff=0.5),
+            symmetry_combine,
+        ]).arrange(DOWN,buff=0.3).next_to(box1,DOWN,buff=0.3)
+
+        self.play(
+            Write(sym),
+        )
+        self.wait(1)
+        self.play(
+            FadeOut(sym),
+        )
+
+        nonhomogeneity_title_iso = MathTex(
+            r"\text{Non-Homogeneity Counterexample}",
+            color=dark_purple,
+        )
+
+        # Space
+        nonhomogeneity_space_iso = MathTex(
+            r"\text{Space: } \mathbb{R}^2 \text{ with } \ell^1 \text{ norm: } \|(u,v)\|_1 = |u| + |v|",
+            color=BLACK,
+        )
+
+        # Vectors
+        nonhomogeneity_vectors_iso = MathTex(
+            r"x = (2,1), \quad y = (-1,2)",
+            color=BLACK,
+        )
+
+        # Part 1 title
+        nonhomogeneity_part1_title = MathTex(
+            r"\text{Part 1: Show } x \perp_I y",
+            color=BLACK,
+        )
+
+        # Part 1 - x+y
+        nonhomogeneity_part1_sum = MathTex(
+            r"\|x + y\|_1 = 4",
+            color=BLACK,
+        )
+
+        # Part 1 - x-y
+        nonhomogeneity_part1_diff = MathTex(
+            r"\|x - y\|_1 = 4",
+            color=BLACK,
+        )
+
+        # Part 1 - conclusion
+        nonhomogeneity_part1_conclusion = MathTex(
+            r"4 = 4 \implies x \perp_I y",
+            color=BLACK,
+        )
+
+        # Part 2 title
+        nonhomogeneity_part2_title = MathTex(
+            r"\text{Part 2: Show } (2x) \not\perp_I y \text{ for } \alpha = 2, \beta = 1",
+            color=BLACK,
+        )
+
+        # Part 2 - scaled vector
+        # nonhomogeneity_part2_scaled = MathTex(
+        #     r"2x = (4,2)",
+        #     color=BLACK,
+        # )
+
+        # Part 2 - 2x+y
+        nonhomogeneity_part2_sum = MathTex(
+            r"\|2x + y\|_1 = 7",
+            color=BLACK,
+        )
+
+        # Part 2 - 2x-y
+        nonhomogeneity_part2_diff = MathTex(
+            r"\|2x - y\|_1 = 5",
+            color=BLACK,
+        )
+
+        # Part 2 - conclusion
+        nonhomogeneity_part2_conclusion = MathTex(
+            r"7 \neq 5 \implies (2x) \not\perp_I y",
+            color=BLACK,
+        )
+
+        sym = VGroup(*[
+            nonhomogeneity_title_iso,
+            nonhomogeneity_space_iso,
+            nonhomogeneity_vectors_iso,
+            VGroup(*[
+                VGroup(*[
+                    nonhomogeneity_part1_title,
+                    nonhomogeneity_part1_sum,
+                    nonhomogeneity_part1_diff,
+                    nonhomogeneity_part1_conclusion
+                ]).arrange(DOWN,buff=0.2).scale(0.7).shift(2*LEFT),
+                VGroup(*[
+                    nonhomogeneity_part2_title,
+                    nonhomogeneity_part2_sum,
+                    nonhomogeneity_part2_diff,
+                    nonhomogeneity_part2_conclusion
+                ]).arrange(DOWN,buff=0.2).scale(0.8).shift(2*LEFT),
+            ]).arrange(RIGHT,buff=1),
+        ]).arrange(DOWN,buff=0.3).next_to(box1,DOWN,buff=0.3)
+
+        self.play(
+            Write(sym),
+        )
+        self.wait(1)
+        self.play(
+            FadeOut(sym),
+        )
+
+        nonadditivity_title_iso = MathTex(
+            r"\text{Non-Additivity Counterexample}",
+            color=dark_terquise,
+        )
+
+        # Space
+        nonadditivity_space_iso = MathTex(
+            r"\text{Space: } \mathbb{R}^2 \text{ with } \ell^1 \text{ norm}",
+            color=BLACK,
+        )
+
+        # Vectors
+        nonadditivity_vectors_iso = MathTex(
+            r"x = (2,1), \quad y = (1,-1), \quad z = (-1,2)",
+            color=BLACK,
+        )
+
+        # Part 1 title
+        nonadditivity_part1_title_iso = MathTex(
+            r"\text{Part 1: Show } x \perp_I y",
+            color=BLACK,
+        )
+
+        # Part 1 - x+y
+        nonadditivity_part1_sum_iso = MathTex(
+            r"\|x + y\|_1 = 3",
+            color=BLACK,
+        )
+
+        # Part 1 - x-y
+        nonadditivity_part1_diff_iso = MathTex(
+            r"\|x - y\|_1 = 3",
+            color=BLACK,
+        )
+
+        # Part 1 - conclusion
+        nonadditivity_part1_conclusion_iso = MathTex(
+            r"3 = 3 \implies x \perp_I y",
+            color=BLACK,
+        )
+
+        # Part 2 title
+        nonadditivity_part2_title_iso = MathTex(
+            r"\text{Part 2: Show } x \perp_I z",
+            color=BLACK,
+        )
+
+        # Part 2 - x+z
+        nonadditivity_part2_sum_iso = MathTex(
+            r"\|x + z\|_1 = 4",
+            color=BLACK,
+        )
+
+        # Part 2 - x-z
+        nonadditivity_part2_diff_iso = MathTex(
+            r"\|x - z\|_1 = 4",
+            color=BLACK,
+        )
+
+        # Part 2 - conclusion
+        nonadditivity_part2_conclusion_iso = MathTex(
+            r"4 = 4 \implies x \perp_I z",
+            color=BLACK,
+        )
+
+        # Part 3 title
+        nonadditivity_part3_title_iso = MathTex(
+            r"\text{Part 3: Check } x \perp_I (y+z)",
+            color=BLACK,
+        )
+
+        # Part 3 - sum
+        # nonadditivity_part3_sum_iso = MathTex(
+        #     r"y + z = (1,-1) + (-1,1) = (0,0) = 0"
+        # )
+
+        # Part 3 - x+(y+z)
+        nonadditivity_part3_xplus_iso = MathTex(
+            r"\|x + (y+z)\|_1 = 4",
+            color=BLACK,
+        )
+
+        # Part 3 - x-(y+z)
+        nonadditivity_part3_xminus_iso = MathTex(
+            r"\|x - (y+z)\|_1 = 2",
+            color=BLACK,
+        )
+
+        # Part 3 - note
+        nonadditivity_part3_note = MathTex(
+            r"4 \neq 2 \implies x \not\perp_I (y+z)",
+            color=BLACK,
+        )
+
+        sym = VGroup(*[
+            nonadditivity_title_iso,
+            nonadditivity_space_iso,
+            nonadditivity_vectors_iso,
+            VGroup(*[
+                VGroup(*[
+                    nonadditivity_part1_title_iso,
+                    nonadditivity_part1_sum_iso,
+                    nonadditivity_part1_diff_iso,
+                    nonadditivity_part1_conclusion_iso
+                ]).arrange(DOWN,buff=0.2).scale(0.7).shift(2*LEFT),
+                VGroup(*[
+                    nonadditivity_part2_title_iso,
+                    nonadditivity_part2_sum_iso,
+                    nonadditivity_part2_diff_iso,
+                    nonadditivity_part2_conclusion_iso
+                ]).arrange(DOWN,buff=0.2).scale(0.8).shift(2*LEFT),
+                VGroup(*[
+                nonadditivity_part3_title_iso,
+                nonadditivity_part3_xplus_iso,
+                nonadditivity_part3_xminus_iso,
+                nonadditivity_part3_note,
+            ]).arrange(DOWN,buff=0.2).scale(0.8),
+            ]).arrange(RIGHT,buff=1),
+        ]).arrange(DOWN,buff=0.3).next_to(box1,DOWN,buff=0.3)
+
+        self.play(
+            Write(sym),
+        )
+        self.wait(1)
+        self.play(
+            FadeOut(sym),
+        )
 
         headers = [
             (r"\text{Symmetry}", dark_pink),
@@ -1610,6 +2543,13 @@ class TitleScene(Scene):
             run_time = 3,
         )
         self.wait(1)
+        self.play(
+            FadeOut(title_orth),
+            FadeOut(box1),
+            FadeOut(roberts),
+            FadeOut(table),
+        )
+        self.wait(1)
 
 
     def scene8_SubScene12(self, title):
@@ -1618,7 +2558,7 @@ class TitleScene(Scene):
         roberts = MathTex(
             r"\|x + y\|^2 ",r"= ",r"\|x\|^2 + \|y\|^2",
             color = BLACK,
-        )
+        ).next_to(title_orth,DOWN,buff=0.5)
         box1 = SurroundingRectangle(
             roberts,
             color=dark_blue,        
@@ -1639,6 +2579,262 @@ class TitleScene(Scene):
 
         # proof and counterexample
 
+        symmetry_title = MathTex(
+            r"\text{Symmetry Proof}",
+            color=dark_pink,
+        )
+
+        assumption = MathTex(
+            r"\text{Assume : } x \perp_P y \implies \|x+y\|^2 = \|x\|^2 + \|y\|^2",
+            color=BLACK,
+        )
+
+        # Goal
+        goal = MathTex(
+            r"\text{Goal : } y \perp_P x \implies \|y+x\|^2 = \|y\|^2 + \|x\|^2",
+            color=BLACK,
+        )
+
+        # Step 1: Commutativity of vector addition
+        # step1 = MathTex(r"x + y = y + x")
+
+        # Step 2: Norm equality
+        step2 = MathTex(
+            r"\|x+y\| = \|y+x\| \implies \|x+y\|^2 = \|y+x\|^2",
+            color=BLACK,
+        )
+
+        # Step 3: Commutativity of real addition
+        step3 = MathTex(
+            r"\|x\|^2 + \|y\|^2 = \|y\|^2 + \|x\|^2",
+            color=BLACK,
+        )
+
+        # Conclusion
+        conclusion = MathTex(
+            r"\|y+x\|^2 = \|y\|^2 + \|x\|^2",
+            color=BLACK,
+        )
+
+        # QED
+        qed = MathTex(
+            r"y \perp_P x \quad . \blacksquare",
+            color=BLACK,
+        )
+
+        sym = VGroup(*[
+            symmetry_title,
+            assumption,
+            goal,
+            VGroup(*[
+                step2,
+                step3,
+                conclusion,
+            ]).arrange(DOWN,buff=0.3).scale(0.8),
+            qed,
+        ]).arrange(DOWN,buff=0.3).next_to(box1,DOWN,buff=0.3)
+
+        self.play(
+            Write(sym),
+        )
+        self.wait(1)
+        self.play(
+            FadeOut(sym),
+        )
+
+        nonhomogeneity_title = MathTex(
+            r"\text{Non-Homogeneity Counterexample}",
+            color=dark_purple,
+        )
+
+        # Space definition
+        nonhomogeneity_space = MathTex(
+            r"\text{Space: } \mathbb{R}^2 \text{ with norm: } \|(u,v)\| = \begin{cases} \sqrt{u^2 + v^2} & \text{if } uv \geq 0 \\ |u| + |v| & \text{if } uv < 0 \end{cases}",
+            color=BLACK,
+        ).scale(0.8)
+
+        # Vectors
+        nonhomogeneity_vectors = MathTex(
+            r"x = (1,0), \quad y = (0,1)",
+            color=BLACK,
+        ).scale(0.8)
+
+        # Part 1 title
+        nonhomogeneity_part1_title = MathTex(
+            r"\text{Part 1: Show } x \perp_P y",
+            color=BLACK,
+        )
+
+        # Part 1 - norms
+        nonhomogeneity_part1_norms = MathTex(
+            r"\|x\| = 1, \quad \|y\| = 1",
+            color=BLACK,
+        )
+
+        # Part 1 - sum
+        nonhomogeneity_part1_sum = MathTex(
+            r"\|x+y\|^2 = 2",
+            color=BLACK,
+        )
+
+        # Part 1 - check
+        nonhomogeneity_part1_check = MathTex(
+            r"\|x\|^2 + \|y\|^2 = 2",
+            color=BLACK,
+        )
+
+        # Part 1 - conclusion
+        nonhomogeneity_part1_conclusion = MathTex(
+            r"2 = 2 \implies x \perp_P y \quad \checkmark",
+            color=BLACK,
+        )
+
+        # Part 2 title
+        nonhomogeneity_part2_title = MathTex(
+            r"\text{Part 2: Show } (-x) \not\perp_P y \text{ for } \alpha = -1, \beta = 1",
+            color=BLACK,
+        )
+
+        # Part 2 - scaled vector
+        nonhomogeneity_part2_scaled = MathTex(
+            r"\|-x\| = 1",
+            color=BLACK,
+        )
+
+        # Part 2 - sum
+        nonhomogeneity_part2_sum = MathTex(
+            r"\|-x+y\| = |-1| + |1| = 2 \quad (uv < 0)",
+            color=BLACK,
+        )
+
+        # Part 2 - check
+        nonhomogeneity_part2_check = MathTex(
+            r"\|-x+y\|^2 = 4, \quad \|-x\|^2 + \|y\|^2 = 1 + 1 = 2",
+            color=BLACK,
+        )
+
+        # Part 2 - conclusion
+        nonhomogeneity_part2_conclusion = MathTex(
+            r"4 \neq 2 \implies (-x) \not\perp_P y",
+            color=BLACK,
+        )
+
+        sym = VGroup(*[
+            nonhomogeneity_title,
+            nonhomogeneity_space,
+            nonhomogeneity_vectors,
+            VGroup(*[
+                VGroup(*[
+                    nonhomogeneity_part1_title,
+                    nonhomogeneity_part1_norms,
+                    nonhomogeneity_part1_sum,
+                    nonhomogeneity_part1_check,
+                    nonhomogeneity_part1_conclusion,
+                ]).arrange(DOWN, buff=0.2).scale(0.7).shift(2*LEFT),
+                VGroup(*[
+                    nonhomogeneity_part2_title,
+                    nonhomogeneity_part2_scaled,
+                    nonhomogeneity_part2_sum,
+                    nonhomogeneity_part2_check,
+                    nonhomogeneity_part2_conclusion,
+                ]).arrange(DOWN, buff=0.2).scale(0.7).shift(2*LEFT),
+            ]).arrange(RIGHT, buff=1),
+        ]).arrange(DOWN, buff=0.2).next_to(box1, DOWN, buff=0.3)
+
+        self.play(
+            Write(sym),
+        )
+        self.wait(1)
+        self.play(
+            FadeOut(sym),
+        )
+
+
+        # nonadditivity_title = MathTex(
+        #     r"\text{Non-Additivity}",
+        #     color=dark_terquise,
+        # )
+
+        # # Statement
+        # nonadditivity_statement = MathTex(
+        #     r"x \perp_P y \text{ and } x \perp_P z \not\Rightarrow x \perp_P (y+z)",
+        #     color=BLACK,
+        # )
+
+        # # Inner product case title
+        # # nonadditivity_inner_title = MathTex(
+        # #     r"\text{In inner product spaces:}",
+        # #     color=BLACK,
+        # # )
+
+        # # Inner product - assumption
+        # nonadditivity_inner_assumption = MathTex(
+        #     r"\langle x, y \rangle = 0 \text{ and } \langle x, z \rangle = 0",
+        #     color=BLACK,
+        # )
+
+        # # Inner product - linearity
+        # nonadditivity_inner_linearity = MathTex(
+        #     r"\langle x, y+z \rangle = \langle x, y \rangle + \langle x, z \rangle = 0 + 0 = 0",
+        #     color=BLACK,
+        # )
+
+        # # Inner product - conclusion
+        # nonadditivity_inner_conclusion = MathTex(
+        #     r"\implies x \perp_P (y+z) \quad \checkmark",
+        #     color=BLACK,
+        # )
+
+        # # General normed space title
+        # nonadditivity_general_title = MathTex(
+        #     r"\text{In general normed spaces:}",
+        #     color=BLACK,
+        # )
+
+        # # General - assumptions
+        # nonadditivity_general_assumptions = MathTex(
+        #     r"\|x+y\|^2 = \|x\|^2 + \|y\|^2 \text{ and } \|x+z\|^2 = \|x\|^2 + \|z\|^2",
+        #     color=BLACK,
+        # )
+
+        # # General - does not imply
+        # nonadditivity_general_notimply = MathTex(
+        #     r"\not\Rightarrow \|x+(y+z)\|^2 = \|x\|^2 + \|y+z\|^2",
+        #     color=BLACK,
+        # )
+
+        # # General - reason
+        # nonadditivity_general_reason = MathTex(
+        #     r"\text{(no algebraic structure guarantees this)}",
+        #     color=BLACK,
+        # )
+
+        # sym = VGroup(*[
+        #     nonadditivity_title,
+        #     nonadditivity_statement,
+        #     VGroup(*[
+        #         VGroup(*[
+        #             nonadditivity_inner_title,
+        #             nonadditivity_inner_assumption,
+        #             nonadditivity_inner_linearity,
+        #             nonadditivity_inner_conclusion,
+        #         ]).arrange(DOWN, buff=0.2).scale(0.7).shift(2*LEFT),
+        #         VGroup(*[
+        #             nonadditivity_general_title,
+        #             nonadditivity_general_assumptions,
+        #             nonadditivity_general_notimply,
+        #             nonadditivity_general_reason,
+        #         ]).arrange(DOWN, buff=0.2).scale(0.7).shift(2*LEFT),
+        #     ]).arrange(RIGHT, buff=1),
+        # ]).arrange(DOWN, buff=0.3).next_to(box1, DOWN, buff=0.3)
+
+        # self.play(
+        #     Write(sym),
+        # )
+        # self.wait(1)
+        # self.play(
+        #     FadeOut(sym),
+        # )
 
         headers = [
             (r"\text{Symmetry}", dark_pink),
@@ -1656,10 +2852,10 @@ class TitleScene(Scene):
             MathTex(r"\Large \checkmark").set_color(GREEN),
             MathTex(r"\Large \times").set_color(RED),
             MathTex(r"\Large \times").set_color(RED),
-            MathTex(r"\Large \times").set_color(RED),
+           MathTex(r"\Large \checkmark").set_color(GREEN),
         ]
         
-        row_label = MathTex(r"\text{Pythagorean}", color=BLACK)
+        row_label = MathTex(r"\text{Pythagorean}", color=BLACK).scale(0.6)
 
         table = MobjectTable(
             [row],
@@ -1677,6 +2873,13 @@ class TitleScene(Scene):
             run_time = 3,
         )
         self.wait(1)
+        self.play(
+            FadeOut(title_orth),
+            FadeOut(box1),
+            FadeOut(roberts),
+            FadeOut(table),
+        )
+        self.wait(1)
 
 
     def scene8(self, title):
@@ -1691,7 +2894,7 @@ class TitleScene(Scene):
 
         # self.define_properties(title)
 
-        self.scene8_SubScene3(title)
+        # self.scene8_SubScene3(title)
 
         ########## birkhof
 
@@ -1715,7 +2918,7 @@ class TitleScene(Scene):
 
         # self.scene8_SubScene11(title)
 
-        # self.scene8_SubScene12(title)
+        self.scene8_SubScene12(title)
 
     def scene7_SubScene0(self, title):
         self.wait(1)
