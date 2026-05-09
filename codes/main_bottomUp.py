@@ -1527,9 +1527,9 @@ class Part1_Scene(MovingCameraScene):
         step_2 = MathTex(r"\iff",r"\|x-y\| = 0",color=BLACK).scale(1.5).next_to(step_1,RIGHT)
         step_3 = MathTex(r"\iff",r"x-y = 0",color=BLACK).scale(1.5).next_to(step_2,DOWN).shift(0.3*LEFT)
         step_2to3 = MathTex(r"(N1)",color=dark_orange).scale(1.5).next_to(step_3,RIGHT)
-        step_4 = MathTex(r"\iff",r"x = y",color=BLACK).scale(1.5).next_to(step_3,DOWN).shift(0.5*LEFT)
+        step_4 = MathTex(r"\iff",r"x = y \quad . \blacksquare",color=BLACK).scale(1.5).next_to(step_3,DOWN) #.shift(0.5*LEFT)
         square_for_end_proof = Square(0.3,color=BLACK).scale(1.5).next_to(step_4,RIGHT)
-        prove_1_group = VGroup(step_1, step_2, step_3, step_2to3, step_4, square_for_end_proof).shift(3*LEFT+0.7*UP)
+        prove_1_group = VGroup(step_1, step_2, step_3, step_2to3, step_4).shift(3*LEFT+0.7*UP)
         rect_prove_1 = SurroundingRectangle(
             prove_1_group,
             color=dark_orange,        
@@ -1568,10 +1568,10 @@ class Part1_Scene(MovingCameraScene):
             Write(step_4),
         )
         self.wait(0.3)
-        self.play(
-            Create(square_for_end_proof),
-        )
-        self.wait(0.3)
+        # self.play(
+        #     Create(square_for_end_proof),
+        # )
+        # self.wait(0.3)
 
         # shape
 
@@ -1668,9 +1668,9 @@ class Part1_Scene(MovingCameraScene):
         step_4 = MathTex(r" = ",r"|-1| \, \|(y-x)\|",color=BLACK).scale(1.5).next_to(step_2,DOWN).shift(1.3*RIGHT)
         step_3to4 = MathTex(r"(N2)",color=dark_orange).scale(1.5).next_to(step_4,RIGHT)
         step_5 = MathTex(r" = ",r"\|y-x\|",color=BLACK).scale(1.5).next_to(step_4,DOWN).shift(1.1*LEFT)
-        step_6 = MathTex(r" = ",r"d(y,x)",color=BLACK).scale(1.5).next_to(step_5,RIGHT)
+        step_6 = MathTex(r" = ",r"d(y,x) \quad . \blacksquare",color=BLACK).scale(1.5).next_to(step_5,RIGHT)
         square_for_end_proof = Square(0.3,color=BLACK).scale(1.5).next_to(step_6,RIGHT)
-        prove_2_group = VGroup(step_1, step_2, step_3, step_4, step_3to4, step_5, step_6, square_for_end_proof).shift(4*LEFT+0.7*UP)
+        prove_2_group = VGroup(step_1, step_2, step_3, step_4, step_3to4, step_5, step_6).shift(4*LEFT+0.7*UP)
         rect_prove_2 = SurroundingRectangle(
             prove_2_group,
             color=dark_orange,        
@@ -1717,10 +1717,10 @@ class Part1_Scene(MovingCameraScene):
             Write(step_6),
         )
         self.wait(0.3)
-        self.play(
-            Create(square_for_end_proof),
-        )
-        self.wait(0.3)
+        # self.play(
+        #     Create(square_for_end_proof),
+        # )
+        # self.wait(0.3)
 
         step_1.set_color(dark_red)
         step_6.set_color(dark_red)
@@ -1860,9 +1860,9 @@ class Part1_Scene(MovingCameraScene):
         step_4.set_color_by_tex(r"\|x-z\|",dark_pink)
         step_4.set_color_by_tex(r"\|z-y\|",dark_purple)
         step_3to4 = MathTex(r"(N3)",color=dark_orange).scale(1.5).next_to(step_4,RIGHT)
-        step_5 = MathTex(r" = ",r"d(x,z) + d(z,y)",color=BLACK).scale(1.5).next_to(step_4,DOWN).shift(0.5*LEFT)
+        step_5 = MathTex(r" = ",r"d(x,z) + d(z,y) \quad . \blacksquare",color=BLACK).scale(1.5).next_to(step_4,DOWN).shift(0.5*LEFT)
         square_for_end_proof = Square(0.3,color=BLACK).scale(1.5).next_to(step_5,RIGHT)
-        prove_2_group = VGroup(step_1, step_2, step_3, rect_step_3_x, rect_step_3_y, step_4, step_3to4, step_5, square_for_end_proof).shift(4*LEFT+0.7*UP)
+        prove_2_group = VGroup(step_1, step_2, step_3, rect_step_3_x, rect_step_3_y, step_4, step_3to4, step_5).shift(4*LEFT+0.7*UP)
         rect_prove_2 = SurroundingRectangle(
             prove_2_group,
             color=dark_orange,        
@@ -1913,10 +1913,10 @@ class Part1_Scene(MovingCameraScene):
             Write(step_5),
         )
         self.wait(0.3)
-        self.play(
-            Create(square_for_end_proof),
-        )
-        self.wait(0.3)
+        # self.play(
+        #     Create(square_for_end_proof),
+        # )
+        # self.wait(0.3)
 
         step_1.set_color(dark_red)
         step_5.set_color(dark_red)
@@ -2467,38 +2467,38 @@ class Part1_Scene(MovingCameraScene):
         # self.wait(1)
 
         # prove part 1
-        # prove_1 = MathTex(r"1. \text{  }",r"d(x,y) = 0",r"\iff",r"x = y",color=BLACK).scale(1.5).move_to(title.get_center()+2*DOWN)
+        prove_1 = MathTex(r"\quad",r"d(x,y) = 0",r"\iff",r"x = y",color=BLACK).scale(1.5).move_to(title.get_center()+2*DOWN)
         # proof_1_needed = [
         #     prove_1, distance
         # ]
         # self.scene5_subScene1(title, *proof_1_needed)
 
         # prove part 2
-        # prove_2 = MathTex(r"2. \text{  }",r"d(x,y)",r" = ",r"d(y,x)",color=BLACK).scale(1.5).move_to(title.get_center()+2*DOWN)
+        prove_2 = MathTex(r"\quad",r"d(x,y)",r" = ",r"d(y,x)",color=BLACK).scale(1.5).move_to(title.get_center()+2*DOWN)
         # proof_2_needed = [
         #     prove_1, prove_2, distance
         # ]
-        # VGroup(distance,rect_distance).to_edge(UL)
-        # text_claim.move_to(rect_distance.get_right()+3.5*RIGHT)
-        # self.add(prove_2, distance, rect_distance, text_claim)
+        VGroup(distance,rect_distance).to_edge(UL)
+        text_claim.move_to(rect_distance.get_right()+3.5*RIGHT)
+        self.add(prove_2, distance, rect_distance, text_claim)
         # self.scene5_subScene2(title,*proof_2_needed)
 
         # # prove part 3
-        # prove_3 = MathTex(r"3. \text{  }",r"d(x,y)",r" \le ",r"d(x,z)",r" + ",r"d(z,y)",color=BLACK).scale(1.5).move_to(title.get_center()+2*DOWN)
-        # proof_3_needed = [
-        #     prove_2, prove_3, distance
-        # ]
-        # self.scene5_subScene3(title, *proof_3_needed)
+        prove_3 = MathTex(r"\quad",r"d(x,y)",r" \le ",r"d(x,z)",r" + ",r"d(z,y)",color=BLACK).scale(1.5).move_to(title.get_center()+2*DOWN)
+        proof_3_needed = [
+            prove_2, prove_3, distance
+        ]
+        self.scene5_subScene3(title, *proof_3_needed)
 
-        # fade_out_list = [
-        #     distance, rect_distance, text_claim, prove_3
-        # ]
-        # self.play(
-        #     FadeOut(VGroup(*fade_out_list)),
-        # )
+        fade_out_list = [
+            distance, rect_distance, text_claim, prove_3
+        ]
+        self.play(
+            FadeOut(VGroup(*fade_out_list)),
+        )
 
         # normed space
-        self.scene5_subScene4(title)
+        # self.scene5_subScene4(title)
 
     def scene4_subScene0(self,title):
         # length
@@ -2730,8 +2730,8 @@ class Part1_Scene(MovingCameraScene):
         self.play(
             FadeOut(vector,run_time=0.5),
             tip.animate.move_to(axes.c2p(0,0)),
-            TransformFromCopy(norm2_2d[1:],text_2_formula_1),
-            Write(text_2_formula_2),
+            # TransformFromCopy(norm2_2d[1:],text_2_formula_1),
+            # Write(text_2_formula_2),
         )
         self.wait(1)
         self.play(
@@ -2754,8 +2754,8 @@ class Part1_Scene(MovingCameraScene):
             FadeOut(arrow_0_0_up),
             FadeOut(arrow_0_0_down),
             FadeOut(text_2),
-            FadeOut(text_2_formula_1),
-            FadeOut(text_2_formula_2),
+            # FadeOut(text_2_formula_1),
+            # FadeOut(text_2_formula_2),
             FadeIn(vector),
             tip.animate.move_to(axes.c2p(6,4)),
             run_time=1
@@ -3129,6 +3129,8 @@ class Part1_Scene(MovingCameraScene):
             FadeOut(vector_merged),
             FadeOut(text_4),
         )
+
+        self.wait(1)
 
         return plane,axes
 
@@ -4006,17 +4008,17 @@ class Part1_Scene(MovingCameraScene):
         )
         self.wait(0.5)
 
-        proof_line4 = MathTex("0 \le \|x\|",color=BLACK).scale(1.5).move_to(proof_line3.get_center()+1.5*DOWN)
+        proof_line4 = MathTex(r"0 \le \|x\| \quad . \blacksquare",color=BLACK).scale(1.5).move_to(proof_line3.get_center()+1.5*DOWN+0.5*RIGHT)
         square_for_end_proof = Square(0.5,color=BLACK).next_to(proof_line4,RIGHT)
         self.play( 
             Write(proof_line4),
         )
 
-        self.wait(0.5)
+        # self.wait(0.5)
 
-        self.play(
-            Create(square_for_end_proof),
-        )
+        # self.play(
+        #     Create(square_for_end_proof),
+        # )
 
         self.wait(1)
 
@@ -4028,7 +4030,7 @@ class Part1_Scene(MovingCameraScene):
             FadeOut(proof_line2),
             FadeOut(proof_line3),
             FadeOut(proof_line4),
-            FadeOut(square_for_end_proof),
+            # FadeOut(square_for_end_proof),
         )
 
         # create shapes for better understanding
@@ -4113,6 +4115,8 @@ class Part1_Scene(MovingCameraScene):
             # FadeOut(),
             # FadeOut(),
         )
+
+        self.wait(1)
 
     def scene4_subScene5(self,title):
         """scene 4: sub scene 5 : examples of norm"""
@@ -4790,13 +4794,13 @@ class Part1_Scene(MovingCameraScene):
         # self.scene4_subScene3(title)
 
         # prove and show ||x||>=0
-        # self.scene4_subScene4(title)
+        self.scene4_subScene4(title)
 
         # examples of norm
         # self.scene4_subScene5(title)
 
         # normed space
-        self.scene4_subScene6(title)
+        # self.scene4_subScene6(title)
 
 
     def scene3(self,topic_number,first_time=False):

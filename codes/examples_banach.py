@@ -101,9 +101,9 @@ class TitleScene(Scene):
 
     def construct(self):
 
-        self.scene1()
+        # self.scene1()
 
-        # self.scene2()
+        self.scene2()
 
     def scene1(self):
 
@@ -407,18 +407,23 @@ class TitleScene(Scene):
             r"\text{everywhere.}",
             color=BLACK,
         ).scale(1.2)
+        final_note = Text("Only for a countable set of \npoints can two functions \n  have different values.",color=BLACK,font_size=30)
         note_l1space = VGroup(*[note_l1space_part1, note_l1space_part2, note_l1space_part3, note_l1space_part4]).arrange(DOWN,buff=0.2)
         text, box = self.show_minorPoint(note_l1space, True)
         text.next_to(l1space,DOWN,buff=0.3)
         box.move_to(text.get_center())
         VGroup(*[text,box]).scale(0.9)
+        final_note.scale(1.2).next_to(box,DOWN,buff=0.3)
         self.play(
             Create(box),
             Write(text),
         )
+        self.play(
+            Write(final_note),
+        )
         self.wait(1)
         self.play(
-            FadeOut(VGroup(*[text,box])),
+            FadeOut(VGroup(*[text,box, final_note])),
         )
         self.wait(0.5)
 
@@ -430,7 +435,7 @@ class TitleScene(Scene):
         self.wait(1)
 
         banach_space = MathTex(r"\text{Banach space}",color=dark_orange).scale(1.2).next_to(norm_example1,DOWN,buff=0.5)
-        image_check = ImageMobject("images/green_tik.png").scale(0.1).next_to(banach_space,RIGHT).shift(0.2*UP)
+        image_check = ImageMobject("images/tik .png").scale(0.1).next_to(banach_space,RIGHT).shift(0.2*UP)
         self.play(
             TransformFromCopy(text_banach_space, banach_space),
         )
