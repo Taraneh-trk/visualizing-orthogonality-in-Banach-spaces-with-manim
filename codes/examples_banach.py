@@ -103,7 +103,22 @@ class TitleScene(Scene):
 
         # self.scene1()
 
-        self.scene2()
+        # self.scene2()
+
+        self.scene3()
+
+    def scene3(self,):
+        pic = ImageMobject("images/end_pic.png").scale(2)
+        self.play(
+            FadeIn(pic),
+        )
+        continue_text = Text(
+            "The end .",color=BLACK,font_size=80,
+        ).shift(1*DOWN)
+        self.play(
+            Write(continue_text),
+        )
+        self.wait(1)
 
     def scene1(self):
 
