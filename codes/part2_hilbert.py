@@ -342,9 +342,14 @@ class TitleScene(Scene):
             axis_config={"color": dark_blue, "include_ticks": False, "tip_length": 0.25, "tip_shape": StealthTip}
         ).move_to([0, 0, 0] + 0.5 * DOWN)
 
+        v_x = np.array([7, 2, 0])
+        v_y = np.array([-0.6, 3, 0])
+        
+        k_tracker = ValueTracker(5/3) 
+
         arrow1 = Arrow(
             start=axes.c2p(0, 0),
-            end=axes.c2p(7, 2),
+            end=axes.c2p(*v_x[:2]),
             buff=0,
             stroke_width=6,
             color=dark_red,
@@ -352,19 +357,9 @@ class TitleScene(Scene):
             tip_shape=StealthTip
         )
 
-        arrow3 = Arrow(
-            start=axes.c2p(0, 0),
-            end=axes.c2p(-1, 5),
-            buff=0,
-            stroke_width=6,
-            color=dark_green,
-            tip_length=0.25,
-            tip_shape=StealthTip
-        )
-
         arrow2 = Arrow(
             start=axes.c2p(0, 0),
-            end=axes.c2p(-0.6, 3),
+            end=axes.c2p(*v_y[:2]),
             buff=0,
             stroke_width=6,
             color=dark_purple,
@@ -372,68 +367,85 @@ class TitleScene(Scene):
             tip_shape=StealthTip
         )
 
+        arrow3 = always_redraw(lambda: Arrow(
+            start=axes.c2p(0, 0),
+            end=axes.c2p(*(v_y * k_tracker.get_value())[:2]),
+            buff=0,
+            stroke_width=6,
+            color=dark_green,
+            tip_length=0.25,
+            tip_shape=StealthTip
+        ))
+
         arc_orthogonal = RightAngle(
             arrow1,
-            arrow3,
+            arrow2,
             length=0.3,
             color=BLACK
         )
+        
+        # always_redraw(lambda: RightAngle(
+        #     arrow1,
+        #     arrow3,
+        #     length=0.3,
+        #     color=BLACK
+        # ))
 
         a_text = MathTex(r"\vec{x}", color=dark_red).scale(1.2).next_to(
-            axes.c2p(7, 2), direction=DOWN + RIGHT, buff=0.15
+            axes.c2p(*v_x[:2]), direction=DOWN + RIGHT, buff=0.15
         )
 
         b_text = MathTex(r"\vec{y}", color=dark_purple).scale(1.2).next_to(
-            axes.c2p(-0.6, 3), direction=LEFT, buff=0.15
+            axes.c2p(*v_y[:2]), direction=LEFT, buff=0.15
         )
 
-        bk_text = MathTex(r"k\,\vec{y}", color=dark_green).scale(1.2).next_to(
-            axes.c2p(-1, 5), direction=LEFT, buff=0.15
-        )
+        bk_text = always_redraw(lambda: MathTex(r"k\,\vec{y}", color=dark_green).scale(1.2).next_to(
+            axes.c2p(*(v_y * k_tracker.get_value())[:2]), direction=LEFT, buff=0.15
+        ))
 
-        corner = (6, 7)
-
-        side3 = DashedLine(
-            axes.c2p(7, 2),
-            axes.c2p(*corner),
+        side3 = always_redraw(lambda: DashedLine(
+            axes.c2p(*v_x[:2]),
+            axes.c2p(*(v_x + v_y * k_tracker.get_value())[:2]),
             color=dark_green,
             stroke_width=4,
             dash_length=0.15
-        )
+        ))
 
-        side4 = DashedLine(
-            axes.c2p(-1, 5),
-            axes.c2p(*corner),
+        side4 = always_redraw(lambda: DashedLine(
+            axes.c2p(*(v_y * k_tracker.get_value())[:2]),
+            axes.c2p(*(v_x + v_y * k_tracker.get_value())[:2]),
             color=dark_red,
             stroke_width=4,
             dash_length=0.15
-        )
+        ))
 
-        dashed1 = Arrow(
+        dashed1 = always_redraw(lambda: Arrow(
             start=axes.c2p(0, 0),
-            end=axes.c2p(*corner),
+            end=axes.c2p(*(v_x + v_y * k_tracker.get_value())[:2]),
             buff=0,
             stroke_width=4,
             color=dark_orange,
             tip_length=0.25,
             tip_shape=StealthTip
-        )
-        dashed2 = Arrow(
-            start=axes.c2p(-1, 5),
-            end=axes.c2p(7, 2),
+        ))
+        
+        dashed2 = always_redraw(lambda: Arrow(
+            start=axes.c2p(*(v_y * k_tracker.get_value())[:2]),
+            end=axes.c2p(*v_x[:2]),
             buff=0,
             stroke_width=4,
             color=dark_pink,
             tip_length=0.25,
             tip_shape=StealthTip
-        )
+        ))
 
-        diag_text1 = MathTex(r"\vec{x} + k\,\vec{y}", color=dark_orange).scale(1.1).next_to(
-            axes.c2p(*corner), direction=RIGHT, buff=0.15
-        )
-        diag_text2 = MathTex(r"\vec{x} - k\,\vec{y}", color=dark_pink).scale(1.1).next_to(
-            axes.c2p(7, 2), direction=RIGHT, buff=0.15
-        ).shift(0.2*UP)
+        diag_text1 = always_redraw(lambda: MathTex(r"\vec{x} + k\,\vec{y}", color=dark_orange).scale(1.1).next_to(
+            axes.c2p(*(v_x + v_y * k_tracker.get_value())[:2]), direction=RIGHT, buff=0.15
+        ))
+        
+        diag_text2 = always_redraw(lambda: MathTex(r"\vec{x} - k\,\vec{y}", color=dark_pink).scale(1.1).next_to(
+            axes.c2p(*v_x[:2]), direction=RIGHT, buff=0.15
+        ).shift(0.2*UP))
 
         all_shapes = VGroup(*[
             plane,
@@ -479,11 +491,11 @@ class TitleScene(Scene):
             Create(axes),
         )
         self.play(
-            GrowArrow(arrow1),
+            GrowArrow(arrow1), 
             Write(a_text),
         )
         self.play(
-            GrowArrow(arrow2),
+            GrowArrow(arrow2), 
             Write(b_text),
         )
         self.play(
@@ -491,21 +503,36 @@ class TitleScene(Scene):
         )
         self.wait(0.5)
         self.play(
-            GrowArrow(arrow3),
-            Write(bk_text),
+            GrowArrow(arrow3), 
+            Write(bk_text)
         )
         self.play(
-            Create(side3),
-            Create(side4),
+            Create(side3), 
+            Create(side4)
         )
         self.play(
-            GrowArrow(dashed1),
-            Write(diag_text1),
+            GrowArrow(dashed1), 
+            Write(diag_text1)
         )
         self.play(
-            GrowArrow(dashed2),
-            Write(diag_text2),
+            GrowArrow(dashed2), 
+            Write(diag_text2)
         )
+        self.wait(1)
+
+
+        self.play(
+            k_tracker.animate.set_value(0.5), run_time=2
+        ) 
+        self.wait(0.5)
+        self.play(
+            k_tracker.animate.set_value(2.5), run_time=2
+        ) 
+        self.wait(0.5)
+        self.play(
+            k_tracker.animate.set_value(5/3), run_time=1.5
+        ) 
+
         self.wait(1)
         self.play(
             FadeOut(title_orth),
@@ -2750,91 +2777,115 @@ class TitleScene(Scene):
         )
 
 
-        # nonadditivity_title = MathTex(
-        #     r"\text{Non-Additivity}",
-        #     color=dark_terquise,
-        # )
+        nonadditivity_title = MathTex(
+            r"\text{Non-Additivity Counterexample}",
+            color=dark_terquise,
+        )
 
-        # # Statement
+        # General statement
         # nonadditivity_statement = MathTex(
         #     r"x \perp_P y \text{ and } x \perp_P z \not\Rightarrow x \perp_P (y+z)",
         #     color=BLACK,
         # )
 
-        # # Inner product case title
-        # # nonadditivity_inner_title = MathTex(
-        # #     r"\text{In inner product spaces:}",
-        # #     color=BLACK,
-        # # )
+        nonadditivity_inner_assumption = MathTex(
+            r"\text{Space: } \mathbb{R}^2 \text{ with norm: } \ell_\infty \, , \|(u,v)\|_\infty = \max{(|u|,|v|)}",
+            color=BLACK,
+        )
 
-        # # Inner product - assumption
-        # nonadditivity_inner_assumption = MathTex(
-        #     r"\langle x, y \rangle = 0 \text{ and } \langle x, z \rangle = 0",
-        #     color=BLACK,
-        # )
+        nonadditivity_inner_linearity = MathTex(
+            r"x = (1,0), \quad y = (\sqrt{2}-1, \, 1), \quad z = (\sqrt{2}-1, \, -1)",
+            color=BLACK,
+        )
 
-        # # Inner product - linearity
-        # nonadditivity_inner_linearity = MathTex(
-        #     r"\langle x, y+z \rangle = \langle x, y \rangle + \langle x, z \rangle = 0 + 0 = 0",
-        #     color=BLACK,
-        # )
+        nonadditivity_part1_1 = MathTex(
+            r"Part 1 : x \perp_P y",
+            color=BLACK,
+        )
 
-        # # Inner product - conclusion
-        # nonadditivity_inner_conclusion = MathTex(
-        #     r"\implies x \perp_P (y+z) \quad \checkmark",
-        #     color=BLACK,
-        # )
+        nonadditivity_part1_2 = MathTex(
+            r"\|x\|_\infty = 1, \quad \|y\|_\infty = 1",
+            color=BLACK,
+        )
+        nonadditivity_part1_3 = MathTex(
+            r"\|x + y\|_\infty = \sqrt{2}",
+            color=BLACK,
+        )
+        nonadditivity_part1_4 = MathTex(
+            r"1 + 1 = 2",
+            color=BLACK,
+        )
 
-        # # General normed space title
-        # nonadditivity_general_title = MathTex(
-        #     r"\text{In general normed spaces:}",
-        #     color=BLACK,
-        # )
+        nonadditivity_part2_1 = MathTex(
+            r"Part 2 : x \perp_P z",
+            color=BLACK,
+        )
 
-        # # General - assumptions
-        # nonadditivity_general_assumptions = MathTex(
-        #     r"\|x+y\|^2 = \|x\|^2 + \|y\|^2 \text{ and } \|x+z\|^2 = \|x\|^2 + \|z\|^2",
-        #     color=BLACK,
-        # )
+        nonadditivity_part2_2 = MathTex(
+            r"\|x\|_\infty = 1, \quad \|z\|_\infty = 1",
+            color=BLACK,
+        )
+        nonadditivity_part2_3 = MathTex(
+            r"\|x + z\|_\infty = \sqrt{2}",
+            color=BLACK,
+        )
+        nonadditivity_part2_4 = MathTex(
+            r"1 + 1 = 2",
+            color=BLACK,
+        )
 
-        # # General - does not imply
-        # nonadditivity_general_notimply = MathTex(
-        #     r"\not\Rightarrow \|x+(y+z)\|^2 = \|x\|^2 + \|y+z\|^2",
-        #     color=BLACK,
-        # )
+        nonadditivity_part3_1 = MathTex(
+            r"Part 3 : x \not\perp_P (y+z)",
+            color=BLACK,
+        )
 
-        # # General - reason
-        # nonadditivity_general_reason = MathTex(
-        #     r"\text{(no algebraic structure guarantees this)}",
-        #     color=BLACK,
-        # )
+        nonadditivity_part3_2 = MathTex(
+            r"\|x\|_\infty = 1, \quad \|y+z\|_\infty = 2\sqrt{2}-2",
+            color=BLACK,
+        )
+        nonadditivity_part3_3 = MathTex(
+            r"\|x + (y+z)\|_\infty = 2\sqrt{2}-1",
+            color=BLACK,
+        )
+        nonadditivity_part3_4 = MathTex(
+            r"(2\sqrt{2}-2)^2 + 1 = 13-8\sqrt{2} \approx 1.686 \ne (2\sqrt{2}-1)^2 \approx 3.343",
+            color=dark_terquise,
+        )
 
-        # sym = VGroup(*[
-        #     nonadditivity_title,
-        #     nonadditivity_statement,
-        #     VGroup(*[
-        #         VGroup(*[
-        #             nonadditivity_inner_title,
-        #             nonadditivity_inner_assumption,
-        #             nonadditivity_inner_linearity,
-        #             nonadditivity_inner_conclusion,
-        #         ]).arrange(DOWN, buff=0.2).scale(0.7).shift(2*LEFT),
-        #         VGroup(*[
-        #             nonadditivity_general_title,
-        #             nonadditivity_general_assumptions,
-        #             nonadditivity_general_notimply,
-        #             nonadditivity_general_reason,
-        #         ]).arrange(DOWN, buff=0.2).scale(0.7).shift(2*LEFT),
-        #     ]).arrange(RIGHT, buff=1),
-        # ]).arrange(DOWN, buff=0.3).next_to(box1, DOWN, buff=0.3)
 
-        # self.play(
-        #     Write(sym),
-        # )
-        # self.wait(1)
-        # self.play(
-        #     FadeOut(sym),
-        # )
+        sym = VGroup(*[
+            nonadditivity_title,
+            nonadditivity_inner_assumption,
+            nonadditivity_inner_linearity,
+            VGroup(*[
+                VGroup(*[
+                    nonadditivity_part1_1,
+                    nonadditivity_part1_2,
+                    nonadditivity_part1_3,
+                    nonadditivity_part1_4,
+                ]).arrange(DOWN, buff=0.2).scale(0.7).shift(2*LEFT),
+                VGroup(*[
+                    nonadditivity_part2_1,
+                    nonadditivity_part2_2,
+                    nonadditivity_part2_3,
+                    nonadditivity_part2_4,
+                ]).arrange(DOWN, buff=0.2).scale(0.7).shift(2*LEFT),
+                VGroup(*[
+                    nonadditivity_part3_1,
+                    nonadditivity_part3_2,
+                    nonadditivity_part3_3,
+                ]).arrange(DOWN, buff=0.2).scale(0.7).shift(2*LEFT),
+            ]).arrange(RIGHT, buff=1),
+            nonadditivity_part3_4,
+        ]).arrange(DOWN, buff=0.3).next_to(box1, DOWN, buff=0.3)
+
+        self.play(
+            Write(sym),
+        )
+        self.wait(1)
+        self.play(
+            FadeOut(sym),
+        )
 
         headers = [
             (r"\text{Symmetry}", dark_pink),
@@ -3029,9 +3080,9 @@ class TitleScene(Scene):
 
         # self.scene8_SubScene11(title)
 
-        # self.scene8_SubScene12(title)
+        self.scene8_SubScene12(title)
 
-        self.scene8_SubScene13(title)
+        # self.scene8_SubScene13(title)
 
     def scene7_SubScene0(self, title):
         self.wait(1)
@@ -3894,6 +3945,7 @@ class TitleScene(Scene):
         line4_n1 = MathTex(
             r"\;\Leftrightarrow\; y = 0",
             r"\quad (IP4) ",
+            r"\quad .\blacksquare", #find me
             color=BLACK
         )
 
@@ -3909,7 +3961,7 @@ class TitleScene(Scene):
             corner_radius=0.15 
         )
         line1_n1.next_to(norm_def_box,RIGHT,buff=1)
-        VGroup(n1_proof, n1_proof_box).next_to(line1_n1,DOWN,buff=1)
+        VGroup(n1_proof, n1_proof_box).next_to(line1_n1,DOWN,buff=1).shift(1*LEFT)
 
         self.play(
             Create(n1_proof_box),
@@ -3933,6 +3985,9 @@ class TitleScene(Scene):
         )
         self.play(
             Write(line4_n1[0]),
+        )
+        self.play(
+            Write(line4_n1[2]),
         )
         self.wait(1)
 
@@ -3966,6 +4021,7 @@ class TitleScene(Scene):
         line5_n2 = MathTex(
             r" = \sqrt{| \alpha |^2 \langle y , y \rangle}",
             r" = | \alpha | \, \| y \|",
+            r"\quad .\blacksquare",
             color=BLACK,
         )
 
@@ -4017,6 +4073,9 @@ class TitleScene(Scene):
         self.play(
             Write(line5_n2[1]),
         )
+        self.play(
+            Write(line5_n2[2]),
+        )
         self.wait(1)
 
         self.play(
@@ -4061,7 +4120,7 @@ class TitleScene(Scene):
         )
 
         line6_n3 = MathTex(
-            r" = ( \|x\| + \|y\| )^2",
+            r" = ( \|x\| + \|y\| )^2 \quad .\blacksquare",
             color=BLACK,
         )
 
