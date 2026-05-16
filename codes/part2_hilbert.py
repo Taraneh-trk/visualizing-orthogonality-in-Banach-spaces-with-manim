@@ -3044,6 +3044,74 @@ class TitleScene(Scene):
 
         self.wait(1)
 
+    def scene8_SubScene14(self, title):
+        title_Summary = Text("Summary",color=BLACK,font_size=50).to_edge(UP).shift(0.3*UP)
+        self.play(Write(title_Summary))
+
+        headers = [
+            (r"\text{Symmetry}", dark_pink),
+            (r"\text{Homogeneity}", dark_purple),
+            (r"\text{Additivity}", dark_terquise),
+            (r"\text{Scalar Existence}", dark_green),
+        ]
+
+        col_labels = [MathTex(h).set_color(color) for h, color in headers]
+
+        
+        row_Pythagorean = [
+            MathTex(r"\Large \checkmark").set_color(GREEN),
+            MathTex(r"\Large \times").set_color(RED),
+            MathTex(r"\Large \times").set_color(RED),
+           MathTex(r"\Large \checkmark").set_color(GREEN),
+        ]
+
+        row_Isosceles = [
+            MathTex(r"\Large \checkmark").set_color(GREEN),
+            MathTex(r"\Large \times").set_color(RED),
+            MathTex(r"\Large \times").set_color(RED),
+           MathTex(r"\Large \checkmark").set_color(GREEN),
+        ]
+
+        row_BJ = [
+            MathTex(r"\Large \times").set_color(RED),
+            MathTex(r"\Large \checkmark").set_color(GREEN),
+            MathTex(r"\Large \times").set_color(RED),
+            MathTex(r"\Large \checkmark").set_color(GREEN),
+        ]
+
+        row_Roberts = [
+            MathTex(r"\Large \checkmark").set_color(GREEN),
+            MathTex(r"\Large \checkmark").set_color(GREEN),
+            MathTex(r"\Large \times").set_color(RED),
+            MathTex(r"\Large \times").set_color(RED),
+        ]
+        
+        row_label_roberts = MathTex(r"\text{Roberts}", color=BLACK).scale(0.6)
+        row_label_BJ = MathTex(r"\text{BJ}", color=BLACK).scale(0.6)
+        row_label_Isosceles = MathTex(r"\text{Isosceles}", color=BLACK).scale(0.6)
+        row_label_Pythagorean = MathTex(r"\text{Pythagorean}", color=BLACK).scale(0.6)
+
+        table = MobjectTable(
+            [row_Roberts, row_BJ, row_Isosceles, row_Pythagorean],
+            row_labels=[row_label_roberts, row_label_BJ, row_label_Isosceles, row_label_Pythagorean],
+            col_labels=col_labels,
+            include_outer_lines=True,
+            line_config={"stroke_width": 3, "color": GRAY},
+            h_buff=0.3,
+        ).shift(0.5*DOWN)
+
+        self.play(
+            Create(table),
+            run_time = 3,
+        )
+        self.wait(1)
+        self.play(
+            FadeOut(table),
+            FadeOut(title_Summary),
+            # run_time = 3,
+        )
+        self.wait(1)
+
     def scene8(self, title):
 
         ########## roberts
@@ -3080,9 +3148,11 @@ class TitleScene(Scene):
 
         # self.scene8_SubScene11(title)
 
-        self.scene8_SubScene12(title)
+        # self.scene8_SubScene12(title)
 
         # self.scene8_SubScene13(title)
+
+        self.scene8_SubScene14(title)
 
     def scene7_SubScene0(self, title):
         self.wait(1)
