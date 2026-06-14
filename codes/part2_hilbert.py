@@ -248,9 +248,9 @@ class TitleScene(Scene):
         topic_number = 3
         title = self.scene3(topic_number,False)
 
-        # self.scene7(title)
+        self.scene7(title)
 
-        self.scene8(title)
+        # self.scene8(title)
 
     def scene8_SubScene0(self, title):
         self.wait(1)
@@ -3122,7 +3122,7 @@ class TitleScene(Scene):
 
         # self.scene8_SubScene2(title)
 
-        # self.define_properties(title)
+        # self.define_properties(title)    # این رو لازم ندارم دیگه 
 
         # self.scene8_SubScene3(title)
 
@@ -3427,6 +3427,781 @@ class TitleScene(Scene):
 
         self.wait(1)
 
+    def scene7_SubScene2_1(self, title):
+        self.show_nondegeneracy()
+        self.show_simplification()
+        self.show_continuity()
+        self.show_homogeneity()
+        self.show_symmetry()
+        self.show_additivity()
+        self.show_existence()
+        # self.show_uniqueness()   #این رو به قبلی اضافه کردم
+        self.show_unique_diagonals()
+        self.show_scalar_existence()
+
+    def create_title_and_box_custom(self, title_text, math_formula):
+        title = Text(title_text, font_size=60, color=BLACK).to_edge(UP) #.shift(0.3*DOWN)
+        formula = MathTex(math_formula, color=BLACK, font_size=45)
+        box = SurroundingRectangle(
+            formula,
+            color=dark_blue,
+            buff=0.3,
+            fill_opacity=0.1,
+            stroke_width=3,
+            corner_radius=0.15
+        )
+        group = VGroup(formula, box).next_to(title, DOWN, buff=0.5)
+        
+        self.play(Write(title))
+        self.play(Create(box), Write(formula))
+        self.wait(1)
+        return title, group, box
+
+    def show_nondegeneracy(self):
+        title, group, box = self.create_title_and_box_custom(
+            "Nondegeneracy", 
+            r"\lambda x \perp \mu x \iff \lambda x = 0 \lor \mu x = 0"
+        )
+        
+        axes = Axes(
+            y_range=[-6, 6, 1],
+            x_range=[-10, 10, 1], 
+            y_length=6,
+            x_length=9,
+            axis_config={"color": medium_blue, "include_ticks": False, "tip_length":0.25, "tip_shape":StealthTip}, # "tip_shape":ArrowTip.TIP_STYLE_ROUND
+        ).next_to(box,DOWN, buff=0.5)
+        plane = NumberPlane(
+            y_range=[-6, 6, 1],
+            x_range=[-10, 10, 1],
+            background_line_style={
+                "stroke_color": GRAY,
+                "stroke_opacity": 0.5
+            },
+            y_length=6,
+            x_length=9,
+        ).next_to(box,DOWN, buff=0.5)
+        
+        # val = ValueTracker(2.5)
+        
+        vec_x = always_redraw(lambda: Arrow(
+            start=axes.c2p(0, 0),
+            end=axes.c2p(2.5, 0),
+            buff=0, stroke_width=6, color=dark_purple,
+            tip_length=0.25, tip_shape=StealthTip
+        ))
+        text_x = always_redraw(
+            lambda : MathTex(r"\vec{x}",color=dark_purple).move_to(vec_x.get_center()+0.4*DOWN)
+        )
+
+        val1 = ValueTracker(4.5)
+        vec_x1 = always_redraw(lambda: Arrow(
+            start=axes.c2p(0, 0),
+            end=axes.c2p(val1.get_value(), 0),
+            buff=0, stroke_width=6, color=dark_pink,
+            tip_length=0.25, tip_shape=StealthTip
+        ))
+        text_x1 = always_redraw(
+            lambda : MathTex(r"\lambda \vec{x}",color=dark_pink).move_to(vec_x1.get_center()+0.4*UP)
+        )
+
+        val2 = ValueTracker(-3.5)
+        vec_x2 = always_redraw(lambda: Arrow(
+            start=axes.c2p(0, 0),
+            end=axes.c2p(val2.get_value(), 0),
+            buff=0, stroke_width=6, color=dark_red,
+            tip_length=0.25, tip_shape=StealthTip
+        ))
+        text_x2 = always_redraw(
+            lambda : MathTex(r"\mu \vec{x}",color=dark_red).move_to(vec_x2.get_center()+0.4*DOWN)
+        )
+        
+        dot = Dot(axes.c2p(0,0), color=dark_green, radius=0.15)
+        
+        self.play(Create(plane))
+        self.play(Create(axes))
+        self.play(GrowArrow(vec_x), Write(text_x))
+        self.play(GrowArrow(vec_x1), Write(text_x1))
+        self.play(GrowArrow(vec_x2), Write(text_x2))
+        self.wait(0.5)
+        self.play(val1.animate.set_value(0.01), run_time=2)
+        self.play(Create(dot), Flash(dot, color=dark_green))
+        self.wait(1)
+        
+        # self.play(FadeOut(VGroup(*[
+        #     axes,
+        #     vec_x,
+        #     text_x,
+        #     dot,
+        #     title,
+        #     group,
+        #     box,
+        #     vec_x1,
+        #     text_x1,
+        #     vec_x2,
+        #     text_x2,
+        # ])),
+        # FadeOut(plane),
+        # )
+        
+        self.clear()
+        self.wait(1)
+
+    def show_simplification(self):
+        title, group, box = self.create_title_and_box_custom(
+            "Simplification", 
+            r"x \perp y \implies \lambda x \perp \lambda y \quad \forall \lambda \in \mathbb{R}"
+        )
+        
+        axes = Axes(
+            y_range=[-6, 6, 1],
+            x_range=[-10, 10, 1], 
+            y_length=6,
+            x_length=9,
+            axis_config={"color": medium_blue, "include_ticks": False, "tip_length":0.25, "tip_shape":StealthTip}, # "tip_shape":ArrowTip.TIP_STYLE_ROUND
+        ).next_to(box,DOWN, buff=0.5)
+        plane = NumberPlane(
+            y_range=[-6, 6, 1],
+            x_range=[-10, 10, 1],
+            background_line_style={
+                "stroke_color": GRAY,
+                "stroke_opacity": 0.5
+            },
+            y_length=6,
+            x_length=9,
+        ).next_to(box,DOWN, buff=0.5)
+        lam = ValueTracker(1)
+        
+        vec_x = always_redraw(lambda: Arrow(
+            start=axes.c2p(0,0),
+            end=axes.c2p(lam.get_value() * 4, 0),
+            buff=0, stroke_width=6, color=dark_orange,
+            tip_length=0.25, tip_shape=StealthTip
+        ))
+        text_x1 = always_redraw( lambda : 
+                MathTex(
+                r"\vec{x}",
+                color=dark_orange,
+            ).move_to(vec_x.get_center()+ 0.4*DOWN)
+        )
+        text_x2 = always_redraw( lambda : 
+                MathTex(
+                r"\lambda \vec{x}",
+                color=dark_orange,
+            ).move_to(vec_x.get_center()+ 0.4*DOWN)
+        )
+        
+        vec_y = always_redraw(lambda: Arrow(
+            start=axes.c2p(0,0),
+            end=axes.c2p(0, lam.get_value() * 2),
+            buff=0, stroke_width=6, color=dark_purple,
+            tip_length=0.25, tip_shape=StealthTip
+        ))
+        text_y1 = always_redraw( lambda : 
+                MathTex(
+                r"\vec{y}",
+                color=dark_purple,
+            ).move_to(vec_y.get_center()+ 0.4*LEFT)
+        )
+        text_y2 = always_redraw( lambda : 
+                MathTex(
+                r"\lambda \vec{y}",
+                color=dark_purple,
+            ).move_to(vec_y.get_center()+ 0.4*LEFT)
+        )
+        
+        angle = always_redraw(lambda: RightAngle(vec_x, vec_y, length=0.3, color=BLACK))
+        
+        self.play(Create(plane), Create(axes))
+        self.play(GrowArrow(vec_x), Write(text_x1), GrowArrow(vec_y), Write(text_y1))
+        self.play(Create(angle))
+
+        self.play(
+            TransformMatchingTex(text_x1, text_x2),
+            TransformMatchingTex(text_y1, text_y2),
+            lam.animate.set_value(1.8), run_time=1
+        )
+        self.play(lam.animate.set_value(0.5), run_time=1)
+        self.play(lam.animate.set_value(-1.5), run_time=1.5)
+        self.wait(1)
+        
+        # self.play(FadeOut(VGroup(*self.mobjects)))
+        self.clear()
+        self.wait(1)
+
+    def get_right_angle_mark(self, vec1, vec2, size=0.3, color=BLACK):
+        start = vec1.get_start()
+        
+        d1 = normalize(vec1.get_end() - vec1.get_start())
+        d2 = normalize(vec2.get_end() - vec2.get_start())
+        
+        p1 = start + d1 * size
+        p2 = start + d1 * size + d2 * size
+        p3 = start + d2 * size
+        
+        return Polygon(start, p1, p2, p3,
+                    stroke_color=color,
+                    stroke_width=2,
+                    fill_opacity=0)
+
+    def show_continuity(self):
+        title, group, box = self.create_title_and_box_custom(
+            "Continuity", 
+            r"x_n \perp y_n, \text{ } x_n \to x, \text{ } y_n \to y \implies x \perp y"
+        )
+        
+        axes = Axes(
+            y_range=[-6, 6, 1],
+            x_range=[-10, 10, 1], 
+            y_length=6,
+            x_length=9,
+            axis_config={"color": medium_blue, "include_ticks": False, "tip_length":0.25, "tip_shape":StealthTip}, # "tip_shape":ArrowTip.TIP_STYLE_ROUND
+        ).next_to(box,DOWN, buff=0.5)
+        plane = NumberPlane(
+            y_range=[-6, 6, 1],
+            x_range=[-10, 10, 1],
+            background_line_style={
+                "stroke_color": GRAY,
+                "stroke_opacity": 0.5
+            },
+            y_length=6,
+            x_length=9,
+        ).next_to(box,DOWN, buff=0.5)
+
+        t = ValueTracker(0)
+        
+        vec_xn = always_redraw(lambda: Arrow(
+            start=axes.c2p(0,0),
+            end=axes.c2p(4 * np.cos(t.get_value()), 4 * np.sin(t.get_value())),
+            buff=0, stroke_width=5, color=dark_terquise,
+            tip_length=0.25, tip_shape=StealthTip
+        ))
+        text_xn = always_redraw( lambda : 
+                MathTex(
+                r"\vec{x_n}",
+                color=dark_terquise,
+            ).move_to(vec_xn.get_center()+ 0.4*DOWN)
+        )
+        
+        vec_yn = always_redraw(lambda: Arrow(
+            start=axes.c2p(0,0),
+            end=axes.c2p(-4 * np.sin(t.get_value() + 0.01), 4 * np.cos(t.get_value() + 0.01)),
+            buff=0, stroke_width=5, color=dark_pink,
+            tip_length=0.25, tip_shape=StealthTip
+        ))
+        text_yn = always_redraw( lambda : 
+                MathTex(
+                r"\vec{y_n}",
+                color=dark_pink,
+            ).move_to(vec_yn.get_center()+ 0.4*LEFT)
+        )
+        
+        angle = always_redraw(lambda: 
+            self.get_right_angle_mark(vec_xn, vec_yn, size=0.3, color=BLACK)
+        )
+        
+        self.play(Create(plane), Create(axes))
+        self.play(GrowArrow(vec_xn), Write(text_xn), GrowArrow(vec_yn), Write(text_yn), Create(angle))
+        self.play(t.animate.set_value(PI/4), run_time=3, rate_func=smootherstep)
+        self.wait(1)
+        
+        # self.play(FadeOut(VGroup(*self.mobjects)))
+        self.clear()
+        self.wait(1)
+
+    def show_homogeneity(self):
+        title, group, box = self.create_title_and_box_custom(
+            "Homogeneity", 
+            r"x \perp y \implies \lambda x \perp \mu y \quad \forall \lambda, \text{ } \mu \in \mathbb{R}"
+        )
+        
+        axes = Axes(
+            y_range=[-6, 6, 1],
+            x_range=[-10, 10, 1], 
+            y_length=6,
+            x_length=9,
+            axis_config={"color": medium_blue, "include_ticks": False, "tip_length":0.25, "tip_shape":StealthTip}, # "tip_shape":ArrowTip.TIP_STYLE_ROUND
+        ).next_to(box,DOWN, buff=0.5)
+        plane = NumberPlane(
+            y_range=[-6, 6, 1],
+            x_range=[-10, 10, 1],
+            background_line_style={
+                "stroke_color": GRAY,
+                "stroke_opacity": 0.5
+            },
+            y_length=6,
+            x_length=9,
+        ).next_to(box,DOWN, buff=0.5)
+
+        lam = ValueTracker(1)
+        mu = ValueTracker(1)
+        
+        vec_x = always_redraw(lambda: Arrow(
+            start=axes.c2p(0,0),
+            end=axes.c2p(lam.get_value() * 3, 0),
+            buff=0, stroke_width=6, color=dark_green,
+            tip_length=0.25, tip_shape=StealthTip
+        ))
+        text_x1 = always_redraw( lambda : 
+                MathTex(
+                r"\vec{x}",
+                color=dark_green,
+            ).move_to(vec_x.get_center()+ 0.4*DOWN)
+        )
+        text_x2 = always_redraw( lambda : 
+                MathTex(
+                r"\lambda \vec{x}",
+                color=dark_green,
+            ).move_to(vec_x.get_center()+ 0.4*DOWN)
+        )
+        
+        vec_y = always_redraw(lambda: Arrow(
+            start=axes.c2p(0,0),
+            end=axes.c2p(0, mu.get_value() * 3),
+            buff=0, stroke_width=6, color=dark_blue,
+            tip_length=0.25, tip_shape=StealthTip
+        ))
+        text_y1 = always_redraw( lambda : 
+                MathTex(
+                r"\vec{y}",
+                color=dark_blue,
+            ).move_to(vec_y.get_center()+ 0.4*LEFT)
+        )
+        text_y2 = always_redraw( lambda : 
+                MathTex(
+                r"\lambda \vec{y}",
+                color=dark_blue,
+            ).move_to(vec_y.get_center()+ 0.4*LEFT)
+        )
+        
+        angle = always_redraw(lambda: self.get_right_angle_mark(vec_x, vec_y, size=0.3, color=BLACK))
+        
+        self.play(Create(plane), Create(axes))
+        self.play(GrowArrow(vec_x), Write(text_x1), GrowArrow(vec_y), Write(text_y1), Create(angle))
+        self.play(
+            TransformMatchingTex(text_x1, text_x2),
+            TransformMatchingTex(text_y1, text_y2),
+        )
+        self.play(lam.animate.set_value(1.8), run_time=1)
+        self.play(mu.animate.set_value(-0.5), run_time=1)
+        self.play(lam.animate.set_value(-1), mu.animate.set_value(1.2), run_time=1)
+        self.wait(1)
+        
+        # self.play(FadeOut(VGroup(*self.mobjects)))
+        self.clear()
+        self.wait(1)
+
+    def show_symmetry(self):
+        title, group, box = self.create_title_and_box_custom(
+            "Symmetry", 
+            r"x \perp y \implies y \perp x"
+        )
+        
+        axes = Axes(
+            y_range=[-6, 6, 1],
+            x_range=[-10, 10, 1], 
+            y_length=6,
+            x_length=9,
+            axis_config={"color": medium_blue, "include_ticks": False, "tip_length":0.25, "tip_shape":StealthTip}, # "tip_shape":ArrowTip.TIP_STYLE_ROUND
+        ).next_to(box,DOWN, buff=0.5)
+        plane = NumberPlane(
+            y_range=[-6, 6, 1],
+            x_range=[-10, 10, 1],
+            background_line_style={
+                "stroke_color": GRAY,
+                "stroke_opacity": 0.5
+            },
+            y_length=6,
+            x_length=9,
+        ).next_to(box,DOWN, buff=0.5)
+        
+        vec_x = Arrow(
+            start=axes.c2p(0,0), end=axes.c2p(4, 0),
+            buff=0, stroke_width=5, color=dark_red,
+            tip_length=0.25, tip_shape=StealthTip
+        )
+        text_x = MathTex(
+            r"\vec{x}",
+            color=dark_red,
+        ).move_to(vec_x.get_center()+0.4*DOWN)
+        
+        vec_y = Arrow(
+            start=axes.c2p(0,0), end=axes.c2p(0, 4),
+            buff=0, stroke_width=5, color=dark_orange,
+            tip_length=0.25, tip_shape=StealthTip
+        )
+        text_y = MathTex(
+            r"\vec{y}",
+            color=dark_orange,
+        ).move_to(vec_y.get_center()+0.4*LEFT)
+        
+        arc1 = RightAngle(vec_x, vec_y, length=0.3, color=BLACK)
+        arc2 = RightAngle(vec_y, vec_x, length=0.3, color=BLACK)
+        
+        self.play(Create(plane), Create(axes))
+        self.play(GrowArrow(vec_x), Write(text_x), GrowArrow(vec_y), Write(text_y))
+        self.play(Create(arc1))
+        self.wait(0.5)
+        self.play(ReplacementTransform(arc1, arc2))
+        self.wait(1)
+        
+        # self.play(FadeOut(VGroup(*self.mobjects)))
+        self.clear()
+        self.wait(1)
+
+    def show_additivity(self):
+        title, group, box = self.create_title_and_box_custom(
+            "Additivity", 
+            r"x \perp y \land x \perp z \implies x \perp (y+z)"
+        )
+        
+        axes = Axes(
+            y_range=[-6, 6, 1],
+            x_range=[-10, 10, 1], 
+            y_length=6,
+            x_length=9,
+            axis_config={"color": medium_blue, "include_ticks": False, "tip_length":0.25, "tip_shape":StealthTip}, # "tip_shape":ArrowTip.TIP_STYLE_ROUND
+        ).next_to(box,DOWN, buff=0.5)
+        plane = NumberPlane(
+            y_range=[-6, 6, 1],
+            x_range=[-10, 10, 1],
+            background_line_style={
+                "stroke_color": GRAY,
+                "stroke_opacity": 0.5
+            },
+            y_length=6,
+            x_length=9,
+        ).next_to(box,DOWN, buff=0.5)
+        
+        vec_x = Arrow(
+            start=axes.c2p(0,0), end=axes.c2p(0, 5),
+            buff=0, stroke_width=6, color=dark_pink,
+            tip_length=0.25, tip_shape=StealthTip
+        )
+        text_x = MathTex(
+            r"\vec{x}",
+            color=dark_pink,
+        ).move_to(vec_x.get_center()+0.4*LEFT)
+
+        vec_y = Arrow(
+            start=axes.c2p(0,0), end=axes.c2p(3, 0),
+            buff=0, stroke_width=6, color=dark_green,
+            tip_length=0.25, tip_shape=StealthTip
+        )
+        text_y = MathTex(
+            r"\vec{y}",
+            color=dark_green,
+        ).move_to(vec_y.get_center()+0.4*DOWN)
+
+        vec_z = Arrow(
+            start=axes.c2p(0,0), end=axes.c2p(-6, 0),
+            buff=0, stroke_width=6, color=dark_orange,
+            tip_length=0.25, tip_shape=StealthTip
+        )
+        text_z = MathTex(
+            r"\vec{z}",
+            color=dark_orange,
+        ).move_to(vec_z.get_center()+0.4*UP)
+
+        vec_sum = Arrow(
+            start=axes.c2p(0,0), end=axes.c2p(-3, 0),
+            buff=0, stroke_width=6, color=dark_purple,
+            tip_length=0.25, tip_shape=StealthTip
+        )
+        text_sum = MathTex(
+            r"\vec{y} + \vec{z}",
+            color=dark_purple,
+        ).move_to(vec_sum.get_center()+0.4*DOWN)
+        
+        self.play(Create(plane), Create(axes))
+        self.play(GrowArrow(vec_x), Write(text_x), GrowArrow(vec_y), Write(text_y), GrowArrow(vec_z), Write(text_z))
+        self.wait(0.5)
+        self.play(GrowArrow(vec_sum), Write(text_sum))
+        self.play(Create(RightAngle(vec_x, vec_sum, length=0.3, color=BLACK)))
+        self.wait(1)
+        
+        # self.play(FadeOut(VGroup(*self.mobjects)))
+        self.clear()
+        self.wait(1)
+
+    def show_existence(self):
+        title, group, box = self.create_title_and_box_custom(
+            "Existence", 
+            r"\exists y \in P : \|y\| = \rho \land x \perp y"
+        )
+        
+        axes = Axes(
+            y_range=[-6, 6, 1],
+            x_range=[-10, 10, 1], 
+            y_length=6,
+            x_length=9,
+            axis_config={"color": medium_blue, "include_ticks": False, "tip_length":0.25, "tip_shape":StealthTip}, # "tip_shape":ArrowTip.TIP_STYLE_ROUND
+        ).next_to(box,DOWN, buff=0.5)
+        plane = NumberPlane(
+            y_range=[-6, 6, 1],
+            x_range=[-10, 10, 1],
+            background_line_style={
+                "stroke_color": GRAY,
+                "stroke_opacity": 0.5
+            },
+            y_length=6,
+            x_length=9,
+        ).next_to(box,DOWN, buff=0.5)
+        
+        vec_x = Arrow(
+            start=axes.c2p(0,0), end=axes.c2p(2.5, 1.5),
+            buff=0, stroke_width=6, color=dark_purple,
+            tip_length=0.25, tip_shape=StealthTip
+        )
+        text_x = MathTex(
+            r"\vec{x}",
+            color=dark_purple,
+        ).move_to(vec_x.get_center()+0.4*LEFT+0.2*UP)
+
+        circle = Circle(radius=2 * (6/8), color=BLACK).shift(axes.c2p(0,0))
+        
+        line = Line(axes.c2p(-2.5, 4.16), axes.c2p(2.5, -4.16), color=GRAY).set_opacity(0.5)
+        
+        vec_y1 = Arrow(
+            start=axes.c2p(0,0), end=axes.c2p(-1.03, 1.71),
+            buff=0, stroke_width=6, color=dark_terquise,
+            tip_length=0.25, tip_shape=StealthTip
+        )
+        text_y1 = MathTex(
+            r"\vec{y_1}",
+            color=dark_terquise,
+        ).move_to(vec_y1.get_center()+0.4*LEFT+0.1*DOWN)
+
+        vec_y2 = Arrow(
+            start=axes.c2p(0,0), end=axes.c2p(1.03, -1.71),
+            buff=0, stroke_width=6, color=dark_pink,
+            tip_length=0.25, tip_shape=StealthTip
+        )
+        text_y2 = MathTex(
+            r"\vec{y_2}",
+            color=dark_pink,
+        ).move_to(vec_y2.get_center()+0.4*LEFT+0.1*DOWN)
+        
+        self.play(Create(plane), Create(axes), GrowArrow(vec_x), Write(text_x))
+        self.play(Create(circle))
+        self.play(Create(line))
+        self.play(GrowArrow(vec_y1), Write(text_y1), GrowArrow(vec_y2), Write(text_y2))
+        self.wait(1)
+        
+        self.play(FadeOut(VGroup(*[
+            title, group, box
+        ])))
+
+        title, group, box = self.create_title_and_box_custom(
+            "Uniqueness", 
+            r"\text{The vector } y \text{ is unique given an orientation.}"
+        )
+        self.wait(1)
+
+        self.clear()
+        self.wait(1)
+
+    def show_uniqueness(self):
+        title, group, box = self.create_title_and_box_custom(
+            "Uniqueness", 
+            r"\text{The vector } y \text{ is unique given an orientation.}"
+        )
+        
+        # axes = Axes(
+        #     y_range=[-6, 6, 1],
+        #     x_range=[-10, 10, 1], 
+        #     y_length=6,
+        #     x_length=9,
+        #     axis_config={"color": medium_blue, "include_ticks": False, "tip_length":0.25, "tip_shape":StealthTip}, # "tip_shape":ArrowTip.TIP_STYLE_ROUND
+        # ).next_to(box,DOWN, buff=0.5)
+        # plane = NumberPlane(
+        #     y_range=[-6, 6, 1],
+        #     x_range=[-10, 10, 1],
+        #     background_line_style={
+        #         "stroke_color": GRAY,
+        #         "stroke_opacity": 0.5
+        #     },
+        #     y_length=6,
+        #     x_length=9,
+        # ).next_to(box,DOWN, buff=0.5)
+        
+        # vec_x = Arrow(
+        #     start=axes.c2p(0,0), end=axes.c2p(2.5, 1.5),
+        #     buff=0, stroke_width=6, color=dark_purple,
+        #     tip_length=0.25, tip_shape=StealthTip
+        # )
+        # circle = Circle(radius=2 * (6/8), color=BLACK).shift(axes.c2p(0,0))
+        
+        # vec_y1 = Arrow(
+        #     start=axes.c2p(0,0), end=axes.c2p(-1.03, 1.71),
+        #     buff=0, stroke_width=6, color=dark_terquise,
+        #     tip_length=0.25, tip_shape=StealthTip
+        # )
+        # vec_y2 = Arrow(
+        #     start=axes.c2p(0,0), end=axes.c2p(1.03, -1.71),
+        #     buff=0, stroke_width=6, color=dark_pink,
+        #     tip_length=0.25, tip_shape=StealthTip
+        # )
+        
+        # orientation = Arc(radius=0.7, angle=PI/2, color=dark_orange).add_tip()
+        
+        # self.play(Create(axes), GrowArrow(vec_x), Create(circle), GrowArrow(vec_y1), GrowArrow(vec_y2))
+        # self.play(Create(orientation))
+        # self.play(FadeOut(vec_y2), vec_y1.animate.set_color(dark_orange))
+        # self.wait(1)
+        
+        # self.play(FadeOut(VGroup(*self.mobjects)))
+        self.clear()
+        self.wait(1)
+
+    def show_unique_diagonals(self):
+        title, group, box = self.create_title_and_box_custom(
+            "Unique Diagonals", 
+            r"\exists ! \rho > 0 : (x + \rho y) \perp (x - \rho y)"
+        )
+        
+        rho = ValueTracker(0.4)
+        axes = Axes(
+            y_range=[-6, 6, 1],
+            x_range=[-10, 10, 1], 
+            y_length=6,
+            x_length=9,
+            axis_config={"color": medium_blue, "include_ticks": False, "tip_length":0.25, "tip_shape":StealthTip},
+        ).next_to(box,DOWN, buff=0.5)
+        plane = NumberPlane(
+            y_range=[-6, 6, 1],
+            x_range=[-10, 10, 1],
+            background_line_style={
+                "stroke_color": GRAY,
+                "stroke_opacity": 0.5
+            },
+            y_length=6,
+            x_length=9,
+        ).next_to(box,DOWN, buff=0.5)
+        
+        def get_verts():
+            v_x = np.array([8, 0, 0])
+            v_y = np.array([2, 6, 0]) * rho.get_value()
+            return (
+                axes.c2p(0, 0),
+                axes.c2p(*v_x),
+                axes.c2p(*(v_x + v_y)),
+                axes.c2p(*v_y),
+            )
+
+        def get_poly():
+            p0, p1, p2, p3 = get_verts()
+            return Polygon(p0, p1, p2, p3, color=dark_orange, fill_opacity=0.1)
+
+        def get_poly_labels():
+            p0, p1, p2, p3 = get_verts()
+            mid_bottom = (np.array(p0) + np.array(p1)) / 2
+            mid_left   = (np.array(p3) + np.array(p0)) / 2
+            label_x = MathTex(r"\vec{x}",        color=dark_orange, font_size=36).move_to(mid_bottom + np.array([0,    -0.35, 0]))
+            label_y = MathTex(r"\rho \vec{y}",   color=dark_orange, font_size=36).move_to(mid_left   + np.array([-0.5,  0,   0]))
+            return VGroup(label_x, label_y)
+
+        def get_diag1():
+            p0, p1, p2, p3 = get_verts()
+            d1 = DashedLine(p0, p2, color=dark_red)
+            mid = (np.array(p0) + np.array(p2)) / 2
+            label = MathTex(r"x + \rho y", color=dark_red, font_size=34).move_to(mid + np.array([-0.8, 0.35, 0])).shift(0.3*DOWN+0.2*LEFT)
+            return VGroup(d1, label)
+
+        def get_diag2():
+            p0, p1, p2, p3 = get_verts()
+            d2 = DashedLine(p1, p3, color=dark_pink)
+            mid = (np.array(p1) + np.array(p3)) / 2
+            label = MathTex(r"x - \rho y", color=dark_pink, font_size=34).move_to(mid + np.array([0.8, 0.35, 0])).shift(0.3*DOWN+0.3*RIGHT)
+            return VGroup(d2, label)
+
+        poly        = always_redraw(get_poly)
+        poly_labels = always_redraw(get_poly_labels)
+        diag1       = always_redraw(get_diag1)
+        diag2       = always_redraw(get_diag2)
+
+        self.play(Create(plane), Create(axes))
+        self.play(Create(poly))
+        self.play(FadeIn(poly_labels))
+        self.play(Create(diag1))
+        self.play(Create(diag2))
+        self.play(rho.animate.set_value(1.114), run_time=3, rate_func=smooth)
+        self.wait(1)
+        
+        self.clear()
+        self.wait(1)
+
+    def show_scalar_existence(self):
+        title, group, box = self.create_title_and_box_custom(
+            "Scalar Existence", 
+            r"\exists a \in \mathbb{K} : x \perp (ax + y)"
+        )
+        
+        axes = Axes(
+            y_range=[-6, 6, 1],
+            x_range=[-10, 10, 1], 
+            y_length=6,
+            x_length=9,
+            axis_config={"color": medium_blue, "include_ticks": False, "tip_length":0.25, "tip_shape":StealthTip},
+        ).next_to(box,DOWN, buff=0.5)
+        plane = NumberPlane(
+            y_range=[-6, 6, 1],
+            x_range=[-10, 10, 1],
+            background_line_style={
+                "stroke_color": GRAY,
+                "stroke_opacity": 0.5
+            },
+            y_length=6,
+            x_length=9,
+        ).next_to(box,DOWN, buff=0.5)
+        
+        vec_x = Arrow(
+            start=axes.c2p(0,0), end=axes.c2p(3, 0),
+            buff=0, stroke_width=6, color=dark_blue,
+            tip_length=0.25, tip_shape=StealthTip
+        )
+        label_x = MathTex(r"x", color=dark_blue, font_size=36)\
+            .next_to(vec_x, DOWN, buff=0.2)
+
+        vec_y = Arrow(
+            start=axes.c2p(0,0), end=axes.c2p(2, 2.5),
+            buff=0, stroke_width=6, color=dark_green,
+            tip_length=0.25, tip_shape=StealthTip
+        )
+        label_y = MathTex(r"y", color=dark_green, font_size=36)\
+            .next_to(vec_y.get_end(), UR, buff=0.15)
+        
+        dashed = DashedLine(axes.c2p(2, 2.5), axes.c2p(2, 0), color=GRAY)
+        
+        vec_ax = Arrow(
+            start=axes.c2p(0,0), end=axes.c2p(-2, 0),
+            buff=0, stroke_width=6, color=dark_red,
+            tip_length=0.25, tip_shape=StealthTip
+        )
+        label_ax = MathTex(r"ax", color=dark_red, font_size=36)\
+            .next_to(vec_ax, DOWN, buff=0.2)
+        
+        vec_sum = Arrow(
+            start=axes.c2p(0,0), end=axes.c2p(0, 2.5),
+            buff=0, stroke_width=6, color=dark_orange,
+            tip_length=0.25, tip_shape=StealthTip
+        )
+        label_sum = MathTex(r"ax + y", color=dark_orange, font_size=36)\
+            .next_to(vec_sum.get_end(), UL, buff=0.15)
+        
+        right_angle = RightAngle(vec_x, vec_sum, length=0.3, color=BLACK)
+
+        self.play(Create(plane), Create(axes))
+        self.play(GrowArrow(vec_x), FadeIn(label_x),
+                  GrowArrow(vec_y), FadeIn(label_y))
+        self.play(Create(dashed))
+        self.play(GrowArrow(vec_ax), FadeIn(label_ax))
+        self.play(GrowArrow(vec_sum), FadeIn(label_sum),
+                  Create(right_angle))
+        self.wait(1)
+        
+        self.clear()
+        self.wait(1)
+
     def scene7(self, title):
 
         # title.shift(0.5*DOWN)
@@ -3444,7 +4219,9 @@ class TitleScene(Scene):
 
         # self.scene7_SubScene2(title)
 
-        self.scene7_SubScene3(title)
+        self.scene7_SubScene2_1(title)
+
+        # self.scene7_SubScene3(title)
 
     def scene6_SubScene0(self, title):
 
