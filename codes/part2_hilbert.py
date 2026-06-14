@@ -248,16 +248,16 @@ class TitleScene(Scene):
         topic_number = 3
         title = self.scene3(topic_number,False)
 
-        self.scene7(title)
+        # self.scene7(title)
 
-        # self.scene8(title)
+        self.scene8(title)
 
     def scene8_SubScene0(self, title):
         self.wait(1)
         image = ImageMobject("images/graduate_brain_img_mini.png").scale(3).to_corner(DL)
         self.add(image)
         or_in_hil_titlepart1 = Tex("Orthogonality in", color=BLACK, font_size=80)
-        or_in_hil_titlepart2 = Tex("Normed space - Banach space", color=BLACK, font_size=80)
+        or_in_hil_titlepart2 = Tex("Normed space", color=BLACK, font_size=80)
         or_in_hil_title = VGroup(or_in_hil_titlepart1, or_in_hil_titlepart2).arrange(DOWN, buff=0.3)
         or_in_hil_title.move_to(title.get_center()+0.5*DOWN)
 
@@ -271,10 +271,76 @@ class TitleScene(Scene):
         )
         self.wait(1)
 
+    def scene8_SubScene01(self, title):
+        # خاصیت هایی که بین همه تعامد ها در فضاهای نرمدار مشترکن
+        title_Summary = Text("Properties That Hold for All Types of Orthogonality",color=BLACK,font_size=40).to_edge(UP) #.shift(0.3*UP)
+        self.play(Write(title_Summary))
+
+        headers = [
+            (r"\text{NONDEGENERACY}", dark_pink),
+            (r"\text{SIMPLIFICATION}", dark_purple),
+            (r"\text{CONTINUITY}", dark_terquise),
+        ]
+
+        col_labels = [MathTex(h).set_color(color) for h, color in headers]
+
+        
+        row_Pythagorean = [
+            MathTex(r"\Large \checkmark").set_color(GREEN),
+            MathTex(r"\Large \checkmark").set_color(GREEN),
+            MathTex(r"\Large \checkmark").set_color(GREEN),
+        ]
+
+        row_Isosceles = [
+            MathTex(r"\Large \checkmark").set_color(GREEN),
+            MathTex(r"\Large \checkmark").set_color(GREEN),
+            MathTex(r"\Large \checkmark").set_color(GREEN),
+        ]
+
+        row_BJ = [
+            MathTex(r"\Large \checkmark").set_color(GREEN),
+            MathTex(r"\Large \checkmark").set_color(GREEN),
+            MathTex(r"\Large \checkmark").set_color(GREEN),
+        ]
+
+        row_Roberts = [
+            MathTex(r"\Large \checkmark").set_color(GREEN),
+            MathTex(r"\Large \checkmark").set_color(GREEN),
+            MathTex(r"\Large \checkmark").set_color(GREEN),
+        ]
+        
+        row_label_roberts = MathTex(r"\text{Roberts}", color=BLACK).scale(0.6)
+        row_label_BJ = MathTex(r"\text{BJ}", color=BLACK).scale(0.6)
+        row_label_Isosceles = MathTex(r"\text{Isosceles}", color=BLACK).scale(0.6)
+        row_label_Pythagorean = MathTex(r"\text{Pythagorean}", color=BLACK).scale(0.6)
+
+        table = MobjectTable(
+            [row_Roberts, row_BJ, row_Isosceles, row_Pythagorean],
+            row_labels=[row_label_roberts, row_label_BJ, row_label_Isosceles, row_label_Pythagorean],
+            col_labels=col_labels,
+            include_outer_lines=True,
+            line_config={"stroke_width": 3, "color": GRAY},
+            h_buff=0.3,
+        ).shift(0.5*DOWN).scale(0.85)
+
+        self.play(
+            Create(table),
+            run_time = 3,
+        )
+        self.wait(1)
+        self.play(
+            FadeOut(table),
+            FadeOut(title_Summary),
+            # run_time = 3,
+        )
+        self.wait(1)
+
     def scene8_SubScene1(self, title):
         title_orth = Tex("Roberts Orthogonality", color=BLACK, font_size=80).to_edge(UP)
 
-        year_text = Tex("1934 - B. D. Roberts",color=BLACK,font_size=65).next_to(title_orth, DOWN,buff=0.5)
+        year_text = Tex("1934 - Byron David Roberts",color=BLACK,font_size=65).next_to(title_orth, DOWN,buff=0.5)
+
+        # roberts_image = ImageMobject("")
 
         robert_def_part1 = MathTex(
             r"\text{Two elements } x \text{ and } y \text{ in a Banach space } X \text{ are said to}",
@@ -1070,6 +1136,8 @@ class TitleScene(Scene):
         title_orth = Tex("Birkhoff-James Orthogonality", color=BLACK, font_size=80).to_edge(UP)
 
         year_text = Tex("1935 - George David Birkhoff",color=BLACK,font_size=65).next_to(title_orth, DOWN,buff=0.5)
+        b_image = ImageMobject("images/George_David_Birkhoff.png").scale(3).next_to(year_text,DOWN,buff=0.5)
+        
         """
         wo elements x and y of X are said to be orthogonal in
         the sense of Birkhoff if and only if ‖x‖ ≤ ‖x + λy‖ , ∀λ ∈ R
@@ -1083,7 +1151,7 @@ class TitleScene(Scene):
             color=BLACK,
         )
         robert_def_part3 = MathTex(
-            r"\|x\| \le \|x + \lambda y\| \quad \text{for all } \lambda \in \mathbb{k}",
+            r"\|x\| \le \|x + \lambda y\| \quad \text{for all } \lambda \in \mathbb{R}",
             color=BLACK,
         )
         robert_def_part4 = MathTex(
@@ -1101,9 +1169,11 @@ class TitleScene(Scene):
         self.play(
             Write(year_text),
         )
+        self.add(b_image)
         self.wait(0.5)
         self.play(
             FadeOut(year_text),
+            FadeOut(b_image),
         )
         self.play(
             Create(box),
@@ -1347,6 +1417,7 @@ class TitleScene(Scene):
         title_orth = Tex("Isosceles Orthogonality", color=BLACK, font_size=80).to_edge(UP)
 
         year_text = Tex("1945 - Robert C. James",color=BLACK,font_size=65).next_to(title_orth, DOWN,buff=0.5)
+        robert_image = ImageMobject("images/Robert_C._James.png").scale(2).shift(1.5*DOWN)
 
         robert_def_part1 = MathTex(
             r"\text{Two elements } x \text{ and } y \text{ in a Banach space } X \text{ are said to}",
@@ -1374,10 +1445,12 @@ class TitleScene(Scene):
         self.wait(0.5)
         self.play(
             Write(year_text),
+            FadeIn(robert_image),
         )
         self.wait(0.5)
         self.play(
             FadeOut(year_text),
+            FadeOut(robert_image),
         )
         self.play(
             Create(box),
@@ -1395,6 +1468,7 @@ class TitleScene(Scene):
         title_orth = Tex("Pythagorean Orthogonality", color=BLACK, font_size=80).to_edge(UP)
 
         year_text = Tex("1945 - Robert C. James",color=BLACK,font_size=65).next_to(title_orth, DOWN,buff=0.5)
+        robert_image = ImageMobject("images/Robert_C._James.png").scale(2).shift(1.5*DOWN)
 
         robert_def_part1 = MathTex(
             r"\text{Two elements } x \text{ and } y \text{ in a Banach space } X \text{ are said to}",
@@ -1422,10 +1496,12 @@ class TitleScene(Scene):
         self.wait(0.5)
         self.play(
             Write(year_text),
+            FadeIn(robert_image),
         )
         self.wait(0.5)
         self.play(
             FadeOut(year_text),
+            FadeOut(robert_image),
         )
         self.play(
             Create(box),
@@ -3118,6 +3194,8 @@ class TitleScene(Scene):
 
         # self.scene8_SubScene0(title)
 
+        # self.scene8_SubScene01(title)
+
         # self.scene8_SubScene1(title)
 
         # self.scene8_SubScene2(title)
@@ -3144,7 +3222,7 @@ class TitleScene(Scene):
 
         ########## pythagorean
 
-        # self.scene8_SubScene10(title)
+        self.scene8_SubScene10(title)
 
         # self.scene8_SubScene11(title)
 
@@ -3152,7 +3230,7 @@ class TitleScene(Scene):
 
         # self.scene8_SubScene13(title)
 
-        self.scene8_SubScene14(title)
+        # self.scene8_SubScene14(title)
 
     def scene7_SubScene0(self, title):
         self.wait(1)
