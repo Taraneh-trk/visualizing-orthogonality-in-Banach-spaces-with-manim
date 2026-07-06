@@ -32,7 +32,7 @@ def projection_point(arrow1, arrow2):
 
     return arrow1.get_start() + proj_len * u1
 
-class TitleScene(Scene):
+class TitleScene(ThreeDScene):   # Scene
 
     def show_definition(self, definition: MathTex, total_title, retrun_notShow=False, what_is_defined=""):
         """Show definition with box"""
@@ -249,6 +249,8 @@ class TitleScene(Scene):
         title = self.scene3(topic_number,False)
 
         # self.scene7(title)
+
+        # self.scene7_1(title)
 
         self.scene8(title)
 
@@ -976,6 +978,112 @@ class TitleScene(Scene):
         self.wait(1)
         self.play(
             FadeOut(add),
+        )
+
+        scalar_existence_title = MathTex(r"\text{Scalar Existence Counterexample}", color=dark_green)
+
+        # Scalar Existence - Space
+        scalar_existence_space = MathTex(
+            r"\text{Space: } \mathbb{R}^2 \text{ with } \ell^\infty \text{ norm: } \|(u,w)\|_\infty = \max(|u|,|w|)",
+            color=BLACK,
+        )
+
+        # Scalar Existence - Claim
+        scalar_existence_claim = MathTex(
+            r"\text{Claim: } \forall x,y \, \exists a \in \mathbb{R} \text{ such that } x \perp_R (ax+y)",
+            color=BLACK,
+        )
+
+        # Scalar Existence - Vectors
+        scalar_existence_vectors = MathTex(
+            r"x = (1, 0.5), \quad y = (0, 1)",
+            color=BLACK,
+        )
+
+        # Setup - z definition
+        setup_z_title = MathTex(
+            r"\text{Assume such } a \text{ exists,} \\ \text{let } z = ax+y = (a,\, 0.5a+1)",
+            color=BLACK,
+        )
+
+        # Roberts condition
+        roberts_condition = MathTex(
+            r"\|x+\lambda z\|_\infty = \|x-\lambda z\|_\infty \quad \forall \lambda \in \mathbb{R}",
+            color=BLACK,
+        )
+
+        # Step 1 - Title
+        step1_title = MathTex(
+            r"\text{Step 1: Small } \lambda > 0",
+            color=BLACK,
+        )
+
+        # Step 1 - Reduction
+        step1_reduction = MathTex(
+            r"|1+\lambda a| = |1-\lambda a| \implies 2\lambda a = 0",
+            color=BLACK,
+        )
+
+        # Step 1 - Conclusion
+        step1_conclusion = MathTex(
+            r"\implies a = 0",
+            color=BLACK,
+        )
+
+        # Step 2 - Title
+        step2_title = MathTex(
+            r"\text{Step 2: Test } a=0 \text{ with } \lambda = 1",
+            color=BLACK,
+        )
+
+        # Step 2 - Equation
+        step2_equation = MathTex(
+            r"\max(|1|,|0.5+\lambda|) = \max(|1|,|0.5-\lambda|)",
+            color=BLACK,
+        )
+
+        # Step 2 - Evaluation
+        step2_evaluation = MathTex(
+            r"\max(1, 1.5) = 1.5 \quad , \quad \max(1, 0.5) = 1",
+            color=BLACK,
+        )
+
+        # Inequality
+        inequality = MathTex(
+            r"1.5 \neq 1",
+            color=dark_green,
+        )
+
+        scalar_existence = VGroup(*[
+            scalar_existence_title,
+            scalar_existence_space,
+            scalar_existence_claim,
+            VGroup(*[
+                VGroup(*[
+                    scalar_existence_vectors,
+                    setup_z_title,
+                    roberts_condition,
+                ]).arrange(DOWN, buff=0.2).scale(0.6).shift(1*LEFT),
+                VGroup(*[
+                    step1_title,
+                    step1_reduction,
+                    step1_conclusion,
+                ]).arrange(DOWN, buff=0.2).scale(0.5).shift(1*LEFT),
+                VGroup(*[
+                    step2_title,
+                    step2_equation,
+                    step2_evaluation,
+                ]).arrange(DOWN, buff=0.2).scale(0.5).shift(1*LEFT),
+            ]).arrange(RIGHT, buff=0.5),
+            inequality,
+        ]).arrange(DOWN, buff=0.3).next_to(box1, DOWN, buff=0.3)
+
+        self.play(
+            Write(scalar_existence),
+        )
+        self.wait(1)
+        self.play(
+            FadeOut(scalar_existence),
         )
 
 
@@ -1849,6 +1957,205 @@ class TitleScene(Scene):
         )
         self.wait(1)
 
+    def han_banakh_shape(self, title):
+        axes = ThreeDAxes(
+            x_range=[-3.5, 3.5, 1],
+            y_range=[-3.5, 3.5, 1],
+            z_range=[-2.5, 2.5, 1],
+            x_length=9, y_length=9, z_length=6.5,
+            color = dark_terquise,
+        )
+        self.set_camera_orientation(phi=68 * DEGREES, theta=-50 * DEGREES, distance=7)
+ 
+        # main_title = Text(
+        #     "Hahn-Banach Theorem",
+        #     font_size=30,
+        #     color=BLACK,
+        # ).to_edge(UP)
+        # self.add_fixed_in_frame_mobjects(main_title)
+        # self.play(Write(main_title))
+        # self.wait(0.5)
+ 
+        floor = Surface(
+            lambda u, v: axes.c2p(u, v, 0),
+            u_range=[-3, 3], v_range=[-3, 3],
+            resolution=(1, 1),
+            fill_color=dark_blue, fill_opacity=0.25,
+            stroke_color=dark_blue, stroke_width=1,
+            checkerboard_colors=[dark_blue, dark_blue],
+        )
+        X_label = MathTex("X", color=dark_blue).move_to(axes.c2p(3.3, 3.3, 0))
+        self.add_fixed_orientation_mobjects(X_label)
+ 
+        self.play(Create(floor))
+        self.play(Write(X_label))
+        self.wait(0.5)
+ 
+        line_M = Line3D(
+            start=axes.c2p(-3, 0, 0), end=axes.c2p(3, 0, 0),
+            color=dark_red, thickness=0.03,
+        )
+        M_label = MathTex("M", color=dark_red).move_to(axes.c2p(3.3, -0.4, 0))
+        self.add_fixed_orientation_mobjects(M_label)
+ 
+        self.play(Create(line_M))
+        self.play(Write(M_label))
+        self.wait(1)
+ 
+ 
+        P_SLOPE = 0.6  # شیب چادر (سوپلینیر/همگن نوع نُرم)
+ 
+        def p(x, y):
+            return P_SLOPE * np.sqrt(x ** 2 + y ** 2)
+ 
+        tent = Surface(
+            lambda u, v: axes.c2p(u, v, p(u, v)),
+            u_range=[-3, 3], v_range=[-3, 3],
+            resolution=(28, 28),
+            fill_opacity=0.35,
+            checkerboard_colors=[GREY_C, GREY_D],
+            stroke_color=GREY_D, stroke_width=0.5,
+        )
+        p_label = MathTex("z = p(x)", color=BLACK).move_to(axes.c2p(0, 3.6, 2.1))
+        self.add_fixed_orientation_mobjects(p_label)
+ 
+        self.play(Create(tent), run_time=2.5)
+        self.play(Write(p_label))
+ 
+        self.begin_ambient_camera_rotation(rate=0.25)
+        self.wait(5)
+        self.stop_ambient_camera_rotation()
+        self.wait(0.5)
+ 
+ 
+        F_SLOPE_ON_M = 0.5  # باید |F_SLOPE_ON_M| <= P_SLOPE باشد تا زیر چادر بماند
+ 
+        def f(x):
+            return F_SLOPE_ON_M * x
+ 
+        line_f = Line3D(
+            start=axes.c2p(-3, 0, f(-3)), end=axes.c2p(3, 0, f(3)),
+            color=dark_green, thickness=0.035,
+        )
+        f_label = MathTex("f(x)", color=dark_green).move_to(axes.c2p(3.4, 0, f(3) + 0.35))
+        self.add_fixed_orientation_mobjects(f_label)
+ 
+        origin_dot = Dot3D(axes.c2p(0, 0, 0), color=BLACK, radius=0.05)
+ 
+        self.play(Create(line_f), FadeIn(origin_dot))
+        self.play(Write(f_label))
+        self.wait(1)
+ 
+        C_Y = 0.2
+        assert np.sqrt(F_SLOPE_ON_M ** 2 + C_Y ** 2) <= P_SLOPE + 1e-9
+ 
+        def F(x, y):
+            return F_SLOPE_ON_M * x + C_Y * y
+ 
+        plane_F = Surface(
+            lambda u, v: axes.c2p(u, v, F(u, v)),
+            u_range=[-3, 3], v_range=[-3, 3],
+            resolution=(1, 1),
+            fill_color=dark_purple, fill_opacity=0.55,
+            stroke_color=light_purple, stroke_width=1.5,
+            checkerboard_colors=[dark_purple, dark_purple],
+        )
+        F_label = MathTex("F(X)", color=dark_purple).move_to(axes.c2p(-3.4, 3.2, F(-3, 3.2)))
+        self.add_fixed_orientation_mobjects(F_label)
+ 
+        self.play(Create(plane_F), run_time=2)
+        self.play(Write(F_label))
+ 
+        self.play(Indicate(line_f, color=dark_green, scale_factor=1.15))
+        self.wait(0.5)
+ 
+        self.begin_ambient_camera_rotation(rate=0.3)
+        self.wait(5)
+        self.stop_ambient_camera_rotation()
+
+        self.move_camera(
+            phi=0,
+            theta=-90 * DEGREES,
+            gamma=0,
+            run_time=2,
+        )
+
+        self.wait(1)
+        self.clear()
+        self.wait(1)
+
+    def han_banakh_def(self, title):
+        title_han = MathTex(r" \text{Hahn-Banach Theorem} ", color=BLACK, font_size=70).to_edge(UP)
+
+        hb_part0 = MathTex(
+            r"\text{Let } X \text{ be a vector space, and let}",
+            color=BLACK,
+        )
+        hb_part1 = MathTex(
+            r"p : X \to \mathbb{R} \text{ be a sublinear function, (i.e., norm)}",
+            color=BLACK,
+        )
+        # hb_part2 = MathTex(
+        #     r"p(x+y) \le p(x) + p(y) \quad \text{and} \quad p(\alpha x) = \alpha \, p(x) \; \text{ for } \alpha \ge 0.",
+        #     color=BLACK,
+        # )
+        hb_part3 = MathTex(
+            r"\text{Let } M \text{ be a subspace of } X \text{, and let}",
+            color=BLACK,
+        )
+        hb_part4 = MathTex(
+            r"f : M \to \mathbb{R} \text{ be a linear functional satisfying}",
+            color=BLACK,
+        )
+        hb_part5 = MathTex(
+            r"f(x) \le p(x) \quad \text{for all } x \in M.",
+            color=BLACK,
+        )
+        hb_part6 = MathTex(
+            r"\text{Then there exists a linear functional } F : X \to \mathbb{R} \text{ such that}",
+            color=BLACK,
+        )
+        # hb_part7 = MathTex(
+        #     r"\text{such that}",
+        #     color=BLACK,
+        # )
+        hb_part8 = MathTex(
+            r"(HB1) \quad F(x) = f(x) \quad \text{for all } x \in M,",
+            color=BLACK,
+        )
+        # hb_part9 = MathTex(
+        #     r"\text{and}",
+        #     color=BLACK,
+        # )
+        hb_part10 = MathTex(
+            r"(HB2) \quad F(x) \le p(x) \quad \text{for all } x \in X.",
+            color=BLACK,
+        )
+
+        hb_def = VGroup(
+            hb_part0, hb_part1, #hb_part2,
+            hb_part3, hb_part4, hb_part5,
+            hb_part6, #hb_part7,
+            hb_part8, hb_part10,
+        ).arrange(DOWN)
+
+        group, box = self.show_definition(hb_def, title_han, True)
+        def_group = VGroup(group, box).scale(0.9).shift(3*UP)
+
+        self.play(
+            Write(title_han),
+            Create(box),
+            Write(group),
+        )
+        self.wait(1)
+
+        self.play(
+            FadeOut(title_han),
+            FadeOut(group),
+            FadeOut(box),
+        )
+        self.wait(1)
+
     def scene8_SubScene6(self, title):
         title_orth = Tex("Birkhoff-James Orthogonality", color=BLACK, font_size=70).to_edge(UP)
 
@@ -1891,7 +2198,7 @@ class TitleScene(Scene):
 
         # Part 1 title
         part1_title = MathTex(
-            r"\text{Part 1: Show } x \perp_{BJ} y",
+            r"\text{Step 1: Show } x \perp_{BJ} y",
             color=BLACK,
         )
 
@@ -1918,7 +2225,7 @@ class TitleScene(Scene):
 
         # Part 2 title
         part2_title = MathTex(
-            r"\text{Part 2: Show } y \not\perp_{BJ} x",
+            r"\text{Step 2: Show } y \not\perp_{BJ} x",
             color=BLACK,
         )
 
@@ -1981,7 +2288,7 @@ class TitleScene(Scene):
             FadeOut(sym),
         )
 
-        homogeneity_title = MathTex(r"\text{Homogeneity Proof}",color=dark_purple)
+        homogeneity_title = MathTex(r"\text{Homogeneity}",color=dark_purple)
 
         # Statement
         homogeneity_statement = MathTex(
@@ -2110,7 +2417,7 @@ class TitleScene(Scene):
 
         # Part 1 - x ⊥ y (reference)
         nonadditivity_part1 = MathTex(
-            r"\text{Part 1: } x \perp_{BJ} y",
+            r"\text{Step 1: } x \perp_{BJ} y",
             color=BLACK,
         )
         non_part1_2 = MathTex(
@@ -2120,7 +2427,7 @@ class TitleScene(Scene):
 
         # Part 2 title
         nonadditivity_part2_title = MathTex(
-            r"\text{Part 2: Show } x \perp_{BJ} z",
+            r"\text{Step 2: Show } x \perp_{BJ} z",
             color=BLACK,
         )
 
@@ -2229,6 +2536,102 @@ class TitleScene(Scene):
         self.wait(1)
         self.play(
             FadeOut(add),
+        )
+
+        existence_title = MathTex(r"\text{Scaler Existence}", color=dark_green)
+
+        existence_statement = MathTex(
+            r"\forall\, x ,\ y \in X,\ \exists\, a \in \mathbb{R}: \quad x \perp_{BJ} (ax + y)",
+            color=BLACK,
+        )
+
+        trivial_case = MathTex(
+            r"\text{If } x = 0: \quad \|0\| \le \|0 + \lambda(a \cdot 0 + y)\| \quad \text{(trivially true)}",
+            color=BLACK,
+        )
+
+        hb_functional = MathTex(
+            r"\text{Assume } x \neq 0. \ \text{By }",
+            r"\text{Hahn-Banach}",
+            r": \ \exists\, f \text{ s.t. } \|f\| = \|x\|, \ f(x) = \|x\|^2",
+            color=BLACK,
+        )
+        hb_functional.set_color_by_tex(r"\text{Hahn-Banach}", dark_green)
+
+        step1_title = MathTex(r"\text{Step 1: Solve for } a", color=BLACK)
+
+        step1_solve1 = MathTex(
+            r"f(ax + y) = 0",
+            color=BLACK,
+        )
+        step1_solve2 = MathTex(
+            r"\Longrightarrow\ a\|x\|^2 + f(y) = 0",
+            color=BLACK,
+        )
+        step1_solve3 = MathTex(
+            r"\Longrightarrow\ a = -\frac{f(y)}{\|x\|^2}",
+            color=BLACK,
+        )
+
+        step2_title = MathTex(r"\text{Step 2: Verify } x \perp_{BJ} (ax + y)", color=BLACK)
+
+        step2_body = MathTex(
+            r"v = ax + y,\ f(v) = 0 \ \Longrightarrow\ f(x + \lambda v) = f(x) = \|x\|^2",
+            color=BLACK,
+        )
+
+        step2_ineq = MathTex(
+            r"\|x\|^2 = f(x + \lambda v) \le \|f\|\,\|x + \lambda v\| = \|x\|\,\|x + \lambda v\|",
+            color=BLACK,
+        )
+
+        step2_conclude = MathTex(
+            r"\Longrightarrow\ \|x\| \le \|x + \lambda v\| \quad \therefore\ x \perp_{BJ} (ax + y) \quad .\blacksquare",
+            color=BLACK,
+        )
+
+        existence = VGroup(*[
+            existence_title,
+            existence_statement,
+            trivial_case.scale(0.9),
+            hb_functional.scale(0.9),
+            VGroup(*[
+                VGroup(*[
+                    step1_title,
+                    step1_solve1,
+                    step1_solve2,
+                    step1_solve3,
+                ]).arrange(DOWN, buff=0.2).scale(0.7).shift(2 * LEFT),
+                VGroup(*[
+                    step2_title,
+                    step2_body,
+                    step2_ineq,
+                    step2_conclude,
+                ]).arrange(DOWN, buff=0.2).scale(0.7).shift(2 * LEFT),
+            ]).arrange(RIGHT, buff=0.5),
+        ]).arrange(DOWN, buff=0.3).next_to(box1, DOWN, buff=0.3)
+
+        self.play(
+            Write(existence[:2]),
+        )
+        pic_pause = ImageMobject("images/pause.png").scale(1.3).move_to(existence[1].get_center() + 2.5*DOWN)
+        self.play(
+            FadeIn(pic_pause)
+        )
+        self.wait(1)
+        self.clear()
+        self.wait(1)
+        self.han_banakh_def(title)
+        self.han_banakh_shape(title)
+        self.play(
+            FadeIn(title_orth),
+            FadeIn(box1),
+            FadeIn(roberts),
+            Write(existence),
+        )
+        self.wait(1)
+        self.play(
+            FadeOut(existence),
         )
 
         headers = [
@@ -3210,7 +3613,10 @@ class TitleScene(Scene):
 
         # self.scene8_SubScene5(title)
 
-        # self.scene8_SubScene6(title)
+        # self.han_banakh_def(title)  # این رو برای تست اینجا گذاشتم
+        # self.han_banakh_shape(title)  # این رو برای تست اینجا گذاشتم
+
+        self.scene8_SubScene6(title)
 
         ########## isosceles
 
@@ -3222,7 +3628,7 @@ class TitleScene(Scene):
 
         ########## pythagorean
 
-        self.scene8_SubScene10(title)
+        # self.scene8_SubScene10(title)
 
         # self.scene8_SubScene11(title)
 
@@ -3514,7 +3920,7 @@ class TitleScene(Scene):
         self.show_additivity()
         self.show_existence()
         # self.show_uniqueness()   #این رو به قبلی اضافه کردم
-        self.show_unique_diagonals()
+        # self.show_unique_diagonals()
         self.show_scalar_existence()
 
     def create_title_and_box_custom(self, title_text, math_formula):
@@ -3538,7 +3944,7 @@ class TitleScene(Scene):
     def show_nondegeneracy(self):
         title, group, box = self.create_title_and_box_custom(
             "Nondegeneracy", 
-            r"\lambda x \perp \mu x \iff \lambda x = 0 \lor \mu x = 0"
+            r"\forall \lambda , \mu \in \mathbb{K} \quad \lambda x \perp \mu x \iff \lambda x = 0 \lor \mu x = 0"
         )
         
         axes = Axes(
@@ -3627,7 +4033,7 @@ class TitleScene(Scene):
     def show_simplification(self):
         title, group, box = self.create_title_and_box_custom(
             "Simplification", 
-            r"x \perp y \implies \lambda x \perp \lambda y \quad \forall \lambda \in \mathbb{R}"
+            r"x \perp y \implies \lambda x \perp \lambda y \quad \forall \lambda \in \mathbb{K}"
         )
         
         axes = Axes(
@@ -3732,8 +4138,8 @@ class TitleScene(Scene):
             x_range=[-10, 10, 1], 
             y_length=6,
             x_length=9,
-            axis_config={"color": medium_blue, "include_ticks": False, "tip_length":0.25, "tip_shape":StealthTip}, # "tip_shape":ArrowTip.TIP_STYLE_ROUND
-        ).next_to(box,DOWN, buff=0.5)
+            axis_config={"color": medium_blue, "include_ticks": False, "tip_length":0.25, "tip_shape":StealthTip},
+        ).next_to(box, DOWN, buff=0.5)
         plane = NumberPlane(
             y_range=[-6, 6, 1],
             x_range=[-10, 10, 1],
@@ -3743,46 +4149,91 @@ class TitleScene(Scene):
             },
             y_length=6,
             x_length=9,
-        ).next_to(box,DOWN, buff=0.5)
+        ).next_to(box, DOWN, buff=0.5)
 
-        t = ValueTracker(0)
-        
-        vec_xn = always_redraw(lambda: Arrow(
-            start=axes.c2p(0,0),
-            end=axes.c2p(4 * np.cos(t.get_value()), 4 * np.sin(t.get_value())),
-            buff=0, stroke_width=5, color=dark_terquise,
-            tip_length=0.25, tip_shape=StealthTip
-        ))
-        text_xn = always_redraw( lambda : 
-                MathTex(
-                r"\vec{x_n}",
-                color=dark_terquise,
-            ).move_to(vec_xn.get_center()+ 0.4*DOWN)
-        )
-        
-        vec_yn = always_redraw(lambda: Arrow(
-            start=axes.c2p(0,0),
-            end=axes.c2p(-4 * np.sin(t.get_value() + 0.01), 4 * np.cos(t.get_value() + 0.01)),
-            buff=0, stroke_width=5, color=dark_pink,
-            tip_length=0.25, tip_shape=StealthTip
-        ))
-        text_yn = always_redraw( lambda : 
-                MathTex(
-                r"\vec{y_n}",
-                color=dark_pink,
-            ).move_to(vec_yn.get_center()+ 0.4*LEFT)
-        )
-        
-        angle = always_redraw(lambda: 
-            self.get_right_angle_mark(vec_xn, vec_yn, size=0.3, color=BLACK)
-        )
-        
         self.play(Create(plane), Create(axes))
-        self.play(GrowArrow(vec_xn), Write(text_xn), GrowArrow(vec_yn), Write(text_yn), Create(angle))
-        self.play(t.animate.set_value(PI/4), run_time=3, rate_func=smootherstep)
+
+        # تعداد مراحل چرخش (مرحله آخر = x_n, y_n)
+        n_steps = 4
+        angles = np.linspace(0, PI/4, n_steps)
+
+        def make_vec_x(angle):
+            return Arrow(
+                start=axes.c2p(0, 0),
+                end=axes.c2p(4 * np.cos(angle), 4 * np.sin(angle)),
+                buff=0, stroke_width=5, color=dark_terquise,
+                tip_length=0.25, tip_shape=StealthTip
+            )
+
+        def make_vec_y(angle):
+            return Arrow(
+                start=axes.c2p(0, 0),
+                end=axes.c2p(-4 * np.sin(angle + 0.01), 4 * np.cos(angle + 0.01)),
+                buff=0, stroke_width=5, color=dark_pink,
+                tip_length=0.25, tip_shape=StealthTip
+            )
+
+        last_text_x = None
+        last_text_y = None
+        last_angle_mark = None
+
+        for i, ang in enumerate(angles):
+            is_last = (i == n_steps - 1)
+
+            vec_x = make_vec_x(ang)
+            vec_y = make_vec_y(ang)
+
+            if is_last:
+                ang*=1.5
+                vec_x = make_vec_x(ang)
+                vec_y = make_vec_y(ang)
+
+                label_x = r"\vec{x_n}"
+                label_y = r"\vec{y_n}"
+            else:
+                label_x = rf"\vec{{x_{i+1}}}"
+                label_y = rf"\vec{{y_{i+1}}}"
+
+            text_x = MathTex(label_x, color=dark_terquise).move_to(axes.c2p(4 * np.cos(ang), 4 * np.sin(ang)) +0.5*RIGHT)
+            text_y = MathTex(label_y, color=dark_pink).move_to(axes.c2p(-4 * np.sin(ang + 0.01), 4 * np.cos(ang + 0.01)) +0.5*UP)
+
+            angle_mark = self.get_right_angle_mark(vec_x, vec_y, size=0.3, color=BLACK)
+
+            if i == 0:
+                # مرحله اول: نمایش کامل بردارها با رشد از مبدا
+                self.play(
+                    GrowArrow(vec_x), Write(text_x),
+                    GrowArrow(vec_y), Write(text_y),
+                    Create(angle_mark)
+                )
+            else:
+                # مراحل بعد: بدون پاک کردن قبلی‌ها، فقط اضافه می‌شوند
+                self.play(
+                    ReplacementTransform(prev_vec_x.copy(), vec_x),
+                    ReplacementTransform(prev_vec_y.copy(), vec_y),
+                    FadeIn(text_x), FadeIn(text_y),
+                    FadeIn(angle_mark),
+                    run_time=0.8
+                )
+
+            prev_vec_x, prev_vec_y = vec_x, vec_y
+            last_text_x, last_text_y = text_x, text_y
+            last_angle_mark = angle_mark
+            self.wait(0.3)
+
         self.wait(1)
-        
-        # self.play(FadeOut(VGroup(*self.mobjects)))
+
+        # حالا x_n, y_n به x, y تبدیل می‌شوند (بدون پاک شدن بقیه چیزها)
+        final_text_x = MathTex(r"\vec{x}", color=dark_terquise).move_to(last_text_x.get_center())
+        final_text_y = MathTex(r"\vec{y}", color=dark_pink).move_to(last_text_y.get_center())
+
+        self.play(
+            Transform(last_text_x, final_text_x),
+            Transform(last_text_y, final_text_y),
+            run_time=1.5
+        )
+
+        self.wait(1)
         self.clear()
         self.wait(1)
 
@@ -3846,7 +4297,7 @@ class TitleScene(Scene):
         )
         text_y2 = always_redraw( lambda : 
                 MathTex(
-                r"\lambda \vec{y}",
+                r"\mu \vec{y}",
                 color=dark_blue,
             ).move_to(vec_y.get_center()+ 0.4*LEFT)
         )
@@ -4279,6 +4730,26 @@ class TitleScene(Scene):
         
         self.clear()
         self.wait(1)
+
+    def scene7_1(self, title):
+        title_property_line1 = Text("Properties of Orthogonality",color=BLACK).scale(1.5)
+        title_property_line2 = Text("in Inner Product Spaces",color=BLACK).scale(1.5)
+        title_property = VGroup(title_property_line1, title_property_line2).arrange(DOWN, buff=0.2)
+        
+        pic1 = ImageMobject(r"images/property1.png").scale(1.3).move_to(title_property.get_center()+2.5*UL)
+        pic2 = ImageMobject(r"images/property2.png").scale(1.3).move_to(title_property.get_center()+2.5*DR)
+
+        self.play(
+            Write(title_property),
+            FadeIn(pic1),
+            FadeIn(pic2),
+        )
+        self.wait(1)
+        self.play(
+            FadeOut(title_property),
+            FadeOut(pic1),
+            FadeOut(pic2),
+        )
 
     def scene7(self, title):
 
