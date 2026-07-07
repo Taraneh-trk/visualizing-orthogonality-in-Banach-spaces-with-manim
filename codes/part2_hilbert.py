@@ -2707,7 +2707,7 @@ class TitleScene(ThreeDScene):   # Scene
         # proof and counterexample
 
         symmetry_title = MathTex(
-            r"\text{Symmetry Proof}",
+            r"\text{Symmetry}",
             color=dark_pink,
         )
 
@@ -2804,7 +2804,7 @@ class TitleScene(ThreeDScene):   # Scene
 
         # Part 1 title
         nonhomogeneity_part1_title = MathTex(
-            r"\text{Part 1: Show } x \perp_I y",
+            r"\text{Step 1: Show } x \perp_I y",
             color=BLACK,
         )
 
@@ -2828,7 +2828,7 @@ class TitleScene(ThreeDScene):   # Scene
 
         # Part 2 title
         nonhomogeneity_part2_title = MathTex(
-            r"\text{Part 2: Show } (2x) \not\perp_I y \text{ for } \alpha = 2, \beta = 1",
+            r"\text{Step 2: Show } (2x) \not\perp_I y \text{ for } \alpha = 2, \beta = 1",
             color=BLACK,
         )
 
@@ -2903,7 +2903,7 @@ class TitleScene(ThreeDScene):   # Scene
 
         # Part 1 title
         nonadditivity_part1_title_iso = MathTex(
-            r"\text{Part 1: Show } x \perp_I y",
+            r"\text{Step 1: Show } x \perp_I y",
             color=BLACK,
         )
 
@@ -2927,7 +2927,7 @@ class TitleScene(ThreeDScene):   # Scene
 
         # Part 2 title
         nonadditivity_part2_title_iso = MathTex(
-            r"\text{Part 2: Show } x \perp_I z",
+            r"\text{Step 2: Show } x \perp_I z",
             color=BLACK,
         )
 
@@ -2951,7 +2951,7 @@ class TitleScene(ThreeDScene):   # Scene
 
         # Part 3 title
         nonadditivity_part3_title_iso = MathTex(
-            r"\text{Part 3: Check } x \perp_I (y+z)",
+            r"\text{Step 3: Check } x \perp_I (y+z)",
             color=BLACK,
         )
 
@@ -3010,6 +3010,89 @@ class TitleScene(ThreeDScene):   # Scene
         self.wait(1)
         self.play(
             FadeOut(sym),
+        )
+
+        existence_title = MathTex(r"\text{Scalar Existence}", color=dark_green)
+
+        existence_statement = MathTex(
+            r"\forall\, x,\ y \in X,\ \exists\, a \in \mathbb{R}: \quad x \perp_I (ax + y)",
+            color=BLACK,
+        )
+
+        setup_eq = MathTex(
+            r"\|x + (ax+y)\| = \|x - (ax+y)\| \ \Longrightarrow\ \|(a+1)x+y\| = \|(a-1)x+y\|",
+            color=BLACK,
+        )
+
+        trivial_case = MathTex(
+            r"\text{If } x = 0,\ \text{choose } a = 0: \quad \|y\| = \|y\| \quad \text{(trivially true)}",
+            color=BLACK,
+        )
+
+        define_f = MathTex(
+            r"\text{Assume } x \neq 0. \ \text{Define } ",
+            r"f(a)",
+            r" = \|(a+1)x+y\| - \|(a-1)x+y\|",
+            color=BLACK,
+        )
+        define_f.set_color_by_tex(r"f(a)", dark_green)
+
+        step1_title = MathTex(r"\text{Step 1: Continuity}", color=BLACK)
+
+        step1_body1 = MathTex(
+            r"\|\cdot\|,\ +,\ \text{scalar mult. continuous} ",
+            color=BLACK,
+        )
+        step1_body2 = MathTex(
+            r"\Longrightarrow\ f \text{ continuous on } \mathbb{R}",
+            color=BLACK,
+        )
+        step1_body = VGroup(step1_body1, step1_body2).arrange(DOWN, buff=0.2)
+
+        step2_title = MathTex(r"\text{Step 2: Sign Change at } \pm\infty", color=BLACK)
+
+        step2_pos = MathTex(
+            r"\lim_{a \to \infty} f(a) = 2\|x\| > 0", # = (a+1)\|x\| - (a-1)\|x\|
+            color=BLACK,
+        )
+
+        step2_neg = MathTex(
+            r"\lim_{a \to -\infty} f(a) = -2\|x\| < 0",
+            color=BLACK,
+        )
+
+        conclude = MathTex(
+            r"\text{By } ",r"\text{IVT} ",r"\text{ : } \exists\, a \in \mathbb{R},\ f(a) = 0 \ \Longrightarrow\ x \perp_I (ax+y) \quad .\blacksquare",
+            color=BLACK,
+        )
+        conclude.set_color_by_tex(r"\text{IVT}", dark_green)
+
+        existence = VGroup(*[
+            existence_title,
+            existence_statement,
+            setup_eq.scale(0.8),
+            trivial_case.scale(0.8),
+            define_f.scale(0.8),
+            VGroup(
+                VGroup(*[
+                    step1_title,
+                    step1_body,
+                ]).arrange(DOWN, buff=0.2).scale(0.7),
+                VGroup(*[
+                    step2_title,
+                    step2_pos,
+                    step2_neg,
+                ]).arrange(DOWN, buff=0.2).scale(0.7)
+            ).arrange(RIGHT, buff=0.5),
+            conclude.scale(0.8),
+        ]).arrange(DOWN, buff=0.2).next_to(box1, DOWN, buff=0.2)
+
+        self.play(
+            Write(existence),
+        )
+        self.wait(1)
+        self.play(
+            FadeOut(existence),
         )
 
         headers = [
@@ -3086,7 +3169,7 @@ class TitleScene(ThreeDScene):   # Scene
         # proof and counterexample
 
         symmetry_title = MathTex(
-            r"\text{Symmetry Proof}",
+            r"\text{Symmetry}",
             color=dark_pink,
         )
 
@@ -3167,7 +3250,7 @@ class TitleScene(ThreeDScene):   # Scene
 
         # Part 1 title
         nonhomogeneity_part1_title = MathTex(
-            r"\text{Part 1: Show } x \perp_P y",
+            r"\text{Step 1: Show } x \perp_P y",
             color=BLACK,
         )
 
@@ -3197,7 +3280,7 @@ class TitleScene(ThreeDScene):   # Scene
 
         # Part 2 title
         nonhomogeneity_part2_title = MathTex(
-            r"\text{Part 2: Show } (-x) \not\perp_P y \text{ for } \alpha = -1, \beta = 1",
+            r"\text{Step 2: Show } (-x) \not\perp_P y \text{ for } \alpha = -1, \beta = 1",
             color=BLACK,
         )
 
@@ -3278,7 +3361,7 @@ class TitleScene(ThreeDScene):   # Scene
         )
 
         nonadditivity_part1_1 = MathTex(
-            r"Part 1 : x \perp_P y",
+            r"\text{Step } 1 : x \perp_P y",
             color=BLACK,
         )
 
@@ -3296,7 +3379,7 @@ class TitleScene(ThreeDScene):   # Scene
         )
 
         nonadditivity_part2_1 = MathTex(
-            r"Part 2 : x \perp_P z",
+            r"\text{Step } 2 : x \perp_P z",
             color=BLACK,
         )
 
@@ -3314,7 +3397,7 @@ class TitleScene(ThreeDScene):   # Scene
         )
 
         nonadditivity_part3_1 = MathTex(
-            r"Part 3 : x \not\perp_P (y+z)",
+            r"\text{Step } 3 : x \not\perp_P (y+z)",
             color=BLACK,
         )
 
@@ -3364,6 +3447,89 @@ class TitleScene(ThreeDScene):   # Scene
         self.wait(1)
         self.play(
             FadeOut(sym),
+        )
+
+        existence_title = MathTex(r"\text{Scalar Existence}", color=dark_green)
+
+        existence_statement = MathTex(
+            r"\forall\, x,\ y \in X,\ x \neq 0,\ \exists\, a \in \mathbb{R}: \quad x \perp_P (ax + y)",
+            color=BLACK,
+        )
+
+        setup_eq = MathTex(
+            r"\|x+(ax+y)\|^2 = \|x\|^2 + \|ax+y\|^2 \ \Longrightarrow\ \|(a+1)x+y\|^2 - \|ax+y\|^2 - \|x\|^2 = 0",
+            color=BLACK,
+        )
+
+        define_f = MathTex(
+            r"\text{Define } ",
+            r"f(a)",
+            r" = \|(a+1)x+y\|^2 - \|ax+y\|^2 - \|x\|^2",
+            color=BLACK,
+        )
+        define_f.set_color_by_tex(r"f(a)", dark_green)
+
+        step1_title = MathTex(r"\text{Step 1: Continuity}", color=BLACK)
+
+        step1_body1 = MathTex(
+            r"\|\cdot\|^2,\ +,\ \text{scalar mult. continuous} ",
+            color=BLACK,
+        )
+        step1_body2 = MathTex(
+            r"\Longrightarrow\ f \text{ continuous on } \mathbb{R}",
+            color=BLACK,
+        )
+        step1_body = VGroup(step1_body1, step1_body2).arrange(DOWN, buff=0.2)
+
+        step2_title = MathTex(r"\text{Step 2: Asymptotic Behavior}", color=BLACK)
+
+        step2_approx = MathTex(
+            r"\|ax+y\| \approx |a|\,\|x\| \ \Longrightarrow\ f(a) \approx 2a\|x\|^2",
+            color=BLACK,
+        )
+
+        step2_pos = MathTex(
+            r"a \to +\infty \ \Longrightarrow\ f(a) \to +\infty",
+            color=BLACK,
+        )
+
+        step2_neg = MathTex(
+            r"a \to -\infty \ \Longrightarrow\ f(a) \to -\infty",
+            color=BLACK,
+        )
+
+        conclude = MathTex(
+            r"\text{By } ",r"\text{IVT} ",r"\text{ : } \exists\, a \in \mathbb{R},\ f(a) = 0 \ \Longrightarrow\ x \perp_P (ax+y) \quad .\blacksquare",
+            color=BLACK,
+        )
+        conclude.set_color_by_tex(r"\text{IVT}", dark_green)
+
+        existence = VGroup(*[
+            existence_title,
+            existence_statement,
+            setup_eq.scale(0.75),
+            define_f.scale(0.8),
+            VGroup(
+                VGroup(*[
+                    step1_title,
+                    step1_body,
+                ]).arrange(DOWN, buff=0.2).scale(0.7),
+                VGroup(*[
+                    step2_title,
+                    step2_approx,
+                    step2_pos,
+                    step2_neg,
+                ]).arrange(DOWN, buff=0.2).scale(0.7)
+            ).arrange(RIGHT, buff=0.5),
+            conclude.scale(0.8),
+        ]).arrange(DOWN, buff=0.2).next_to(box1, DOWN, buff=0.2)
+
+        self.play(
+            Write(existence),
+        )
+        self.wait(1)
+        self.play(
+            FadeOut(existence),
         )
 
         headers = [
@@ -3591,6 +3757,170 @@ class TitleScene(ThreeDScene):   # Scene
         )
         self.wait(1)
 
+    def scene8_SubScene3_1(self, title):
+        x_y = MathTex(
+            r"x = (x_1, x_2, \dots , x_n),",
+            r"\quad y = (y_1, y_2, \dots , y_n)",
+            r" \, \in \mathbb{R}^n",
+            color=BLACK,
+        ).move_to(title.get_center()) #+0.5*DOWN
+
+        x_p_y = MathTex(
+            r"x \perp_R y \Longrightarrow \|x + \lambda y\| = \|x - \lambda y\| , \quad \forall \lambda \in \mathbb{R}",
+            color=dark_blue,
+        ).next_to(x_y,DOWN,buff=0.5)
+        condition = MathTex(
+            r"\text{Lets use }", r"\| \cdot \|_\infty", r" \text{ as the norm. }",
+            color=dark_orange,
+        ).next_to(x_p_y,DOWN,buff=0.6)
+        condition_box = SurroundingRectangle(
+            condition,
+            color=dark_orange,
+            fill_opacity=0.1,
+            buff=0.25,
+            corner_radius=0.1,
+        )
+        use_l_inf = MathTex(
+            r"\max_{1 \leq i \leq n} |x_i - \lambda y_i| = \max_{1 \leq i \leq n} |x_i + \lambda y_i|, \quad \forall \lambda \in \mathbb{R}",
+            color=dark_blue,
+        ).next_to(condition,DOWN,buff=0.5)
+        self.play(
+            Write(x_y),
+            # Write(x_p_y),
+        )
+        self.wait(0.5)
+        self.play(
+            # Write(x_y),
+            Write(x_p_y),
+        )
+        self.wait(0.5)
+        self.play(
+            Create(condition_box),
+            Write(condition),
+        )
+        self.wait(0.5)
+        self.play(
+            Write(use_l_inf),
+        )
+        self.wait(1)
+
+
+
+    def scene8_SubScene3_0(self, title):
+        headers = [
+            (r"\text{Symmetry}", dark_pink),
+            (r"\text{Homogeneity}", dark_purple),
+            (r"\text{Additivity}", dark_terquise),
+            (r"\text{Scalar Existence}", dark_green),
+        ]
+
+        col_labels = [MathTex(h).set_color(color) for h, color in headers]
+
+        cross = MathTex(r"\Large \times").set_color(RED)
+        check = MathTex(r"\Large \checkmark").set_color(GREEN)
+        
+        row = [
+            MathTex(r"\Large \checkmark").set_color(GREEN),
+            MathTex(r"\Large \checkmark").set_color(GREEN),
+            MathTex(r"\Large \times").set_color(RED),
+            MathTex(r"\Large \times").set_color(RED),
+        ]
+        
+        row_label = MathTex(r"\text{Roberts}", color=BLACK)
+
+        table = MobjectTable(
+            [row],
+            row_labels=[row_label],
+            col_labels=col_labels,
+            include_outer_lines=True,
+            line_config={"stroke_width": 3, "color": GRAY},
+            h_buff=0.3,
+        )
+
+        table.scale(0.9).move_to(title.get_center()+0.5*DOWN)
+
+        self.play(
+            FadeIn(table),
+        )
+        self.wait(1)
+
+        col_index = 2  # 0: Symmetry, 1: Homogeneity, 2: Additivity, 3: Scalar Existence
+
+        highlight_group = VGroup(
+            col_labels[col_index],
+            row[col_index],
+        )
+
+        col_box = SurroundingRectangle(
+            highlight_group,
+            color=dark_red,
+            fill_opacity=0.1,
+            buff=0.25,
+            corner_radius=0.1,
+        )
+        detecter_text = Text("Detector", font_size=30, color=dark_red).next_to(col_box, DOWN, buff=0.5)
+        theoream_title = Text("Characterization of Inner Product Spaces", font_size=40, color=dark_blue)
+        theoream_text1 = MathTex(r"\text{Let } X \text{ be a normed space with } \dim(X) \ge 2. ",color=BLACK)
+        theoream_text2 = MathTex(r"\text{The space } X \text{ is an inner product space } ",r"\text{if and only if }",color=BLACK)
+        theoream_text2.set_color_by_tex(r"\text{if and only if }", dark_red)
+        theoream_text3 = MathTex(r"\text{Roberts orthogonality is additive}",color=BLACK)
+        theoream_text4 = MathTex(r"\text{with respect to the second variable. }",color=BLACK)
+        theoream_text = VGroup(theoream_text1, theoream_text2, theoream_text3, theoream_text4).arrange(DOWN, buff=0.2)
+        theoream_text_final1 = MathTex(
+            r"X \text{ is an inner product space}",
+            color=BLACK,
+        )
+        theoream_text_final2 = MathTex(
+            r"\iff",
+            color=BLACK,
+        )
+        theoream_text_final3 = MathTex(
+            r"\forall x,y,z \in X, \, x \perp_R y, \, x \perp_R z \implies x \perp_R (y + z)",
+            color=BLACK,
+        )
+        theoream_text_final = VGroup(theoream_text_final1, theoream_text_final2, theoream_text_final3).arrange(DOWN, buff=0.2)
+        
+        box_theoream = SurroundingRectangle(
+            VGroup(theoream_title, theoream_text).arrange(DOWN, buff=0.2).next_to(table, DOWN, buff=0.6),
+            color=dark_blue,
+            fill_opacity=0.1,
+            buff=0.2,
+            corner_radius=0.1,
+        )
+
+        box_theoream_final = SurroundingRectangle(
+            VGroup(theoream_title, theoream_text_final).arrange(DOWN, buff=0.2).next_to(table, DOWN, buff=0.6),
+            color=dark_blue,
+            fill_opacity=0.1,
+            buff=0.2,
+            corner_radius=0.1,
+        )
+        self.play(
+            Create(col_box),
+            # Write(detecter_text),
+        )
+        self.wait(0.5)
+        self.play(
+            Write(detecter_text),
+        )
+        self.wait(0.5)
+        self.play(
+            FadeOut(detecter_text),
+        )
+        self.wait(0.5)
+        self.play(
+            Create(box_theoream),
+            Write(theoream_title),
+            Write(theoream_text),
+        )
+        self.wait(1)
+        self.play(
+            TransformMatchingShapes(VGroup(box_theoream, theoream_title, theoream_text), VGroup(box_theoream_final, theoream_title, theoream_text_final)),
+        )
+        self.wait(1)
+        self.clear()
+        self.wait(1)
+
     def scene8(self, title):
 
         ########## roberts
@@ -3607,6 +3937,9 @@ class TitleScene(ThreeDScene):   # Scene
 
         # self.scene8_SubScene3(title)
 
+        self.scene8_SubScene3_0(title)
+        # self.scene8_SubScene3_1(title)  # این یک طرفه هست و اون طرفش درست نیست مثل اینکه
+
         ########## birkhof
 
         # self.scene8_SubScene4(title)
@@ -3616,7 +3949,7 @@ class TitleScene(ThreeDScene):   # Scene
         # self.han_banakh_def(title)  # این رو برای تست اینجا گذاشتم
         # self.han_banakh_shape(title)  # این رو برای تست اینجا گذاشتم
 
-        self.scene8_SubScene6(title)
+        # self.scene8_SubScene6(title)
 
         ########## isosceles
 
