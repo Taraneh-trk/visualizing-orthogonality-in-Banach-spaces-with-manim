@@ -3757,6 +3757,290 @@ class TitleScene(ThreeDScene):   # Scene
         )
         self.wait(1)
 
+    def scene8_SubScene6_0(self, title):
+        headers = [
+            (r"\text{Symmetry}", dark_pink),
+            (r"\text{Homogeneity}", dark_purple),
+            (r"\text{Additivity}", dark_terquise),
+            (r"\text{Scalar Existence}", dark_green),
+        ]
+
+        col_labels = [MathTex(h).set_color(color) for h, color in headers]
+
+        cross = MathTex(r"\Large \times").set_color(RED)
+        check = MathTex(r"\Large \checkmark").set_color(GREEN)
+        
+        row = [
+            MathTex(r"\Large \times").set_color(RED),
+            MathTex(r"\Large \checkmark").set_color(GREEN),
+            MathTex(r"\Large \times").set_color(RED),
+            MathTex(r"\Large \checkmark").set_color(GREEN),
+        ]
+        
+        row_label = MathTex(r"\text{Birkhoff}", color=BLACK)
+
+        table = MobjectTable(
+            [row],
+            row_labels=[row_label],
+            col_labels=col_labels,
+            include_outer_lines=True,
+            line_config={"stroke_width": 3, "color": GRAY},
+            h_buff=0.3,
+        )
+
+        table.scale(0.8).move_to(title.get_center()+0.5*DOWN)
+
+        self.play(
+            FadeIn(table),
+        )
+        self.wait(1)
+
+        col_index = 0  # 0: Symmetry, 1: Homogeneity, 2: Additivity, 3: Scalar Existence
+
+        highlight_group = VGroup(
+            col_labels[col_index],
+            row[col_index],
+        )
+
+        col_box = SurroundingRectangle(
+            highlight_group,
+            color=dark_red,
+            fill_opacity=0.1,
+            buff=0.25,
+            corner_radius=0.1,
+        )
+
+        definition_text = MathTex(
+            r"x \perp_{BJ} y \text{ } \not\rightarrow \text{ } y \perp_{BJ} x",
+            color=dark_red,
+        ).next_to(table, DOWN, buff=0.4)
+
+        
+
+        self.play(
+            Create(col_box),
+        )
+        self.wait(0.5)
+        self.play(
+            Write(definition_text),
+        )
+        self.wait(0.5)
+        self.play(
+            FadeOut(definition_text),
+        )
+        self.wait(0.5)
+
+        theoream_title = Text("Characterization of Inner Product Spaces", font_size=40, color=dark_blue)
+        theoream_text1 = MathTex(r"\text{Let } X \text{ be a real normed space with } \dim(X) \ge 3. ",color=BLACK)
+        theoream_text2 = MathTex(r"\text{The space } X \text{ is an inner product space } ",r"\text{if and only if }",color=BLACK)
+        theoream_text2.set_color_by_tex(r"\text{if and only if }", dark_red)
+        theoream_text3 = MathTex(r"\text{Birkhoff-James orthogonality is symmetric} \text{ on } X.",color=BLACK)
+        # theoream_text4 = MathTex(r"\text{on } X.",color=BLACK)
+        theoream_text = VGroup(theoream_text1, theoream_text2, theoream_text3).arrange(DOWN, buff=0.2)
+        theoream_text_final1 = MathTex(
+            r"X \text{ is an inner product space}",
+            color=BLACK,
+        )
+        theoream_text_final2 = MathTex(
+            r"\iff",
+            color=BLACK,
+        )
+        theoream_text_final3 = MathTex(
+            r"\forall x,y \in X, \, x \perp_{BJ} y \implies y \perp_{BJ} x",
+            color=BLACK,
+        )
+        theoream_text_final = VGroup(theoream_text_final1, theoream_text_final2, theoream_text_final3).arrange(DOWN, buff=0.2)
+
+        box_theoream = SurroundingRectangle(
+            VGroup(theoream_title, theoream_text).arrange(DOWN, buff=0.2).next_to(table, DOWN, buff=0.6),
+            color=dark_blue,
+            fill_opacity=0.1,
+            buff=0.2,
+            corner_radius=0.1,
+        )
+
+        box_theoream_final = SurroundingRectangle(
+            VGroup(theoream_title, theoream_text_final).arrange(DOWN, buff=0.2).next_to(table, DOWN, buff=0.6),
+            color=dark_blue,
+            fill_opacity=0.1,
+            buff=0.2,
+            corner_radius=0.1,
+        )
+
+        hint_text1 = MathTex(
+            r"\text{As a counterexample in } \dim(X) = 2 \text{, we can point to Radon planes,}",
+            color=BLACK,
+        )
+        hint_text2 = MathTex(
+            r"\text{where Birkhoff-James orthogonality is symmetric}",
+            color=BLACK,
+        )
+        hint_text3 = MathTex(
+            r"\text{yet the space is not an inner product space. }",
+            color=BLACK,
+        )
+        hint_text = VGroup(hint_text1, hint_text2, hint_text3).arrange(DOWN, buff=0.2).scale(0.8).next_to(box_theoream_final, DOWN, buff=0.6)
+        box_theoream_hint = SurroundingRectangle(
+            hint_text,
+            color=dark_red,
+            fill_opacity=0.1,
+            buff=0.2,
+            corner_radius=0.1,
+        )
+        
+        self.play(
+            Create(box_theoream),
+            Write(theoream_title),
+            Write(theoream_text),
+        )
+        self.wait(0.5)
+        self.play(
+            Create(box_theoream_hint),
+            Write(hint_text),
+        )
+        self.wait(1)
+        self.play(
+            FadeOut(VGroup(box_theoream_hint, hint_text)), 
+            TransformMatchingShapes(VGroup(box_theoream, theoream_title, theoream_text), VGroup(box_theoream_final, theoream_title, theoream_text_final)),
+        )
+        self.wait(1)
+        self.clear()
+        self.wait(1)
+
+    def scene8_SubScene6_1(self, title):
+        pic1 = ImageMobject("images/come up with.png").scale(1.5).to_corner(UL).shift(0.4*LEFT)
+        idea_text = MathTex(
+            r"\text{Overcoming the Limitation of Roberts Orthogonality}",
+            color=BLACK,
+        ).scale(1.1).next_to(pic1, RIGHT, buff=0.1)
+
+        line1 = MathTex(
+            r"\textbf{Existence Theorem}",
+            color=dark_blue,
+        )
+
+        line2 = MathTex(
+            r"\text{For every nonzero vector } x \in X,",
+            color=BLACK
+        )
+
+        line3 = MathTex(
+            r"\text{there exist two nonzero vectors } z_1 \text{ and } z_2 \text{ such that}",
+            color=BLACK
+        )
+
+        line4 = MathTex(
+            r"z_1 \perp_{BJ} x \qquad \text{(left Birkhoff--James orthogonality)}",
+            color=BLACK
+        )
+
+        line5 = MathTex(
+            r"x \perp_{BJ} z_2 \qquad \text{(right Birkhoff--James orthogonality)}",
+            color=BLACK
+        )
+
+        theory1_text = VGroup(
+            line1,
+            line2,
+            line3,
+            line4,
+            line5,
+        ).arrange(DOWN, buff=0.2).scale(1.2).shift(0.5*DOWN) #.next_to(idea_text, DOWN, buff=0.5)
+
+        theory1_box = SurroundingRectangle(
+            theory1_text,
+            color=dark_blue,
+            fill_opacity=0.1,
+            buff=0.2,
+            corner_radius=0.1,
+        )
+
+        line1 = MathTex(
+            r"\textbf{Existence Theorem for Scalars}",
+            color=dark_blue
+        )
+
+        line2 = MathTex(
+            r"\text{For every pair of vectors } x,y\in X,",
+            color=BLACK
+        )
+
+        line3 = MathTex(
+            r"\text{there exist real scalars } \lambda \text{ and } \mu \text{ such that}",
+            color=BLACK
+        )
+
+        line4 = MathTex(
+            r"x \perp_{BJ} (\lambda x+y)",
+            color=BLACK
+        )
+
+        line5 = MathTex(
+            r"(\mu x+y)\perp_{BJ}x",
+            color=BLACK
+        )
+
+        line6 = MathTex(
+            r"\text{Moreover, the scalars } \lambda \text{ and } \mu \text{ satisfy}",
+            color=BLACK
+        )
+
+        line7 = MathTex(
+            r"\alpha_1\le\lambda\le\alpha_2,\qquad \beta_1\le\mu\le\beta_2.",
+            color=BLACK
+        )
+
+        theory2_text = VGroup(
+            line1,
+            line2,
+            line3,
+            line4,
+            line5,
+            line6,
+            line7,
+        ).arrange(DOWN, buff=0.2).scale(1.3) #.shift(1*DOWN) #.next_to(idea_text, DOWN, buff=0.5)
+
+        theory2_box = SurroundingRectangle(
+            theory2_text,
+            color=dark_blue,
+            fill_opacity=0.1,
+            buff=0.2,
+            corner_radius=0.1,
+        )
+
+        self.play(
+            FadeIn(pic1),
+        )
+        self.wait(0.1)
+        self.play(
+            Write(idea_text),
+        )
+        self.wait(0.5)
+        self.play(
+            Create(theory1_box),
+            Write(theory1_text),
+        )
+        self.wait(1)
+        self.play(
+            FadeOut(theory1_box),
+            FadeOut(theory1_text),
+            FadeOut(idea_text),
+            FadeOut(pic1),
+        )
+        self.play(
+            Create(theory2_box),
+            Write(theory2_text),
+        )
+        self.wait(0.5)
+
+        self.wait(1)
+        self.clear()
+        self.wait(1)
+
+
+    def scene8_SubScene6_2(self, title):
+        ...
+
     def scene8_SubScene3_2(self, title):
         title_dictator = Text("The Geometric Dictatorship of Roberts", color=BLACK).move_to(title.get_center())
         self.play(
@@ -4265,7 +4549,7 @@ class TitleScene(ThreeDScene):   # Scene
 
         # self.scene8_SubScene3_0(title)
         # self.scene8_SubScene3_1(title)  # این یک طرفه هست و اون طرفش درست نیست مثل اینکه  ->  درستش کردم :)
-        self.scene8_SubScene3_2(title)
+        # self.scene8_SubScene3_2(title)
 
         ########## birkhof
 
@@ -4277,6 +4561,10 @@ class TitleScene(ThreeDScene):   # Scene
         # self.han_banakh_shape(title)  # این رو برای تست اینجا گذاشتم
 
         # self.scene8_SubScene6(title)
+
+        # self.scene8_SubScene6_0(title)
+        self.scene8_SubScene6_1(title)
+        # self.scene8_SubScene6_2(title)
 
         ########## isosceles
 
