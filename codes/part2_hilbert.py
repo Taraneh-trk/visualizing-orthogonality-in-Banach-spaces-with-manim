@@ -3757,6 +3757,143 @@ class TitleScene(ThreeDScene):   # Scene
         )
         self.wait(1)
 
+    def scene8_SubScene3_2(self, title):
+        title_dictator = Text("The Geometric Dictatorship of Roberts", color=BLACK).move_to(title.get_center())
+        self.play(
+            Write(title_dictator),
+        )
+        self.wait(0.5)
+
+        # ---------- تنظیمات کلی: بزرگ‌نمایی و جابجایی به پایین ----------
+        SCALE = 1.5
+        SHIFT = DOWN * 1.0
+
+        def P(vec):
+            return vec * SCALE + SHIFT
+
+        points = [
+            P(RIGHT * 3),                      # نقطه راست
+            P(RIGHT * 1 + UP * 2.0),           # قله سمت راست
+            P(LEFT * 1.5 + UP * 1.5),          # قله سمت چپ
+            P(LEFT * 3),                       # نقطه چپ
+            P(LEFT * 1.5 + DOWN * 1.5),        # دره سمت چپ
+            P(RIGHT * 1 + DOWN * 2.0)          # دره سمت راست
+        ]
+
+        # ---------- کره واحد با گرادیان رنگی زیباتر ----------
+        unit_ball = Polygon(
+            *points,
+            color=BLUE_D,
+            fill_color=[BLUE_E, BLUE_D, TEAL_E],
+            fill_opacity=0.25,
+            stroke_width=4,
+        )
+        ball_label = MathTex(r"\text{Unit Ball}", color=BLUE_E).scale(1.1)
+        ball_label.next_to(unit_ball, UP + RIGHT).shift(DOWN * 0.6 + LEFT * 0.3)
+
+        self.play(Create(unit_ball), Write(ball_label), run_time=2)
+        self.wait(1)
+
+        # ---------- محور span(x) و بردارها ----------
+        span_x = DashedLine(
+            P(LEFT * 4), P(RIGHT * 4),
+            color=RED_E, dash_length=0.15, stroke_width=3,
+        )
+        span_label = MathTex(r"\text{span}(x)", color=RED_E).scale(1.0).next_to(span_x, RIGHT).shift(0.6*DOWN + 1*LEFT)
+
+        x_vec = Vector(RIGHT * 2 * SCALE, color=RED_D).shift(SHIFT)
+        x_label = MathTex(r"\vec{x}", color=RED_D).scale(1.1).next_to(x_vec, DOWN).shift(0.3 * RIGHT)
+
+        y_vec = Vector(UP * 1.5 * SCALE, color=GREEN_D).shift(SHIFT)
+        y_label = MathTex(r"\vec{y}", color=GREEN_D).scale(1.1).next_to(y_vec, LEFT)
+
+        self.play(Create(span_x), Write(span_label))
+        self.play(GrowArrow(x_vec), Write(x_label))
+        self.play(GrowArrow(y_vec), Write(y_label))
+        self.wait(1)
+
+        # ---------- وترها (chords) ----------
+        chords = VGroup()
+        chord_data = [
+            (-1.5, 1.5),
+            (0.0, 1.8),
+            (1.0, 2.0),
+        ]
+
+        chord_midpoint_coords = []
+        for x_val, y_val in chord_data:
+            top = P(np.array([x_val, y_val, 0]))
+            bottom = P(np.array([x_val, -y_val, 0]))
+            mid = P(np.array([x_val, 0, 0]))
+            chord_midpoint_coords.append(mid)
+
+            chord = Line(top, bottom, color=ORANGE, stroke_width=3.5)
+            chords.add(chord)
+
+        self.play(Create(chords), run_time=2, lag_ratio=0.3)
+        self.wait(0.5)
+
+        # ---------- افکت درخشان قرمز روی نقاط میانی  ----------
+        def glow_dot(point, color=PINK, max_radius=0.30, num_circles=5, core_radius=0.07):
+            glow = VGroup()
+            for i in range(num_circles, 0, -1):
+                r = max_radius * i / num_circles
+                op = 0.5 * (1 - i / num_circles) + 0.05
+                circ = Circle(
+                    radius=r, color=color, fill_color=color,
+                    fill_opacity=op, stroke_opacity=0,
+                )
+                circ.move_to(point)
+                glow.add(circ)
+            core = Dot(point, radius=core_radius, color=color, z_index=2)
+            glow.add(core)
+            return glow
+
+        glow_groups = VGroup()
+        for pt in chord_midpoint_coords:
+            g = glow_dot(pt)
+            glow_groups.add(g)
+            self.play(
+                Flash(pt, color=PINK, line_length=0.25, num_lines=10, flash_radius=0.35),
+                FadeIn(g, scale=1.3),
+                run_time=0.5,
+            )
+
+        # افکت تپش ملایم برای جلب توجه بیشتر
+        self.play(
+            *[g[-1].animate.scale(1.4) for g in glow_groups],
+            rate_func=there_and_back,
+            run_time=0.8,
+        )
+        self.wait(1)
+
+        # ---------- نیمه‌ی بالایی چندضلعی ----------
+        top_points = points[:4]
+        top_half = Polygon(
+            *top_points,
+            color=YELLOW_E,
+            fill_color=[YELLOW_D, YELLOW_E],
+            fill_opacity=0.6,
+            stroke_width=3,
+        )
+
+        self.play(FadeIn(top_half, shift=UP * 0.2))
+        self.wait(0.5)
+
+        self.play(
+            Rotate(
+                top_half,
+                angle=PI,
+                axis=RIGHT,
+                about_point=SHIFT,   # چرخش حول مرکز جدید شکل (به‌جای ORIGIN)
+            ),
+            run_time=2.5,
+            rate_func=smooth,
+        )
+        self.wait(1)
+        self.clear()
+        self.wait(1)
+
     def scene8_SubScene3_1(self, title):
         x_y = MathTex(
             r"x = (x_1, x_2, \dots , x_n),",
@@ -3781,9 +3918,38 @@ class TitleScene(ThreeDScene):   # Scene
             corner_radius=0.1,
         )
         use_l_inf = MathTex(
-            r"\max_{1 \leq i \leq n} |x_i - \lambda y_i| = \max_{1 \leq i \leq n} |x_i + \lambda y_i|, \quad \forall \lambda \in \mathbb{R}",
+            r"\max_{1 \leq i \leq n} |x_i - \lambda y_i| = \max_{1 \leq i \leq n} |x_i + \lambda y_i|, \quad ",r"\forall \lambda \in \mathbb{R}",
             color=dark_blue,
-        ).next_to(condition,DOWN,buff=0.5)
+        ).next_to(condition,DOWN,buff=0.6)
+        lambda_box = SurroundingRectangle(
+            use_l_inf[1],
+            color=dark_pink,
+            fill_opacity=0.1,
+            buff=0.2,
+            corner_radius=0.1,
+        )
+        pic1 = ImageMobject("images/computer.png").scale(2).to_corner(DL).shift(0.2*DOWN)
+        pic2 = ImageMobject("images/loop.png").scale(2).next_to(pic1, RIGHT, buff=1.25)
+        pic3 = ImageMobject("images/crash.png").scale(2).next_to(pic2, RIGHT, buff=1.25)
+        vector_1 = Arrow(
+            start=pic1.get_right(),
+            end=pic2.get_left(),
+            buff=0,
+            stroke_width=6,
+            color=dark_green,
+            tip_length=0.25,
+            tip_shape=StealthTip
+        )
+        vector_2 = Arrow(
+            start=pic2.get_right(),
+            end=pic3.get_left(),
+            buff=0,
+            stroke_width=6,
+            color=dark_green,
+            tip_length=0.25,
+            tip_shape=StealthTip
+        )
+        
         self.play(
             Write(x_y),
             # Write(x_p_y),
@@ -3800,11 +3966,171 @@ class TitleScene(ThreeDScene):   # Scene
         )
         self.wait(0.5)
         self.play(
+            # Create(lambda_box),
             Write(use_l_inf),
         )
+        self.wait(0.5)
+        self.play(
+            Create(lambda_box),
+        )
+        self.wait(0.5)
+        self.play(
+            FadeIn(pic1),
+        )
+        self.wait(0.5)
+        self.play(
+            GrowArrow(vector_1),
+        )
+        self.wait(0.5)
+        self.play(
+            FadeIn(pic2),
+        )
+        self.wait(0.5)
+        self.play(
+            GrowArrow(vector_2),
+        )
+        self.wait(0.5)
+        self.play(
+            FadeIn(pic3),
+        )
+        self.wait(0.5)
+        self.play(
+            FadeOut(pic1),
+            FadeOut(pic2),
+            FadeOut(pic3),
+            FadeOut(VGroup(*[
+                x_y,
+                condition,
+                condition_box,
+                use_l_inf,
+                lambda_box,
+                vector_1,
+                vector_2,
+            ])),
+            x_p_y.animate.move_to(x_y.get_center()),
+        )
+
+        f_lambda = MathTex(
+            r"f(\lambda) = \| x + \lambda y \|",
+            color=dark_pink,
+        ).next_to(x_p_y,DOWN,buff=0.3).shift(2*LEFT)
+
+        self.play(
+            Write(f_lambda),
+        )
+        self.wait(0.5)
+
+        axes = Axes(
+            x_range=[-3.5, 3.5, 1],
+            y_range=[0, 7.5, 1],
+            x_length=9,
+            y_length=5.5,
+            axis_config={"color": medium_blue, "include_ticks": False, "tip_length":0.25, "tip_shape":StealthTip}
+        )
+        axes.to_edge(DOWN, buff=0.6).shift(RIGHT)
+        plane = NumberPlane(
+            x_range=[-3.5, 3.5, 1],
+            y_range=[0, 7.5, 1],
+            x_length=9,
+            y_length=5.5,
+            background_line_style={
+                "stroke_color": GRAY,
+                "stroke_opacity": 0.5
+            },
+        ).to_edge(DOWN, buff=0.6).shift(RIGHT)
+
+        x_label = MathTex(r"\lambda", color=BLACK).next_to(axes.x_axis.get_end(), RIGHT)
+        y_label = MathTex(r"f(\lambda)", color=BLACK).scale(0.8)
+        y_label.next_to(axes.y_axis.get_end(), UP, buff=0.15)
+
+        self.play(Create(plane), Create(axes), run_time=1.5)
+        self.play(Write(x_label), Write(y_label))
+        self.wait(0.5)
+
+        raw_points = [
+            (-3, 5),
+            (-2, 3),
+            (-1, 2),
+            (0, 2.5),
+            (1, 3.5),
+            (2, 5),
+            (3, 7),
+        ]
+
+        dots_coords = [axes.c2p(x, y) for x, y in raw_points]
+
+        segments = VGroup()
+        for i in range(len(dots_coords) - 1):
+            seg = Line(
+                dots_coords[i], dots_coords[i + 1],
+                color=dark_green, stroke_width=5,
+            )
+            segments.add(seg)
+
+        for seg in segments:
+            self.play(Create(seg), run_time=0.6)
+
+        self.wait(0.5)
+
+        breakpoint_coords = dots_coords[1:-1]
+
+        def glow_dot(point, color=RED, max_radius=0.28, num_circles=5):
+            glow = VGroup()
+            for i in range(num_circles, 0, -1):
+                r = max_radius * i / num_circles
+                op = 0.5 * (1 - i / num_circles) + 0.05
+                circ = Circle(radius=r, color=color, fill_color=color,
+                               fill_opacity=op, stroke_opacity=0)
+                circ.move_to(point)
+                glow.add(circ)
+            core = Dot(point, radius=0.07, color=color, z_index=2)
+            glow.add(core)
+            return glow
+
+        glow_groups = VGroup()
+        for pt in breakpoint_coords:
+            g = glow_dot(pt)
+            glow_groups.add(g)
+            self.play(
+                Flash(pt, color=RED, line_length=0.25, num_lines=10, flash_radius=0.35),
+                FadeIn(g, scale=1.3),
+                run_time=0.6,
+            )
+
+        self.wait(0.3)
+
+        self.play(
+            *[
+                g[-1].animate.scale(1.4)
+                for g in glow_groups
+            ],
+            rate_func=there_and_back,
+            run_time=0.8,
+        )
+        self.wait(0.3)
+
+        label_pos = axes.c2p(-0.5, 6.6)
+        breakpoints_text = Text("Breakpoints", color=RED, weight=BOLD).scale(0.7)
+        breakpoints_text.move_to(label_pos).shift(1*LEFT)
+
+        arrows = VGroup()
+        for pt in [breakpoint_coords[1], breakpoint_coords[2], breakpoint_coords[3]]:
+            arrow = Arrow(
+                start=breakpoints_text.get_bottom() + 0.1 * DOWN,
+                end=pt,
+                color=RED,
+                stroke_width=2.5,
+                max_tip_length_to_length_ratio=0.15,
+                buff=0.15,
+            )
+            arrows.add(arrow)
+
+        self.play(Write(breakpoints_text))
+        self.play(*[GrowArrow(a) for a in arrows], run_time=1)
+
         self.wait(1)
-
-
+        self.clear()
+        self.wait(1)
 
     def scene8_SubScene3_0(self, title):
         headers = [
@@ -3937,8 +4263,9 @@ class TitleScene(ThreeDScene):   # Scene
 
         # self.scene8_SubScene3(title)
 
-        self.scene8_SubScene3_0(title)
-        # self.scene8_SubScene3_1(title)  # این یک طرفه هست و اون طرفش درست نیست مثل اینکه
+        # self.scene8_SubScene3_0(title)
+        # self.scene8_SubScene3_1(title)  # این یک طرفه هست و اون طرفش درست نیست مثل اینکه  ->  درستش کردم :)
+        self.scene8_SubScene3_2(title)
 
         ########## birkhof
 
