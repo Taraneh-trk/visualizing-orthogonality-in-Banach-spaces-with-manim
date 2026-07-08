@@ -37,7 +37,7 @@ class TitleScene(ThreeDScene):   # Scene
     def show_definition(self, definition: MathTex, total_title, retrun_notShow=False, what_is_defined=""):
         """Show definition with box"""
 
-        title_text = Text(f"⚙️📃Definition {what_is_defined}", color=dark_green, font_size=36)
+        title_text = Text(f"⚙️📃Definition" if what_is_defined=="" else f"{what_is_defined}", color=dark_green, font_size=36)
 
         group = VGroup(title_text, definition).arrange(DOWN, buff=0.3)
         
@@ -3971,12 +3971,12 @@ class TitleScene(ThreeDScene):   # Scene
         )
 
         line4 = MathTex(
-            r"x \perp_{BJ} (\lambda x+y)",
+            r"x \perp_{BJ} (",r"\lambda",r" x+y)",
             color=BLACK
         )
 
         line5 = MathTex(
-            r"(\mu x+y)\perp_{BJ}x",
+            r"(",r"\mu",r" x+y)\perp_{BJ}x",
             color=BLACK
         )
 
@@ -4032,9 +4032,320 @@ class TitleScene(ThreeDScene):   # Scene
             Write(theory2_text),
         )
         self.wait(0.5)
+        line4 = line4.copy().move_to(title.get_center()+LEFT*3.5) # +DOWN*0.5
+        line5 = line5.copy().move_to(title.get_center()+RIGHT*3.5)
+        self.play(
+            TransformMatchingShapes(VGroup(theory2_box, theory2_text), VGroup(line4, line5)),
+        )
+        self.wait(0.5)
+        line4.set_color_by_tex(r"\lambda", dark_pink)
+        lambda_condition = MathTex(
+            r"\alpha_1\le\lambda\le\alpha_2",
+            color=dark_pink,
+        ).next_to(line4, DOWN, buff=0.5)
+        self.play(
+            Write(lambda_condition),
+        )
+        self.wait(0.5)
+        line5.set_color_by_tex(r"\mu", dark_red)
+        mu_condition = MathTex(
+            r"\beta_1\le\mu\le\beta_2",
+            color=dark_red,
+        ).next_to(line5, DOWN, buff=0.5)
+        self.play(
+            Write(mu_condition),
+        )
+        self.wait(0.5)
+
+        question_text = Text(
+            " When are these coefficients unique ?",
+            color=dark_terquise,
+        ).move_to(mu_condition.get_center()+1.5*DOWN+3*LEFT)
+
+        theoream3_text1 = MathTex(
+            r"\text{Let } X \text{ be a normed space and } x, y \in X \text{ with } x \neq 0.",
+            color=BLACK,
+        )
+        theoream3_text2 = MathTex(
+            r"\text{Then, the relation } x \perp_{BJ} y \text{ is said to be:}",
+            color=BLACK,
+        )
+
+        theoream3_text30 = MathTex(
+            r"\textbf{right-unique}",
+            color=dark_pink,
+        )
+        theoream3_text31 = MathTex(
+            r"\text{if there exists a unique } \lambda \in \mathbb{K}",
+            color=BLACK,
+        )
+        theoream3_text32 = MathTex(
+            r"\text{ such that } x \perp_{BJ} (\lambda x + y).",
+            color=BLACK,
+        )
+        theoream3_text3 = VGroup(theoream3_text30, theoream3_text31, theoream3_text32).arrange(DOWN, buff=0.2)
+
+        theoream3_text40 = MathTex(
+            r"\textbf{left-unique}",
+            color=dark_red,
+        )
+        theoream3_text41 = MathTex(
+            r"\text{if there exists a unique } \mu \in \mathbb{K}",
+            color=BLACK,
+        )
+        theoream3_text42 = MathTex(
+            r"\text{ such that } (\mu x + y) \perp_{BJ} x.",
+            color=BLACK,
+        )
+        theoream3_text4 = VGroup(theoream3_text40, theoream3_text41, theoream3_text42).arrange(DOWN, buff=0.2)
+
+        theoream_text = VGroup(
+            theoream3_text1,
+            theoream3_text2,
+            VGroup(
+                theoream3_text3,
+                theoream3_text4,
+            ).arrange(RIGHT, buff=1)
+        ).arrange(DOWN, buff=0.2).move_to(question_text.get_center()+1.5*DOWN+0.5*LEFT)
+
+        self.play(
+            Write(theoream_text),
+        )
+        self.wait(0.5)
+        theoream3_text30 = theoream3_text30.copy().move_to(lambda_condition.get_center())
+        theoream3_text40 = theoream3_text40.copy().move_to(mu_condition.get_center())
+        self.play(
+            TransformMatchingShapes(VGroup(theoream_text, lambda_condition, mu_condition), VGroup(theoream3_text30, theoream3_text40)),
+        )
+        self.wait(0.5)
+        question_text = question_text.copy().shift(1*DOWN)
+        self.play(
+            Write(question_text),
+        )
+        self.wait(0.5)
+        self.play(
+            FadeOut(question_text),
+        )
+        self.wait(0.5)
+        left_part = VGroup(line5, theoream3_text40)
+        left_init_center = left_part.get_center()
+        right_part = VGroup(line4, theoream3_text30)
+        right_init_center = right_part.get_center()
+        self.play(
+            FadeOut(left_part),
+            right_part.animate.move_to(title.get_center()+0.6*DOWN),
+        )
+        self.wait(0.5)
+
+        right_unique_text_0 = MathTex(
+            r"\text{The relation } \perp_{BJ} \text{ is right-unique } ",
+            color=BLACK,
+        )
+        right_unique_text_1 = MathTex(
+            r"\text{if and only if} ",r"\text{ it is } ",r"\text{additive} ",r"\text{. In other words,}",
+            color=BLACK,
+        )
+        right_unique_text_1.set_color_by_tex(r"\text{if and only if} ", dark_pink)
+        right_unique_text_1.set_color_by_tex(r"\text{additive} ", dark_pink)
+        right_unique_text_2 = MathTex(
+            r"x \perp_{BJ} y \quad \text{and} \quad x \perp_{BJ} z \implies x \perp_{BJ} (y + z).",
+            color=BLACK,
+        )
+
+        right_unique_text = VGroup(right_unique_text_0, right_unique_text_1, right_unique_text_2).arrange(DOWN, buff=0.3).scale(1.1)
+        box_right = SurroundingRectangle(
+            right_unique_text,
+            color=dark_blue,
+            fill_opacity=0.1,
+            buff=0.2,
+            corner_radius=0.1,
+        )
+        self.play(
+            Create(box_right),
+            Write(right_unique_text),
+        )
+        self.wait(0.5)
+
+        self.play(
+            FadeOut(VGroup(box_right, right_unique_text)),
+            right_part.animate.move_to(right_init_center),
+            FadeIn(left_part),
+        )
+        self.wait(0.5)
+        self.play(
+            left_part.animate.move_to(title.get_center()+0.6*DOWN),
+            FadeOut(right_part),
+        )
+        self.wait(0.5)
+
+        title_sc = MathTex(r"\textbf{Strictly Convex}", color=BLACK, font_size=70).to_edge(UP)
+
+        sc_part0 = MathTex(
+            r"\text{Let } X \text{ be a normed vector space. We say the}",
+            color=BLACK,
+        )
+        sc_part1 = MathTex(
+            r"\text{unit ball of } X \text{ is strictly convex if for every}",
+            color=BLACK,
+        )
+        sc_part2 = MathTex(
+            r"\text{two points } x, y \text{ belonging to the boundary of the }",
+            color=BLACK,
+        )
+        sc_part3 = MathTex(
+            r"\text{unit ball, the line passing through } x \text{ and } y \text{ intersects}",
+            color=BLACK,
+        )
+        sc_part4 = MathTex(
+            r"\text{the boundary of this ball only at these two points.}",
+            color=BLACK,
+        )
+
+        sc_def = VGroup(
+            sc_part0, sc_part1, sc_part2,
+            sc_part3, sc_part4,
+        ).arrange(DOWN, buff=0.2)
+
+        group, box = self.show_definition(sc_def, title_sc, True, "Strictly Convex")
+        def_group = VGroup(group, box).scale(1.1).next_to(theoream3_text40, DOWN, buff=0.5)
+
+        self.play(
+            # Write(title_sc),
+            Create(box),
+            Write(group),
+        )
+        self.wait(0.5)
+
+        self.play(
+            # FadeOut(title_sc),
+            FadeOut(group),
+            FadeOut(box),
+        )
+        # shapes
+        left_label = MathTex(r"\text{Counterexample}", color=RED, font_size=44)
+        square = Square(side_length=3.5, color=BLACK, stroke_width=3)
+        left_group = VGroup(square).shift(LEFT * 3.5 + DOWN * 1)
+        left_label.next_to(left_group, UP)
+
+        right_label = MathTex(r"\text{Strictly Convex}", color=GREEN, font_size=44)
+        circle = Circle(radius=1.75, color=BLACK, stroke_width=3)
+        right_group = VGroup(circle).shift(RIGHT * 3.5 + DOWN * 1)
+        right_label.next_to(right_group, UP)
+
+        self.play(
+            Create(square), Write(left_label),
+            Create(circle), Write(right_label),
+        )
+        self.wait(1)
+
+        angle1 = 60 * DEGREES
+        angle2 = 160 * DEGREES
+        center_r = circle.get_center()
+        r = circle.radius
+
+        x_point = center_r + r * np.array([np.cos(angle1), np.sin(angle1), 0])
+        y_point = center_r + r * np.array([np.cos(angle2), np.sin(angle2), 0])
+
+        dot_x = Dot(x_point, color=BLUE, radius=0.09)
+        dot_y = Dot(y_point, color=BLUE, radius=0.09)
+        label_x = MathTex("x", color=BLUE, font_size=40).next_to(dot_x, RIGHT, buff=0.2)
+        label_y = MathTex("y", color=BLUE, font_size=40).next_to(dot_y, UP, buff=0.2)
+
+        self.play(
+            FadeIn(dot_x), FadeIn(dot_y),
+            Write(label_x), Write(label_y),
+        )
+        self.wait(0.5)
+
+        chord = DashedLine(x_point, y_point, color=BLUE, stroke_width=4)
+        self.play(Create(chord))
+        self.wait(0.5)
+
+        midpoint_r = (x_point + y_point) / 2
+        mid_dot_r = Dot(midpoint_r, color=ORANGE, radius=0.09)
+        interior_note = MathTex(
+            r"\text{lies inside}", color=ORANGE, font_size=36
+        ).next_to(mid_dot_r, DOWN, buff=0.35)
+
+        self.play(FadeIn(mid_dot_r), Write(interior_note))
+        self.wait(1)
+
+        top_left_corner = square.get_corner(UL)
+        top_right_corner = square.get_corner(UR)
+
+        x_point_sq = top_left_corner + 0.5 * (top_right_corner - top_left_corner) - RIGHT * 0.6
+        y_point_sq = top_left_corner + 0.5 * (top_right_corner - top_left_corner) + RIGHT * 0.6
+
+        dot_x_sq = Dot(x_point_sq, color=RED, radius=0.09)
+        dot_y_sq = Dot(y_point_sq, color=RED, radius=0.09)
+        label_x_sq = MathTex("x", color=RED, font_size=40).next_to(dot_x_sq, DOWN, buff=0.2)
+        label_y_sq = MathTex("y", color=RED, font_size=40).next_to(dot_y_sq, DOWN, buff=0.2)
+
+        self.play(
+            FadeIn(dot_x_sq), FadeIn(dot_y_sq),
+            Write(label_x_sq), Write(label_y_sq),
+        )
+        self.wait(0.5)
+
+        segment_sq = Line(x_point_sq, y_point_sq, color=ORANGE, stroke_width=5)
+        self.play(Create(segment_sq))
+        self.wait(0.5)
+
+        midpoint_sq = (x_point_sq + y_point_sq) / 2
+        mid_dot_sq = Dot(midpoint_sq, color=ORANGE, radius=0.09)
+        boundary_note = MathTex(
+            r"\text{stays on boundary!}", color=ORANGE, font_size=36
+        ).next_to(midpoint_sq, DOWN, buff=2)
+
+        self.play(FadeIn(mid_dot_sq), Write(boundary_note))
+        self.wait(1)
+
+        self.play(
+            *[FadeOut(mob) for mob in [dot_x, dot_y, label_x, label_y,
+                                       dot_x_sq, dot_y_sq, label_x_sq, label_y_sq,
+                                       chord, mid_dot_r, interior_note,
+                                       segment_sq, mid_dot_sq, boundary_note,
+                                       left_group, right_group, left_label, right_label]]
+        )
+
+        left_unique_text_0 = MathTex(
+            r"\text{A } ",r"\text{necessary and sufficient condition } ",r"\text{for the} ",
+            color=BLACK,
+        )
+        left_unique_text_1 = MathTex(
+            r"\text{relation } \perp_{BJ} \text{to be left-unique on the vector space } X ",
+            color=BLACK,
+        )
+        left_unique_text_0.set_color_by_tex(r"\text{necessary and sufficient condition } ", dark_red)
+        left_unique_text_2 = MathTex(
+            r"\text{ is that, }",
+            r"X \text{ be strictly convex.}",
+            color=BLACK,
+        )
+        left_unique_text_2.set_color_by_tex(r"X \text{ be strictly convex.}", dark_red)
+        # left_unique_text_2 = MathTex(
+        #     r"X \text{ be strictly convex.}",
+        #     color=BLACK,
+        # )
+
+        left_unique_text = VGroup(left_unique_text_0, left_unique_text_1, left_unique_text_2).arrange(DOWN, buff=0.3).scale(1.1)
+        box_left = SurroundingRectangle(
+            left_unique_text,
+            color=dark_blue,
+            fill_opacity=0.1,
+            buff=0.2,
+            corner_radius=0.1,
+        )
+        self.play(
+            Create(box_left),
+            Write(left_unique_text),
+        )
+        self.wait(0.5)
 
         self.wait(1)
-        self.clear()
+        self.play(
+            *[FadeOut(mob) for mob in self.mobjects]
+        )
         self.wait(1)
 
 
@@ -4563,8 +4874,8 @@ class TitleScene(ThreeDScene):   # Scene
         # self.scene8_SubScene6(title)
 
         # self.scene8_SubScene6_0(title)
-        self.scene8_SubScene6_1(title)
-        # self.scene8_SubScene6_2(title)
+        # self.scene8_SubScene6_1(title)
+        self.scene8_SubScene6_2(title)
 
         ########## isosceles
 
