@@ -4350,7 +4350,218 @@ class TitleScene(ThreeDScene):   # Scene
 
 
     def scene8_SubScene6_2(self, title):
-        ...
+        x_y = MathTex(
+            r"x = (x_1, x_2, \dots , x_n),",
+            r"\quad y = (y_1, y_2, \dots , y_n)",
+            r" \, \in \mathbb{R}^n",
+            color=BLACK,
+        ).move_to(title.get_center())
+
+        x_p_y = MathTex(
+            r"x \perp_{BJ} y \Longrightarrow \|x\| \le ",r"\|x + \lambda y\| ",r", \quad \forall \lambda \in \mathbb{R}",
+            color=dark_blue,
+        ).next_to(x_y,DOWN,buff=0.5)
+
+        f_lambda = MathTex(
+            r"f(\lambda) = ",
+            r"\|x + \lambda y\|^P ",
+            color=dark_pink,
+        ).next_to(x_p_y,DOWN,buff=0.5).shift(4*LEFT)
+
+        f_lambda_exp = MathTex(
+            r"\text{Goal} : ",
+            r"\text{Minimize } f(\lambda) ",
+            color=dark_pink,
+        ).next_to(f_lambda,RIGHT,buff=1.5)
+
+        self.play(
+            Write(x_y),
+        )
+        self.wait(0.5)
+        self.play(
+            Write(x_p_y),
+        )
+        self.wait(1)
+        self.play(
+            Write(f_lambda[0]),
+        )
+        self.wait(0.5)
+        self.play(
+            TransformFromCopy(x_p_y[1], f_lambda[1]),
+        )
+        self.wait(0.5)
+        self.play(
+            Write(f_lambda_exp),
+        )
+        self.wait(0.5)
+        f_l = VGroup(f_lambda, f_lambda_exp)
+        self.play(
+            f_l.animate.move_to(title.get_center()),
+            FadeOut(x_y), FadeOut(x_p_y),
+        )
+        self.wait(0.5)
+
+        left_plane = NumberPlane(
+            x_range=[-3, 3, 1],
+            y_range=[-3, 3, 1],
+            x_length=4.5,
+            y_length=4.5,
+            background_line_style={
+                "stroke_color": GRAY,
+                "stroke_opacity": 0.5
+            },
+        ).shift(LEFT * 3.5 + DOWN * 0.5)
+
+        right_axes = Axes(
+            x_range=[-2, 2, 1],
+            y_range=[0, 6, 1],
+            x_length=4.5,
+            y_length=4.5,
+            axis_config={"color": medium_blue, "include_ticks": False, "tip_length":0.25, "tip_shape":StealthTip}
+        ).shift(RIGHT * 3.5 + DOWN * 0.5)
+
+        right_labels = right_axes.get_axis_labels(
+            x_label=MathTex(r"\lambda", color=BLACK),
+            y_label=MathTex(r"f(\lambda)", color=BLACK),
+        )
+
+        self.play(Create(left_plane), Create(right_axes), Write(right_labels))
+        self.wait(0.5)
+
+        origin_point = left_plane.c2p(0, 0)
+
+        line_anchor = left_plane.c2p(1.5, 0.5)
+        y_dir = np.array([0.6, 1.0, 0])
+        d_hat = y_dir / np.linalg.norm(y_dir)
+
+        t_foot = np.dot(origin_point - line_anchor, d_hat)
+        x_vec_end = line_anchor + t_foot * d_hat
+
+        x_vector = Arrow(origin_point, x_vec_end, buff=0, color=dark_blue, stroke_width=5, tip_length=0.25,
+            tip_shape=StealthTip)
+        x_label = MathTex("x", color=dark_blue).move_to(x_vector.get_center()+0.5*UP)
+
+        line_start = x_vec_end + (-3) * d_hat
+        line_end = x_vec_end + (3) * d_hat
+        direction_line = Line(line_start, line_end, color=GRAY, stroke_width=2)
+
+        self.play(Create(x_vector), Write(x_label))
+        self.play(Create(direction_line))
+        self.wait(0.5)
+
+        lam = ValueTracker(-2)
+
+        def get_point():
+            return x_vec_end + lam.get_value() * y_dir
+
+        moving_dot = Dot(get_point(), color=RED)
+        moving_vector = always_redraw(
+            lambda: Arrow(origin_point, get_point(), buff=0, color=RED, stroke_width=5, tip_length=0.25, tip_shape=StealthTip)
+        )
+        moving_label = always_redraw(
+            lambda: MathTex(r"x+\lambda y", color=RED, font_size=32).next_to(get_point(), RIGHT, buff=0.3)
+        )
+
+        self.play(FadeIn(moving_dot), Create(moving_vector), Write(moving_label))
+        self.wait(0.5)
+
+        def f(l):
+            return l ** 2 + 1.2
+
+        def get_graph_point():
+            return right_axes.c2p(lam.get_value(), f(lam.get_value()))
+
+        graph_dot = always_redraw(lambda: Dot(get_graph_point(), color=RED))
+
+        traced_curve = TracedPath(get_graph_point, stroke_color=GREEN, stroke_width=4)
+
+        self.add(traced_curve)
+        self.play(FadeIn(graph_dot))
+        self.wait(0.5)
+
+        moving_dot.add_updater(lambda m: m.move_to(get_point()))
+
+        self.play(lam.animate.set_value(2), run_time=5, rate_func=linear)
+        self.wait(0.5)
+
+        self.play(lam.animate.set_value(0), run_time=2, rate_func=smooth)
+        self.wait(0.5)
+
+        min_dot = Dot(right_axes.c2p(0, f(0)), color=ORANGE)
+        min_label = MathTex(r"\lambda = 0 \; (\text{minimum})", color=ORANGE, font_size=32).next_to(min_dot, DOWN, buff=0.3)
+
+        self.play(FadeIn(min_dot), Write(min_label))
+        self.wait(1)
+
+        moving_dot.clear_updaters()
+
+        self.play(
+            *[FadeOut(mob) for mob in [
+                x_vector, x_label, direction_line, moving_dot, moving_vector, moving_label,
+                graph_dot, traced_curve, min_dot, min_label, right_axes, right_labels,
+                left_plane,
+            ]]
+        )
+
+        self.wait(1)
+
+        ferma_text = MathTex(
+            r"\text{By Fermat's Theorem :  } f'(0) = 0",
+            color=BLACK,
+        ).next_to(f_lambda, DOWN, buff=1, aligned_edge=f_lambda.get_left())
+
+        condition = MathTex(
+            r"\text{Lets use }", r"\| \cdot \|_P", r" \text{ as the norm. }",
+            color=dark_orange,
+        ).next_to(ferma_text,DOWN,buff=0.6)
+        condition_box = SurroundingRectangle(
+            condition,
+            color=dark_orange,
+            fill_opacity=0.1,
+            buff=0.25,
+            corner_radius=0.1,
+        )
+        result_text_1 = MathTex(
+            r"f(\lambda) = \| x + \lambda y \|^P = \sum_{i=1}^{n}|x_i + \lambda y_i|^P",
+            color=BLACK,
+        ).next_to(condition_box, DOWN, buff=0.2,)
+        result_text_2 = MathTex(
+            r"f'(0) = \sum_{i=1}^{n} |x_i|^{p-1} \text{sgn}(x_i) y_i",
+            color=BLACK,
+        ).next_to(result_text_1, DOWN, buff=0.2,)
+        result_text_3 = MathTex(
+            r"\text{for } P = 2, \quad f'(0) = \sum_{i=1}^{n} x_i \, y_i",
+            r"\quad \text{(dot product)}",
+            color=BLACK,
+        ).scale(0.9).next_to(result_text_2, DOWN, buff=0.2,)
+
+        self.play(
+            Write(ferma_text),
+        )
+        self.wait(0.5)
+        self.play(
+            Create(condition_box),
+            Write(condition),
+        )
+        self.wait(0.5)
+        self.play(
+            Write(result_text_1),
+        )
+        self.wait(0.5)
+        self.play(
+            Write(result_text_2),
+        )
+        self.wait(0.5)
+        self.play(
+            Write(result_text_3),
+        )
+
+        self.wait(1)
+        self.play(
+            *[FadeOut(mob) for mob in self.mobjects]
+        )
+        self.wait(1)
+
 
     def scene8_SubScene3_2(self, title):
         title_dictator = Text("The Geometric Dictatorship of Roberts", color=BLACK).move_to(title.get_center())
