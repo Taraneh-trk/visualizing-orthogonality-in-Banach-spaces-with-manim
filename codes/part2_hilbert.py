@@ -3757,6 +3757,192 @@ class TitleScene(ThreeDScene):   # Scene
         )
         self.wait(1)
 
+    def scene8_SubScene9_0(self, title):
+        headers = [
+            (r"\text{Symmetry}", dark_pink),
+            (r"\text{Homogeneity}", dark_purple),
+            (r"\text{Additivity}", dark_terquise),
+            (r"\text{Scalar Existence}", dark_green),
+        ]
+
+        col_labels = [MathTex(h).set_color(color) for h, color in headers]
+
+        row = [
+            MathTex(r"\Large \checkmark").set_color(GREEN),
+            MathTex(r"\Large \times").set_color(RED),
+            MathTex(r"\Large \times").set_color(RED),
+            MathTex(r"\Large \checkmark").set_color(GREEN),
+        ]
+
+        row_label = MathTex(r"\text{Isosceles}", color=BLACK)
+
+        table = MobjectTable(
+            [row],
+            row_labels=[row_label],
+            col_labels=col_labels,
+            include_outer_lines=True,
+            line_config={"stroke_width": 3, "color": GRAY},
+            h_buff=0.3,
+        )
+
+        table.scale(0.8).move_to(title.get_center() + 0.5 * DOWN)
+
+        self.play(
+            FadeIn(table),
+        )
+        self.wait(1)
+
+        col_index = 1  # 0: Symmetry, 1: Homogeneity, 2: Additivity, 3: Scalar Existence
+
+        highlight_group = VGroup(
+            col_labels[col_index],
+            row[col_index],
+        )
+
+        col_box = SurroundingRectangle(
+            highlight_group,
+            color=dark_red,
+            fill_opacity=0.1,
+            buff=0.25,
+            corner_radius=0.1,
+        )
+
+        definition_text = MathTex(
+            r"x \perp_{I} y \text{ } \not\rightarrow \text{ } (\alpha x) \perp_{I} y",
+            color=dark_red,
+        ).next_to(table, DOWN, buff=0.4)
+
+        self.play(
+            Create(col_box),
+        )
+        self.wait(0.5)
+        self.play(
+            Write(definition_text),
+        )
+        self.wait(0.5)
+        self.play(
+            FadeOut(definition_text),
+        )
+        self.wait(0.5)
+
+        theoream_title = Text("Characterization of Inner Product Spaces", font_size=40, color=dark_blue)
+        theoream_text1 = MathTex(r"\text{Let } X \text{ be a real normed space with } \dim(X) \ge 2. ", color=BLACK)
+        theoream_text2 = MathTex(r"\text{The space } X \text{ is an inner product space } ", r"\text{if and only if }", color=BLACK)
+        theoream_text2.set_color_by_tex(r"\text{if and only if }", dark_red)
+        theoream_text3 = MathTex(r"\text{Isosceles orthogonality is homogeneous} \text{ on } X.", color=BLACK)
+        theoream_text = VGroup(theoream_text1, theoream_text2, theoream_text3).arrange(DOWN, buff=0.2)
+
+        theoream_text_final1 = MathTex(
+            r"X \text{ is an inner product space}",
+            color=BLACK,
+        )
+        theoream_text_final2 = MathTex(
+            r"\iff",
+            color=BLACK,
+        )
+        theoream_text_final3 = MathTex(
+            r"\forall x,y \in X,\, \forall \alpha \in \mathbb{K},\, x \perp_{I} y \implies (\alpha x) \perp_{I} y",
+            color=BLACK,
+        )
+        theoream_text_final = VGroup(theoream_text_final1, theoream_text_final2, theoream_text_final3).arrange(DOWN, buff=0.2)
+
+        box_theoream = SurroundingRectangle(
+            VGroup(theoream_title, theoream_text).arrange(DOWN, buff=0.2).next_to(table, DOWN, buff=0.6),
+            color=dark_blue,
+            fill_opacity=0.1,
+            buff=0.2,
+            corner_radius=0.1,
+        )
+
+        box_theoream_final = SurroundingRectangle(
+            VGroup(theoream_title, theoream_text_final).arrange(DOWN, buff=0.2).next_to(table, DOWN, buff=0.6),
+            color=dark_blue,
+            fill_opacity=0.1,
+            buff=0.2,
+            corner_radius=0.1,
+        )
+
+        additivity_extra = MathTex(
+            r"\text{Similarly, we can consider this for additivity.}",
+            color=BLACK,
+        ).scale(1.1).next_to(table, DOWN, buff=1)
+
+        additivity_extra_box = SurroundingRectangle(
+            additivity_extra,
+            color=dark_blue,
+            fill_opacity=0.1,
+            buff=0.3,
+            corner_radius=0.1,
+        )
+
+        col_index2 = 2  # 0: Symmetry, 1: Homogeneity, 2: Additivity, 3: Scalar Existence
+
+        highlight_group2 = VGroup(
+            col_labels[col_index2],
+            row[col_index2],
+        )
+
+        col_box2 = SurroundingRectangle(
+            highlight_group2,
+            color=dark_red,
+            fill_opacity=0.1,
+            buff=0.25,
+            corner_radius=0.1,
+        )
+
+        # hint_text1 = MathTex(
+        #     r"\text{Note that Isosceles orthogonality is always symmetric,}",
+        #     color=BLACK,
+        # )
+        # hint_text2 = MathTex(
+        #     r"\text{but this alone does not guarantee}",
+        #     color=BLACK,
+        # )
+        # hint_text3 = MathTex(
+        #     r"\text{an inner product structure on } X. ",
+        #     color=BLACK,
+        # )
+        # hint_text = VGroup(hint_text1, hint_text2, hint_text3).arrange(DOWN, buff=0.2).scale(0.8).next_to(box_theoream_final, DOWN, buff=0.6)
+        # box_theoream_hint = SurroundingRectangle(
+        #     hint_text,
+        #     color=dark_red,
+        #     fill_opacity=0.1,
+        #     buff=0.2,
+        #     corner_radius=0.1,
+        # )
+
+        self.play(
+            Create(box_theoream),
+            Write(theoream_title),
+            Write(theoream_text),
+        )
+        self.wait(0.5)
+        # self.play(
+        #     Create(box_theoream_hint),
+        #     Write(hint_text),
+        # )
+        # self.wait(1)
+        self.play(
+            # FadeOut(VGroup(box_theoream_hint, hint_text)),
+            TransformMatchingShapes(VGroup(box_theoream, theoream_title, theoream_text), VGroup(box_theoream_final, theoream_title, theoream_text_final)),
+        )
+        self.wait(0.5)
+        self.play(
+            FadeOut(VGroup(box_theoream_final, theoream_title, theoream_text_final)),
+        )
+        self.wait(0.5)
+        self.play(
+            Transform(col_box, col_box2),
+            Create(additivity_extra_box),
+            Write(additivity_extra),
+        )
+        self.wait(1)
+        self.clear()
+        self.wait(1)
+
+    def scene8_SubScene9_1(self, title):
+        ...
+
     def scene8_SubScene6_0(self, title):
         headers = [
             (r"\text{Symmetry}", dark_pink),
@@ -4347,7 +4533,6 @@ class TitleScene(ThreeDScene):   # Scene
             *[FadeOut(mob) for mob in self.mobjects]
         )
         self.wait(1)
-
 
     def scene8_SubScene6_2(self, title):
         x_y = MathTex(
@@ -5086,7 +5271,7 @@ class TitleScene(ThreeDScene):   # Scene
 
         # self.scene8_SubScene6_0(title)
         # self.scene8_SubScene6_1(title)
-        self.scene8_SubScene6_2(title)
+        # self.scene8_SubScene6_2(title)
 
         ########## isosceles
 
@@ -5095,6 +5280,10 @@ class TitleScene(ThreeDScene):   # Scene
         # self.scene8_SubScene8(title)
 
         # self.scene8_SubScene9(title)
+
+        self.scene8_SubScene9_0(title)
+        # self.scene8_SubScene9_1(title)
+        # self.scene8_SubScene9_2(title)
 
         ########## pythagorean
 
