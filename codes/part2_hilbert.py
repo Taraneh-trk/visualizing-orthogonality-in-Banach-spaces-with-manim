@@ -3937,10 +3937,407 @@ class TitleScene(ThreeDScene):   # Scene
             Write(additivity_extra),
         )
         self.wait(1)
-        self.clear()
+        self.play(
+            *[FadeOut(mob) for mob in self.mobjects]
+        )
         self.wait(1)
 
     def scene8_SubScene9_1(self, title):
+        title_lt = MathTex(
+            r"\text{Linear Transformation}",
+            color=BLACK,
+            font_size=60,
+        ).to_edge(UP)
+        exp_lt0 = MathTex(
+            r"\text{A function } T: X \to Y \text{ is called a linear transformation}",
+            color=BLACK,
+        )
+        exp_lt1 = MathTex(
+            r"\text{if it satisfies the following two conditions :}",
+            color=BLACK,
+        )
+        exp_lt2 = MathTex(
+            r"(LT1)\quad T(x + y) = T(x) + T(y)",
+            color=BLACK,
+        )
+        exp_lt3 = MathTex(
+            r"(LT2)\quad T(\alpha x) = \alpha T(x)",
+            color=BLACK,
+        )
+        exp_lt4 = MathTex(
+            r"\text{for all vectors } x, y \in X \text{ and any scalar } \alpha \in \mathbb{K}.",
+            color=BLACK,
+        )
+        exp_lt = VGroup(exp_lt0, exp_lt1, VGroup(exp_lt2, exp_lt3).arrange(DOWN, buff=0.2, aligned_edge=LEFT), exp_lt4).arrange(DOWN, buff=0.2).scale(0.8)
+
+        group, box = self.show_definition(exp_lt, title, True)
+        VGroup(group, box).scale(1.3).shift(0.3*UP)
+        
+
+        self.play(
+            Write(title_lt),
+        )
+        self.wait(0.5)
+        self.play(
+            Create(box),
+            Write(group),
+        )
+        self.wait(0.5)
+        self.play(
+            FadeOut(box),
+            FadeOut(group),
+            # FadeOut(title_lt),
+        )
+        self.wait(0.5)
+
+        grid = NumberPlane(
+            y_range=[-30, 30, 1],
+            x_range=[-30, 30, 1],
+            background_line_style={"stroke_color": axes_background_color, "stroke_opacity": 0.5},
+            y_length=30,
+            x_length=30,
+        ).move_to([0, 0, 0] + 0.5 * DOWN)
+
+        axes = Axes(
+            y_range=[-30, 30, 1],
+            y_length=30,
+            x_range=[-30, 30, 1],
+            x_length=30,
+            axis_config={"color": dark_blue, "include_ticks": False, "tip_length": 0.25, "tip_shape": StealthTip}
+        ).move_to([0, 0, 0] + 0.5 * DOWN)
+ 
+        vec_i = Arrow(
+            start=axes.c2p(0, 0),
+            end=axes.c2p(1, 0),
+            buff=0,
+            stroke_width=3,
+            color=dark_orange,
+            tip_length=0.25,
+            tip_shape=StealthTip
+        )
+        vec_j = Arrow(
+            start=axes.c2p(0, 0),
+            end=axes.c2p(0, 1),
+            buff=0,
+            stroke_width=3,
+            color=dark_red,
+            tip_length=0.25,
+            tip_shape=StealthTip
+        )
+ 
+        label_i = MathTex(r"\hat{i}").set_color(dark_orange)
+        label_j = MathTex(r"\hat{j}").set_color(dark_red)
+        label_i.add_updater(lambda m: m.next_to(vec_i.get_end(), DOWN, buff=0.15))
+        label_j.add_updater(lambda m: m.next_to(vec_j.get_end(), LEFT, buff=0.15))
+ 
+        vec_x = Arrow(
+            start=axes.c2p(0, 0),
+            end=axes.c2p(2, 1),
+            buff=0,
+            stroke_width=3,
+            color=BLUE,
+            tip_length=0.25,
+            tip_shape=StealthTip
+        )
+        vec_y = Arrow(
+            start=axes.c2p(0, 0),
+            end=axes.c2p(-1, 2),
+            buff=0,
+            stroke_width=3,
+            color=GREEN,
+            tip_length=0.25,
+            tip_shape=StealthTip
+        )
+ 
+        label_x = MathTex(r"\vec{x}").set_color(BLUE)
+        label_y = MathTex(r"\vec{y}").set_color(GREEN)
+        label_x.add_updater(lambda m: m.next_to(vec_x.get_end(), RIGHT, buff=0.1))
+        label_y.add_updater(lambda m: m.next_to(vec_y.get_end(), UP, buff=0.1))
+ 
+        matrix_data = [["1.5", "0.5"], ["0.5", "1.5"]]
+        matrix_mob = Matrix(matrix_data)
+        matrix_mob.get_columns()[0].set_color(dark_orange)
+        matrix_mob.get_columns()[1].set_color(dark_red)
+ 
+        matrix_label = MathTex(r"T = ",color=BLACK)
+        matrix_group = VGroup(matrix_label, matrix_mob).arrange(RIGHT)
+        matrix_group.to_corner(UL).shift(DOWN * 1.8 + RIGHT * 0.2)
+        matrix_bg = SurroundingRectangle(
+            matrix_group, color=GREY, fill_color=WHITE, fill_opacity=0.85, buff=0.15
+        )
+ 
+        # subtitle = Text(
+        #     "A linear map is fully determined by where it sends i and j",
+        #     font_size=34,
+        #     color=DARK_GREY,
+        # ).to_edge(DOWN)
+ 
+        self.play(Create(grid), Create(axes))
+        # self.play(Write(subtitle))
+        self.wait(0.5)
+ 
+        self.play(
+            GrowArrow(vec_i), Write(label_i),
+            GrowArrow(vec_j), Write(label_j),
+        )
+        self.wait(0.5)
+ 
+        self.play(
+            GrowArrow(vec_x), Write(label_x),
+            GrowArrow(vec_y), Write(label_y),
+        )
+        self.wait(1)
+ 
+        self.play(FadeIn(matrix_bg), FadeIn(matrix_group))
+        self.wait(1)
+ 
+        matrix = [[1.5, 0.5],[0.5, 1.5]]
+ 
+        self.play(
+            Indicate(vec_i, color=dark_orange),
+            Indicate(matrix_mob.get_columns()[0], color=dark_orange),
+        )
+        self.play(
+            Indicate(vec_j, color=dark_red),
+            Indicate(matrix_mob.get_columns()[1], color=dark_red),
+        )
+        self.wait(0.5)
+ 
+        self.play(
+            grid.animate.apply_matrix(matrix),
+            axes.animate.apply_matrix(matrix),
+            vec_i.animate.apply_matrix(matrix),
+            vec_j.animate.apply_matrix(matrix),
+            vec_x.animate.apply_matrix(matrix),
+            vec_y.animate.apply_matrix(matrix),
+            run_time=3,
+        )
+        self.wait(1)
+ 
+        new_label_i = MathTex(r"T(\hat{i})").set_color(dark_orange).move_to(label_i.get_center()+0.2*DOWN)
+        new_label_j = MathTex(r"T(\hat{j})").set_color(dark_red).move_to(label_j.get_center()+0.3*UP+0.5*RIGHT)
+        new_label_x = MathTex(r"T(\vec{x})").set_color(BLUE).move_to(label_x.get_center()+0.4*UP)
+        new_label_y = MathTex(r"T(\vec{y})").set_color(GREEN).move_to(label_y.get_center())
+ 
+        label_i.clear_updaters()
+        label_j.clear_updaters()
+        label_x.clear_updaters()
+        label_y.clear_updaters()
+ 
+        self.play(
+            Transform(label_i, new_label_i),
+            Transform(label_j, new_label_j),
+            Transform(label_x, new_label_x),
+            Transform(label_y, new_label_y),
+        )
+        self.wait(1)
+        self.play(
+            *[FadeOut(mob) for mob in self.mobjects]
+        )
+        self.wait(1)
+
+        title_lm = MathTex(
+            r"\text{Orthogonality Preserving}",
+            color=BLACK,
+        ).scale(1.2).to_edge(UP)
+
+        definition_lm1 = MathTex(
+            r"\text{A linear transformation } T: X \to Y \text{ is orthogonality preserving if:}",
+            color=BLACK,
+        )
+        definition_lm2 = MathTex(
+            r"x \perp y \implies T(x) \perp T(y)",
+            color=BLACK,
+        )
+        definition_lm3 = MathTex(
+            r"\text{for all } x, y \in X.",
+            color=BLACK,
+        )
+        definition_lm = VGroup(definition_lm1, definition_lm2, definition_lm3).arrange(DOWN, buff=0.2).scale(0.8)
+        definition_lm3.align_to(definition_lm1, LEFT)
+
+        group, box = self.show_definition(definition_lm, title_lm, True)
+        VGroup(group, box).scale(1.1).shift(0.3*UP)
+
+        self.play(
+            Write(title_lm),
+        )
+        self.wait(0.5)
+        self.play(
+            Create(box),
+            Write(group),
+        )
+        self.wait(0.5)
+        self.play(
+            FadeOut(box),
+            FadeOut(group),
+        )
+        self.wait(0.5)
+
+        o_l = np.array([-4.5, 0.0, 0.0])
+        o_r = np.array([1.5, -2.5, 0.0])
+
+        x_vec = np.array([1.8, 0.0, 0.0])
+        y_vec = np.array([0.0, 1.8, 0.0])
+
+        angle = PI / 6
+        scale = 2
+        matrix = np.array([
+            [scale * np.cos(angle), -scale * np.sin(angle), 0],
+            [scale * np.sin(angle),  scale * np.cos(angle), 0],
+            [0, 0, 1]
+        ])
+
+        tx_vec = np.dot(matrix, x_vec)
+        ty_vec = np.dot(matrix, y_vec)
+
+        xl = o_l + x_vec
+        yl = o_l + y_vec
+        sl = o_l + x_vec + y_vec
+
+        xr = o_r + tx_vec
+        yr = o_r + ty_vec
+        sr = o_r + tx_vec + ty_vec
+
+        vec_x_l = Arrow(o_l, xl, buff=0, color=BLUE, stroke_width=4, tip_length=0.25, tip_shape=StealthTip)
+        vec_y_l = Arrow(o_l, yl, buff=0, color=GREEN, stroke_width=4, tip_length=0.25, tip_shape=StealthTip)
+        edge_x_l = DashedLine(yl, sl, color=BLUE, stroke_width=2)
+        edge_y_l = DashedLine(xl, sl, color=GREEN, stroke_width=2)
+        
+        label_x_l = MathTex(r"\vec{x}").set_color(BLUE).next_to(vec_x_l.get_end(), DOWN, buff=0.1)
+        label_y_l = MathTex(r"\vec{y}").set_color(GREEN).next_to(vec_y_l.get_end(), LEFT, buff=0.1)
+
+        right_angle_l = RightAngle(vec_x_l, vec_y_l, length=0.3, color=DARK_GRAY, stroke_width=3)
+
+        diag_plus_l_bg = Line(o_l, sl, color=GRAY, stroke_width=2)
+        diag_minus_l_bg = Line(yl, xl, color=GRAY, stroke_width=2)
+
+        stick_l = Line(o_l, sl, color=RED, stroke_width=6)
+        target_stick_l = Line(yl, xl, color=RED, stroke_width=6)
+
+        vec_x_r = Arrow(o_r, xr, buff=0, color=BLUE, stroke_width=4, tip_length=0.25, tip_shape=StealthTip)
+        vec_y_r = Arrow(o_r, yr, buff=0, color=GREEN, stroke_width=4, tip_length=0.25, tip_shape=StealthTip)
+        edge_x_r = DashedLine(yr, sr, color=BLUE, stroke_width=2)
+        edge_y_r = DashedLine(xr, sr, color=GREEN, stroke_width=2)
+        
+        label_x_r = MathTex(r"T(\vec{x})").set_color(BLUE).next_to(vec_x_r.get_end(), RIGHT, buff=0.1)
+        label_y_r = MathTex(r"T(\vec{y})").set_color(GREEN).next_to(vec_y_r.get_end(), UP, buff=0.1)
+
+        right_angle_r = RightAngle(vec_x_r, vec_y_r, length=0.3, color=DARK_GRAY, stroke_width=3)
+
+        diag_plus_r_bg = Line(o_r, sr, color=GRAY, stroke_width=2)
+        diag_minus_r_bg = Line(yr, xr, color=GRAY, stroke_width=2)
+
+        stick_r = Line(o_r, sr, color=RED, stroke_width=6)
+        target_stick_r = Line(yr, xr, color=RED, stroke_width=6)
+
+        self.play(
+            GrowArrow(vec_x_l), Write(label_x_l),
+            GrowArrow(vec_y_l), Write(label_y_l)
+        )
+        self.play(Create(right_angle_l))
+        perp_l = MathTex(
+            r"\vec{x} \perp_I \vec{y}",
+            color=BLACK,
+        ).move_to(vec_x_l.get_center() + 2*DOWN)
+        self.play(
+            Write(perp_l),
+        )
+        self.play(Create(edge_x_l), Create(edge_y_l))
+        self.play(Create(diag_plus_l_bg), Create(diag_minus_l_bg))
+        self.wait(0.5)
+
+        self.play(Create(stick_l))
+        self.wait(0.5)
+        self.play(Transform(stick_l, target_stick_l, path_arc=-PI/2), run_time=2)
+        self.wait(1)
+
+        self.play(
+            GrowArrow(vec_x_r), Write(label_x_r),
+            GrowArrow(vec_y_r), Write(label_y_r)
+        )
+        self.play(Create(right_angle_r))
+        perp_r = MathTex(
+            r"T(\vec{x}) \perp_I T(\vec{y})",
+            color=BLACK,
+        ).move_to(vec_x_r.get_center() + 1.5*DOWN)
+        self.play(
+            Write(perp_r),
+        )
+        self.play(Create(edge_x_r), Create(edge_y_r))
+        self.play(Create(diag_plus_r_bg), Create(diag_minus_r_bg))
+        self.wait(0.5)
+
+        self.play(Create(stick_r))
+        self.wait(0.5)
+        self.play(Transform(stick_r, target_stick_r, path_arc=-PI/2), run_time=2)
+
+        self.wait(1)
+        self.play(
+            *[FadeOut(mob) for mob in self.mobjects]
+        )
+        self.wait(1)
+
+        theoream_title = Text("Theorem", font_size=40, color=dark_blue)
+        theoream_text1 = MathTex(
+            r"\text{If an invertible linear operator } ",r"\text{preserves isosceles orthogonality,}",
+            color=BLACK
+        )
+        theoream_text1.set_color_by_tex(r"\text{preserves isosceles orthogonality,}", dark_red)
+        theoream_text2 = MathTex(
+            r"\text{it is necessarily a }", 
+            r"\text{scalar multiple of an } ",r"\text{isometry} ",r"\text{. That is,}",
+            color=BLACK
+        )
+        theoream_text2.set_color_by_tex(r"\text{isometry} ", dark_red)
+        
+        theoream_text3 = MathTex(
+            r"\text{there exists a constant } c > 0 \text{ such that:}",
+            color=BLACK
+        )
+        theoream_text4 = MathTex(
+            r"\|T(x)\| = c \|x\| \quad \text{for all } x \in \mathbb{X}.",
+            color=BLACK
+        )
+
+        theoream_text = VGroup(
+            theoream_text1, 
+            theoream_text2, 
+            theoream_text3, 
+            theoream_text4
+        ).arrange(DOWN, buff=0.4).scale(0.9).shift(1.5*UP)
+        theoream_text2.align_to(theoream_text1, LEFT)
+        theoream_text3.align_to(theoream_text1, LEFT)
+
+        box_theoream = SurroundingRectangle(
+            VGroup(theoream_title, theoream_text).arrange(DOWN, buff=0.2),
+            color=dark_blue,
+            fill_opacity=0.1,
+            buff=0.2,
+            corner_radius=0.1,
+        )
+
+        note = Text(
+            "It preserves both distance and length exactly.",
+            color=dark_pink,
+        ).next_to(box_theoream, DOWN,buff=1)
+
+        self.play(
+            Create(box_theoream), 
+            Write(VGroup(theoream_title, theoream_text)),
+        )
+        self.wait(0.5)
+        self.play(
+            Write(note),
+        )
+
+        self.wait(1)
+        self.play(
+            *[FadeOut(mob) for mob in self.mobjects]
+        )
+        self.wait(1)
+
+    def scene8_SubScene9_2(self, title):
         ...
 
     def scene8_SubScene6_0(self, title):
@@ -5281,9 +5678,9 @@ class TitleScene(ThreeDScene):   # Scene
 
         # self.scene8_SubScene9(title)
 
-        self.scene8_SubScene9_0(title)
+        # self.scene8_SubScene9_0(title)
         # self.scene8_SubScene9_1(title)
-        # self.scene8_SubScene9_2(title)
+        self.scene8_SubScene9_2(title)
 
         ########## pythagorean
 
