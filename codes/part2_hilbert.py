@@ -4338,7 +4338,268 @@ class TitleScene(ThreeDScene):   # Scene
         self.wait(1)
 
     def scene8_SubScene9_2(self, title):
-        ...
+        # title_li = MathTex(
+        #     r"\text{Linear Independence}",
+        #     color=BLACK,
+        #     font_size=60,
+        # ).to_edge(UP)
+
+        # exp_li0 = MathTex(
+        #     r"\text{Let } V \text{ be a vector space over } \mathbb{K} \text{ ,and let } ",
+        #     color=BLACK,
+        # )
+        # exp_li1 = MathTex(
+        #     r"\{v_1, v_2, \dots, v_n\} \text{ be a set of vectors in } V.",
+        #     color=BLACK,
+        # )
+        # exp_li2 = MathTex(
+        #     r"\text{These vectors are called linearly independent}",
+        #     color=BLACK,
+        # )
+        # exp_li21 = MathTex(
+        #     r"\text{if the only solution to}",
+        #     color=BLACK,
+        # )
+        # exp_li3 = MathTex(
+        #     r"c_1 v_1 + c_2 v_2 + \dots + c_n v_n = 0",
+        #     color=BLACK,
+        # )
+        # exp_li4 = MathTex(
+        #     r"\text{is the trivial solution }",
+        #     color=BLACK,
+        # )
+        # exp_li41 = MathTex(
+        #     r"c_1 = c_2 = \dots = c_n = 0.",
+        #     color=BLACK,
+        # )
+
+        # exp_li = VGroup(
+        #     exp_li0, exp_li1, exp_li2, exp_li21, exp_li3, exp_li4, exp_li41,
+        # ).arrange(DOWN, buff=0.2).scale(0.8)
+
+        # group, box = self.show_definition(exp_li, title_li, True)
+        # VGroup(group, box).scale(1.2).shift(1 * UP)
+        # exp_li1.align_to(exp_li1, LEFT)
+        # exp_li2.align_to(exp_li1, LEFT)
+        # exp_li21.align_to(exp_li1, LEFT)
+        # exp_li4.align_to(exp_li1, LEFT)
+
+        # self.play(Write(title_li))
+        # self.wait(0.5)
+        # self.play(Create(box), Write(group))
+        # self.wait(0.5)
+        # self.play(FadeOut(box), FadeOut(group), FadeOut(title_li))
+        # self.wait(0.5)
+
+        # axes = ThreeDAxes(
+        #     x_range=[-4, 4, 1], y_range=[-4, 4, 1], z_range=[-4, 4, 1],
+        #     x_length=8, y_length=8, z_length=8,
+        #     axis_config={"color": dark_blue, "include_ticks": False, "tip_length": 0.25, "tip_shape": StealthTip}
+
+        # ).set_color(GRAY)
+
+        # v1_coord = np.array([2, 1, 0])
+        # v2_coord = np.array([-1, 2, 0])
+        
+        # v3_dependent_coord = v1_coord + v2_coord # [1, 3, 0]
+        
+        # v3_independent_coord = np.array([0, 0, 3])
+
+        # v1 = Vector(v1_coord, color=BLUE, tip_length=0.25, tip_shape=StealthTip)
+        # v2 = Vector(v2_coord, color=GREEN, tip_length=0.25, tip_shape=StealthTip)
+        # v3 = Vector(v3_dependent_coord, color=RED, tip_length=0.25, tip_shape=StealthTip)
+        
+        # text_dep = Text("Linear dependence", color=BLACK,).to_edge(DOWN)
+        # text_indep = Text("Linear Independence", color=BLACK,).to_edge(DOWN)
+        
+        # plane = Surface(
+        #     lambda u, v: axes.c2p(u, v, 0),
+        #     u_range=[-4, 4],
+        #     v_range=[-4, 4],
+        #     fill_color=BLUE,
+        #     fill_opacity=0.2,
+        #     # resolution=(2, 2)
+        # )
+
+        # self.set_camera_orientation(phi=0 * DEGREES, theta=-90 * DEGREES)
+
+        # self.play(Create(axes))
+        # self.play(GrowArrow(v1), GrowArrow(v2))
+        # self.play(Create(plane))
+        # self.wait(1)
+        
+        # self.play(GrowArrow(v3))
+        
+        # self.add_fixed_in_frame_mobjects(text_dep)
+        # self.play(Write(text_dep))
+        # self.wait(2)
+
+        # self.move_camera(phi=65 * DEGREES, theta=-45 * DEGREES, run_time=2)
+        # self.wait(1)
+
+        # v3_independent = Vector(v3_independent_coord, color=RED)
+        
+        # self.add_fixed_in_frame_mobjects(text_indep)
+        # self.play(
+        #     Transform(v3, v3_independent),
+        #     Transform(text_dep, text_indep) 
+        # )
+        # self.wait(1)
+
+        # p1 = v1_coord
+        # p2 = v2_coord
+        # p3 = v3_independent_coord
+        
+        # p12 = p1 + p2
+        # p13 = p1 + p3
+        # p23 = p2 + p3
+        # p123 = p1 + p2 + p3
+
+        # edges = VGroup(
+        #     DashedLine(p1, p12, color=GRAY),
+        #     DashedLine(p2, p12, color=GRAY),
+            
+        #     DashedLine(p1, p13, color=GRAY),
+        #     DashedLine(p3, p13, color=GRAY),
+            
+        #     DashedLine(p2, p23, color=GRAY),
+        #     DashedLine(p3, p23, color=GRAY),
+            
+        #     DashedLine(p12, p123, color=GRAY),
+        #     DashedLine(p13, p123, color=GRAY),
+        #     DashedLine(p23, p123, color=GRAY)
+        # )
+
+        # self.play(Create(edges), run_time=3)
+        
+        # self.move_camera(theta=-15 * DEGREES, run_time=4)
+        # self.wait(2)
+
+        theoream_title = Text("Theorem", font_size=40, color=dark_blue)
+        theoream_text1 = MathTex(
+            r"\text{Suppose } X \text{ is a normed space. If } x, y \in X ",
+            color=BLACK
+        )
+        theoream_text2 = MathTex(
+            r"\text{are two non-zero vectors such that } ",r"x \perp_I y ",r", \text{ then}", 
+            color=BLACK
+        )
+        theoream_text2.set_color_by_tex(r"x \perp_I y ", dark_red)
+        
+        theoream_text3 = MathTex(
+            r"x \text{ and } y \text{ are} ",r"\text{ linearly independent.}",
+            color=BLACK
+        )
+        theoream_text3.set_color_by_tex(r"\text{ linearly independent.}", dark_red)
+
+        theoream_text = VGroup(
+            theoream_text1, 
+            theoream_text2, 
+            theoream_text3, 
+        ).arrange(DOWN, buff=0.4, aligned_edge=LEFT).scale(1.15).shift(1.5*UP)
+
+        box_theoream = SurroundingRectangle(
+            VGroup(theoream_title, theoream_text).arrange(DOWN, buff=0.2),
+            color=dark_blue,
+            fill_opacity=0.1,
+            buff=0.2,
+            corner_radius=0.1,
+        )
+
+        self.play(
+            Create(box_theoream), 
+            Write(VGroup(theoream_title, theoream_text)),
+        )
+        self.wait(0.5)
+
+        statement = MathTex(
+            r"x \perp_I y ",r"\implies", r"x , y \text{ are} \text{ linearly independent.}",
+            color=dark_blue,
+        ).to_edge(UP)
+
+        self.play(
+            TransformMatchingShapes(VGroup(box_theoream, theoream_title, theoream_text), statement)
+        )
+        self.wait(0.5)
+
+        step1 = MathTex(
+            r"\text{Contradiction} : ",
+            r"\text{Assume } x , y ",r"\text{ are linearly dependent}",
+            color=BLACK,
+        ).next_to(statement, DOWN, buff=0.5).shift(0.5*LEFT)
+
+        step2 = MathTex(
+            r"y = \lambda x",
+            color=dark_orange,
+        ).next_to(step1, RIGHT, buff=0.5)
+
+        step3 = MathTex(
+            r"\|x + y\| = \|x - y\|",
+            color=BLACK,
+        ).next_to(step1, DOWN, buff=0.5)
+        step4 = MathTex(
+            r"\|x + \lambda x \| = \|x - \lambda x \|",
+            color=BLACK,
+        ).next_to(step3, DOWN, buff=0.5)
+        step5 = MathTex(
+            r"|1 + \lambda| \cdot \|x\| = |1 - \lambda| \cdot \|x\|",
+            color=BLACK,
+        ).next_to(step4, DOWN, buff=0.4)
+        step6 = MathTex(
+            r"|1 + \lambda|= |1 - \lambda|",
+            r"\quad (x \ne 0)",
+            color=BLACK,
+        ).next_to(step5, DOWN, buff=0.4)
+        step7 = MathTex(
+            r"\implies \lambda = 0",
+            r"\implies y = 0",
+            r"\quad \cdot \! \overset{\cdot}{\underset{\cdot}{\times}} \! \cdot",
+            color=BLACK,
+        ).next_to(step6, DOWN, buff=0.5)
+        step8 = MathTex(
+            r"\text{Thus, the assumption is false and the claim holds}.\blacksquare",
+            color=BLACK,
+        ).next_to(step7, DOWN, buff=0.3)
+
+        proff = VGroup(step1, step2, step3, step4, step5, step6, step7, step8)
+
+        self.play(
+            Write(step1),
+        )
+        self.wait(0.5)
+        self.play(
+            TransformFromCopy(step1[2], step2),
+        )
+        self.wait(0.5)
+        self.play(
+            TransformFromCopy(statement[0], step3),
+        )
+        self.wait(0.5)
+        self.play(
+            TransformFromCopy(VGroup(step2, step3), step4),
+        )
+        self.wait(0.5)
+        self.play(
+            Write(step5),
+        )
+        self.wait(0.5)
+        self.play(
+            Write(step6),
+        )
+        self.wait(0.5)
+        self.play(
+            Write(step7),
+        )
+        self.wait(0.5)
+        self.play(
+            Write(step8),
+        )
+
+        self.wait(1)
+        self.play(
+            *[FadeOut(mob) for mob in self.mobjects]
+        )
+        self.wait(1)
 
     def scene8_SubScene6_0(self, title):
         headers = [
@@ -5680,7 +5941,7 @@ class TitleScene(ThreeDScene):   # Scene
 
         # self.scene8_SubScene9_0(title)
         # self.scene8_SubScene9_1(title)
-        self.scene8_SubScene9_2(title)
+        # self.scene8_SubScene9_2(title)
 
         ########## pythagorean
 
@@ -5689,6 +5950,10 @@ class TitleScene(ThreeDScene):   # Scene
         # self.scene8_SubScene11(title)
 
         # self.scene8_SubScene12(title)
+
+        self.scene8_SubScene12_0(title)
+        # self.scene8_SubScene12_1(title)
+        # self.scene8_SubScene12_2(title)
 
         # self.scene8_SubScene13(title)
 
