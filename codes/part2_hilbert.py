@@ -4337,6 +4337,653 @@ class TitleScene(ThreeDScene):   # Scene
         )
         self.wait(1)
 
+    def scene8_SubScene12_0(self, title):
+        headers = [
+            (r"\text{Symmetry}", dark_pink),
+            (r"\text{Homogeneity}", dark_purple),
+            (r"\text{Additivity}", dark_terquise),
+            (r"\text{Scalar Existence}", dark_green),
+        ]
+
+        col_labels = [MathTex(h).set_color(color) for h, color in headers]
+
+        row = [
+            MathTex(r"\Large \checkmark").set_color(GREEN),
+            MathTex(r"\Large \times").set_color(RED),
+            MathTex(r"\Large \times").set_color(RED),
+            MathTex(r"\Large \checkmark").set_color(GREEN),
+        ]
+
+        row_label = MathTex(r"\text{Pythagorean}", color=BLACK)
+
+        table = MobjectTable(
+            [row],
+            row_labels=[row_label],
+            col_labels=col_labels,
+            include_outer_lines=True,
+            line_config={"stroke_width": 3, "color": GRAY},
+            h_buff=0.3,
+        )
+
+        table.scale(0.8).move_to(title.get_center() + 0.5 * DOWN)
+
+        self.play(
+            FadeIn(table),
+        )
+        self.wait(1)
+
+        col_index = 1  # 0: Symmetry, 1: Homogeneity, 2: Additivity, 3: Scalar Existence
+
+        highlight_group = VGroup(
+            col_labels[col_index],
+            row[col_index],
+        )
+
+        col_box = SurroundingRectangle(
+            highlight_group,
+            color=dark_red,
+            fill_opacity=0.1,
+            buff=0.25,
+            corner_radius=0.1,
+        )
+
+        definition_text = MathTex(
+            r"x \perp_{P} y \text{ } \not\rightarrow \text{ } (\alpha x) \perp_{P} y",
+            color=dark_red,
+        ).next_to(table, DOWN, buff=0.4)
+
+        self.play(
+            Create(col_box),
+        )
+        self.wait(0.5)
+        self.play(
+            Write(definition_text),
+        )
+        self.wait(0.5)
+        self.play(
+            FadeOut(definition_text),
+        )
+        self.wait(0.5)
+
+        theoream_title = Text("Characterization of Inner Product Spaces", font_size=40, color=dark_blue)
+        theoream_text1 = MathTex(r"\text{Let } X \text{ be a real normed space with } \dim(X) \ge 2. ", color=BLACK)
+        theoream_text2 = MathTex(r"\text{The space } X \text{ is an inner product space } ", r"\text{if and only if }", color=BLACK)
+        theoream_text2.set_color_by_tex(r"\text{if and only if }", dark_red)
+        theoream_text3 = MathTex(r"\text{Pythagorean orthogonality is homogeneous} \text{ on } X.", color=BLACK)
+        theoream_text = VGroup(theoream_text1, theoream_text2, theoream_text3).arrange(DOWN, buff=0.2)
+
+        theoream_text_final1 = MathTex(
+            r"X \text{ is an inner product space}",
+            color=BLACK,
+        )
+        theoream_text_final2 = MathTex(
+            r"\iff",
+            color=BLACK,
+        )
+        theoream_text_final3 = MathTex(
+            r"\forall x,y \in X,\, \forall \alpha \in \mathbb{K},\, x \perp_{P} y \implies (\alpha x) \perp_{P} y",
+            color=BLACK,
+        )
+        theoream_text_final = VGroup(theoream_text_final1, theoream_text_final2, theoream_text_final3).arrange(DOWN, buff=0.2)
+
+        box_theoream = SurroundingRectangle(
+            VGroup(theoream_title, theoream_text).arrange(DOWN, buff=0.2).next_to(table, DOWN, buff=0.6),
+            color=dark_blue,
+            fill_opacity=0.1,
+            buff=0.2,
+            corner_radius=0.1,
+        )
+
+        box_theoream_final = SurroundingRectangle(
+            VGroup(theoream_title, theoream_text_final).arrange(DOWN, buff=0.2).next_to(table, DOWN, buff=0.6),
+            color=dark_blue,
+            fill_opacity=0.1,
+            buff=0.2,
+            corner_radius=0.1,
+        )
+
+        additivity_extra = MathTex(
+            r"\text{Similarly, we can consider this for additivity.}",
+            color=BLACK,
+        ).scale(1.1).next_to(table, DOWN, buff=1)
+
+        additivity_extra_box = SurroundingRectangle(
+            additivity_extra,
+            color=dark_blue,
+            fill_opacity=0.1,
+            buff=0.3,
+            corner_radius=0.1,
+        )
+
+        col_index2 = 2  # 0: Symmetry, 1: Homogeneity, 2: Additivity, 3: Scalar Existence
+
+        highlight_group2 = VGroup(
+            col_labels[col_index2],
+            row[col_index2],
+        )
+
+        col_box2 = SurroundingRectangle(
+            highlight_group2,
+            color=dark_red,
+            fill_opacity=0.1,
+            buff=0.25,
+            corner_radius=0.1,
+        )
+
+        # hint_text1 = MathTex(
+        #     r"\text{Note that Isosceles orthogonality is always symmetric,}",
+        #     color=BLACK,
+        # )
+        # hint_text2 = MathTex(
+        #     r"\text{but this alone does not guarantee}",
+        #     color=BLACK,
+        # )
+        # hint_text3 = MathTex(
+        #     r"\text{an inner product structure on } X. ",
+        #     color=BLACK,
+        # )
+        # hint_text = VGroup(hint_text1, hint_text2, hint_text3).arrange(DOWN, buff=0.2).scale(0.8).next_to(box_theoream_final, DOWN, buff=0.6)
+        # box_theoream_hint = SurroundingRectangle(
+        #     hint_text,
+        #     color=dark_red,
+        #     fill_opacity=0.1,
+        #     buff=0.2,
+        #     corner_radius=0.1,
+        # )
+
+        self.play(
+            Create(box_theoream),
+            Write(theoream_title),
+            Write(theoream_text),
+        )
+        self.wait(0.5)
+        # self.play(
+        #     Create(box_theoream_hint),
+        #     Write(hint_text),
+        # )
+        # self.wait(1)
+        self.play(
+            # FadeOut(VGroup(box_theoream_hint, hint_text)),
+            TransformMatchingShapes(VGroup(box_theoream, theoream_title, theoream_text), VGroup(box_theoream_final, theoream_title, theoream_text_final)),
+        )
+        self.wait(0.5)
+        self.play(
+            FadeOut(VGroup(box_theoream_final, theoream_title, theoream_text_final)),
+        )
+        self.wait(0.5)
+        self.play(
+            Transform(col_box, col_box2),
+            Create(additivity_extra_box),
+            Write(additivity_extra),
+        )
+        self.wait(1)
+        self.play(
+            *[FadeOut(mob) for mob in self.mobjects]
+        )
+        self.wait(1)
+    
+    def scene8_SubScene12_1(self, title):
+        title_li = MathTex(
+            r"\text{Linear Independence } ",r"\text{VS} ",r"\text{ Pythagorean Orthogonality}",
+            color=BLACK,
+        ).scale(1.1).to_edge(UP)
+        title_li.set_color_by_tex(r"\text{VS} ", dark_red)
+
+        r_text = MathTex(
+            r"\mathbb{R}",
+            color=dark_pink,
+        ).scale(2).shift(3*LEFT+2*UP)
+
+        c_text = MathTex(
+            r"\mathbb{C}",
+            color=dark_terquise,
+        ).scale(2).shift(3*RIGHT+2*UP)
+
+        self.play(
+            Write(title_li),
+        )
+        self.wait(0.5)
+        self.play(
+            Write(r_text),
+        )
+        self.play(
+            Write(c_text),
+        )
+        self.wait(0.5)
+
+        title_li1 = MathTex(
+            r"\text{Linear Independence in } ",r"\mathbb{R} ",
+            color=BLACK,
+        ).scale(1.1).to_edge(UP)
+
+        theoream_title = Text("Theorem", font_size=40, color=dark_blue)
+        theoream_text1 = MathTex(
+            r"\text{Suppose } X \text{ is a normed space on } \mathbb{R} \text{ . If } x, y \in X ",
+            color=BLACK
+        )
+        theoream_text2 = MathTex(
+            r"\text{are two non-zero vectors such that } ",r"x \perp_P y ",r", \text{ then}", 
+            color=BLACK
+        )
+        theoream_text2.set_color_by_tex(r"x \perp_P y ", dark_red)
+        
+        theoream_text3 = MathTex(
+            r"x \text{ and } y \text{ are} ",r"\text{ linearly independent.}",
+            color=BLACK
+        )
+        theoream_text3.set_color_by_tex(r"\text{ linearly independent.}", dark_red)
+
+        theoream_text = VGroup(
+            theoream_text1, 
+            theoream_text2, 
+            theoream_text3, 
+        ).arrange(DOWN, buff=0.4, aligned_edge=LEFT).scale(1.15).shift(1.5*UP)
+
+        box_theoream = SurroundingRectangle(
+            VGroup(theoream_title, theoream_text).arrange(DOWN, buff=0.2),
+            color=dark_blue,
+            fill_opacity=0.1,
+            buff=0.2,
+            corner_radius=0.1,
+        )
+
+        self.play(
+            TransformMatchingTex(title_li, title_li1),
+            FadeOut(c_text),
+            FadeOut(r_text),
+        )
+
+        statement1 = MathTex(
+            r"x \perp_P y ",r"\implies", r"x , y \text{ are} \text{ linearly independent.}",
+            color=dark_blue,
+        ).next_to(title_li1,DOWN,buff=0.5)
+
+        self.wait(0.5)
+        self.play(
+            Create(box_theoream), 
+            Write(VGroup(theoream_title, theoream_text)),
+        )
+        self.wait(0.5)
+        self.play(
+            TransformMatchingShapes(VGroup(box_theoream, theoream_title, theoream_text), statement1),
+        )
+        self.wait(0.5)
+
+        step1 = MathTex(
+            r"\text{Contradiction} : ",
+            r"\text{Assume } x , y ",r"\text{ are linearly dependent}",
+            color=BLACK,
+        ).scale(0.8).next_to(statement1, DOWN, buff=0.2).shift(1.5*LEFT)
+
+        step2 = MathTex(
+            r"y = \lambda x \quad (\lambda \in \mathbb{R})",
+            color=dark_orange,
+        ).next_to(step1, RIGHT, buff=0.2)
+
+        step3 = MathTex(
+            r"\|x + y\|^2 = \|x \|^2 + \|y\|^2",
+            color=BLACK,
+        ).next_to(step1, DOWN, buff=0.2).shift(1*RIGHT)
+        step4 = MathTex(
+            r"\|x + \lambda x \|^2 = \|x \|^2 + \|\lambda x \|^2",
+            color=BLACK,
+        ).next_to(step3, DOWN, buff=0.2)
+        step5 = MathTex(
+            r"|1 + \lambda|^2 \cdot \|x\|^2 = (1 + |\lambda|^2) \cdot \|x\|^2",
+            color=BLACK,
+        ).next_to(step4, DOWN, buff=0.2)
+        step6 = MathTex(
+            r"|1 + \lambda|^2 = 1 + |\lambda|^2",
+            r"\quad (x \ne 0)",
+            color=BLACK,
+        ).next_to(step5, DOWN, buff=0.2)
+        step7 = MathTex(
+            r"\implies \lambda = 0",
+            r"\implies y = 0",
+            r"\quad \cdot \! \overset{\cdot}{\underset{\cdot}{\times}} \! \cdot",
+            color=BLACK,
+        ).next_to(step6, DOWN, buff=0.2)
+        step8 = MathTex(
+            r"\text{Thus, the assumption is false and the claim holds}.\blacksquare",
+            color=BLACK,
+        ).next_to(step7, DOWN, buff=0.2)
+
+        proff = VGroup(step1, step2, step3, step4, step5, step6, step7, step8)
+
+        self.play(
+            Write(step1),
+        )
+        self.wait(0.5)
+        self.play(
+            TransformFromCopy(step1[2], step2),
+        )
+        self.wait(0.5)
+        self.play(
+            TransformFromCopy(statement1[0], step3),
+        )
+        self.wait(0.5)
+        self.play(
+            TransformFromCopy(VGroup(step2, step3), step4),
+        )
+        self.wait(0.5)
+        self.play(
+            Write(step5),
+        )
+        self.wait(0.5)
+        self.play(
+            Write(step6),
+        )
+        self.wait(0.5)
+        self.play(
+            Write(step7),
+        )
+        self.wait(0.5)
+        self.play(
+            Write(step8),
+        )
+
+        title_li2 = MathTex(
+            r"\text{Linear dependence in } ",r"\mathbb{C} ",
+            color=BLACK,
+        ).scale(1.1).to_edge(UP)
+
+        statement2 = MathTex(
+            r"x \perp_P y ",r"\not \rightarrow", r"x , y \text{ are} \text{ linearly independent.}",
+            color=dark_blue,
+        ).next_to(title_li1,DOWN,buff=0.5)
+
+        step1_2 = MathTex(
+            r"\text{Counterexample : } y = i x \quad (i \in \mathbb{C})",
+            color=dark_orange,
+        ).move_to(VGroup(step1, step2).get_center())
+
+        step4_new = MathTex(
+            r"\|x + i x \|^2 ",r"= ",r"\|x \|^2 + \| i x \|^2",
+            color=BLACK,
+        ).move_to(step4.get_center())
+        step4_new.set_color_by_tex(r"\|x + i x \|^2 ", dark_pink)
+        step4_new.set_color_by_tex(r"\|x \|^2 + \| i x \|^2", dark_green)
+        step5_new = MathTex(
+            r"\|x + i x \|^2 ",r"= |1+i|^2 \|x\|^2 = ",r"2 \|x\|^2",
+            color=dark_pink,
+        ).move_to(step5.get_center())
+
+        step6_new = MathTex(
+            r"\|x \|^2 + \| i x \|^2 ",r"= \|x \|^2 + |i|^2 \| x \|^2 = ",r"2 \|x\|^2",
+            color=dark_green,
+        ).move_to(step6.get_center())
+
+        final = MathTex(
+            r"\|x + i x \|^2 ",r" = ",r"2 \|x\|^2",r" = ",r"\|x \|^2 + \| i x \|^2 .",
+            color=BLACK,
+        ).move_to(step7.get_center())
+
+
+        self.play(
+            TransformMatchingTex(title_li1, title_li2),
+        )
+        self.wait(0.5)
+        self.play(
+            TransformMatchingTex(statement1, statement2),
+        )
+        self.wait(0.5)
+        self.play(
+            TransformMatchingTex(VGroup(step1, step2), step1_2),
+        )
+        self.play(
+            FadeOut(VGroup(
+                step5,
+                step6,
+                step7,
+                step8,
+            ))
+        )
+        self.wait(0.5)
+        self.play(
+            TransformMatchingTex(step4, step4_new),
+        )
+        self.wait(0.5)
+        self.play(
+            Write(step5_new),
+        )
+        self.wait(0.5)
+        self.play(
+            Write(step6_new),
+        )
+        self.wait(0.5)
+        self.play(
+            Write(final),
+        )
+        self.wait(0.5)
+
+        self.wait(1)
+        self.play(
+            *[FadeOut(mob) for mob in self.mobjects]
+        )
+        self.wait(1)
+
+    def scene8_SubScene12_2(self, title):
+        pic1 = ImageMobject("images/book_brain.png").scale(2.5).to_corner(DL).shift(1*LEFT)
+        theoream_title1 = Text("Inner product space", font_size=40, color=dark_blue).scale(1.2).to_edge(UP)
+        theoream_text1 = MathTex(
+            r"x \perp_P y \quad \implies \quad x \perp_P -y",
+            color=BLACK
+        ).scale(1.2).next_to(theoream_title1, DOWN,buff=0.5)
+        box_theoream1 = SurroundingRectangle(
+            VGroup(theoream_title1, theoream_text1),
+            color=dark_blue,
+            fill_opacity=0.1,
+            buff=0.2,
+            corner_radius=0.1,
+        )
+        theoream_title2 = Text("Normed space", font_size=40, color=dark_purple).scale(1.2).next_to(theoream_text1, DOWN,buff=1)
+        theoream_text2 = MathTex(
+            r"x \perp_P y \quad \not \rightarrow \quad x \perp_P -y",
+            color=BLACK
+        ).scale(1.2).next_to(theoream_title2, DOWN,buff=0.5)
+        box_theoream2 = SurroundingRectangle(
+            VGroup(theoream_title2, theoream_text2).arrange(DOWN, buff=0.2),
+            color=dark_purple,
+            fill_opacity=0.1,
+            buff=0.2,
+            corner_radius=0.1,
+        )
+
+        self.play(
+            FadeIn(pic1),
+            Create(box_theoream1),
+            Write(theoream_title1),
+        )
+        # self.wait(0.5)
+        self.play(
+            Write(theoream_text1),
+        )
+        self.wait(0.5)
+        self.play(
+            Create(box_theoream2),
+            Write(theoream_title2),
+        )
+        # self.wait(0.5)
+        self.play(
+            Write(theoream_text2),
+        )
+        self.wait(0.5)
+
+        self.play(
+            FadeOut(VGroup(
+                box_theoream1,
+                box_theoream2,
+                theoream_text1,
+                theoream_text2,
+                theoream_title1
+            )),
+            FadeOut(pic1),
+            theoream_title2.animate.to_edge(UP),
+        )
+        self.wait(0.5)
+
+        pythagorean_title = MathTex(
+            r"\text{Counterexample}",
+            color=dark_terquise,
+        )
+
+        # Space definition
+        pythagorean_space = MathTex(
+            r"\text{Space: } \mathbb{R}^2 \text{ with norm: } \|(a,b)\|_\infty = \max(|a|, |b|)",
+            color=BLACK,
+        ).scale(0.8)
+
+        # Vectors
+        pythagorean_vectors = MathTex(
+            r"x = (1,0), \quad y = (1,\sqrt{3})",
+            color=BLACK,
+        ).scale(0.8)
+
+        # Part 1 title
+        pythagorean_part1_title = MathTex(
+            r"\text{Step 1: Check } x \perp_P y",
+            color=BLACK,
+        )
+
+        # Part 1 - norms
+        pythagorean_part1_norms = MathTex(
+            r"\|x\|_\infty = 1, \quad \|y\|_\infty = \sqrt{3}",
+            color=BLACK,
+        )
+
+        # Part 1 - sum
+        pythagorean_part1_sum = MathTex(
+            r"x+y = (2,\sqrt{3})",
+            color=BLACK,
+        )
+
+        # Part 1 - sum norm
+        pythagorean_part1_sum_norm = MathTex(
+            r"\|x+y\|_\infty = \max(2,\sqrt{3}) = 2",
+            color=BLACK,
+        )
+
+        # Part 1 - check
+        pythagorean_part1_check = MathTex(
+            r"2^2 = 1^2 + (\sqrt{3})^2 \implies 4 = 1+3",
+            color=BLACK,
+        )
+
+        # Part 1 - conclusion
+        pythagorean_part1_conclusion = MathTex(
+            r"4 = 4 \implies x \perp_P y \quad \checkmark",
+            color=BLACK,
+        )
+
+        # Part 2 title
+        pythagorean_part2_title = MathTex(
+            r"\text{Step 2: Check } x \perp_P (-y)",
+            color=BLACK,
+        )
+
+        # Part 2 - negated vector
+        pythagorean_part2_negated = MathTex(
+            r"-y = (-1,-\sqrt{3})",
+            color=BLACK,
+        )
+
+        # Part 2 - norms
+        pythagorean_part2_norms = MathTex(
+            r"\|x\|_\infty = 1, \quad \|-y\|_\infty = \sqrt{3}",
+            color=BLACK,
+        )
+
+        # Part 2 - difference
+        pythagorean_part2_diff = MathTex(
+            r"x - y = (0,-\sqrt{3})",
+            color=BLACK,
+        )
+
+        # Part 2 - diff norm
+        pythagorean_part2_diff_norm = MathTex(
+            r"\|x-y\|_\infty = \max(0,\sqrt{3}) = \sqrt{3}",
+            color=BLACK,
+        )
+
+        # Part 2 - check
+        pythagorean_part2_check = MathTex(
+            r"\|x-y\|_\infty^2 = 3, \quad \|x\|_\infty^2 + \|-y\|_\infty^2 = 4",
+            color=BLACK,
+        )
+
+        # Part 2 - conclusion
+        pythagorean_part2_conclusion = MathTex(
+            r"3 \neq 4 \implies x \not\perp_P (-y)",
+            color=BLACK,
+        )
+
+        sym = VGroup(*[
+            pythagorean_title,
+            pythagorean_space,
+            pythagorean_vectors,
+            VGroup(*[
+                VGroup(*[
+                    pythagorean_part1_title,
+                    pythagorean_part1_norms,
+                    pythagorean_part1_sum,
+                    pythagorean_part1_sum_norm,
+                    pythagorean_part1_check,
+                    pythagorean_part1_conclusion,
+                ]).arrange(DOWN, buff=0.2).scale(0.7).shift(2*LEFT),
+                VGroup(*[
+                    pythagorean_part2_title,
+                    pythagorean_part2_negated,
+                    pythagorean_part2_norms,
+                    pythagorean_part2_diff,
+                    pythagorean_part2_diff_norm,
+                    pythagorean_part2_check,
+                    pythagorean_part2_conclusion,
+                ]).arrange(DOWN, buff=0.2).scale(0.7).shift(2*LEFT),
+            ]).arrange(RIGHT, buff=1),
+        ]).arrange(DOWN, buff=0.2).next_to(theoream_title2, DOWN, buff=0.3)
+
+        # ---- نمایش مرحله به مرحله ----
+        self.play(Write(pythagorean_title))
+        self.wait(0.5)
+        self.play(Write(pythagorean_space))
+        self.wait(0.5)
+        self.play(Write(pythagorean_vectors))
+        self.wait(0.5)
+
+        self.play(Write(pythagorean_part1_title))
+        self.wait(0.3)
+        self.play(Write(pythagorean_part1_norms))
+        self.wait(0.3)
+        self.play(Write(pythagorean_part1_sum))
+        self.wait(0.3)
+        self.play(Write(pythagorean_part1_sum_norm))
+        self.wait(0.3)
+        self.play(Write(pythagorean_part1_check))
+        self.wait(0.3)
+        self.play(Write(pythagorean_part1_conclusion))
+        self.wait(0.5)
+
+        self.play(Write(pythagorean_part2_title))
+        self.wait(0.3)
+        self.play(Write(pythagorean_part2_negated))
+        self.wait(0.3)
+        self.play(Write(pythagorean_part2_norms))
+        self.wait(0.3)
+        self.play(Write(pythagorean_part2_diff))
+        self.wait(0.3)
+        self.play(Write(pythagorean_part2_diff_norm))
+        self.wait(0.3)
+        self.play(Write(pythagorean_part2_check))
+        self.wait(0.3)
+        self.play(Write(pythagorean_part2_conclusion))
+        self.wait(1)
+
+        self.wait(1)
+        self.play(
+            *[FadeOut(mob) for mob in self.mobjects]
+        )
+        self.wait(1)
+
     def scene8_SubScene9_2(self, title):
         # title_li = MathTex(
         #     r"\text{Linear Independence}",
@@ -5951,11 +6598,11 @@ class TitleScene(ThreeDScene):   # Scene
 
         # self.scene8_SubScene12(title)
 
-        self.scene8_SubScene12_0(title)
+        # self.scene8_SubScene12_0(title)
         # self.scene8_SubScene12_1(title)
         # self.scene8_SubScene12_2(title)
 
-        # self.scene8_SubScene13(title)
+        self.scene8_SubScene13(title)
 
         # self.scene8_SubScene14(title)
 
