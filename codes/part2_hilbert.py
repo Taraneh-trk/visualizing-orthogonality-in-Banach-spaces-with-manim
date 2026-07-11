@@ -7327,6 +7327,121 @@ class TitleScene(ThreeDScene):   # Scene
         self.clear()
         self.wait(1)
 
+    def scene8_SubScene15(self, title):
+        theorem_title = Text("Theorem", font_size=40, color=dark_blue)
+
+        theorem_intro1 = MathTex(
+            r"\text{Kapoor proved that: a necessary and sufficient}",
+            color=BLACK
+        )
+        theorem_intro2 = MathTex(
+            r"\text{condition for a normed space } X \text{ to be an inner}",
+            color=BLACK
+        )
+        theorem_intro3 = MathTex(
+            r"\text{product space is that just one of the introduced}",
+            color=BLACK
+        )
+        theorem_intro4 = MathTex(
+            r"\text{orthogonality relations implies the others. More}",
+            color=BLACK
+        )
+        theorem_intro5 = MathTex(
+            r"\text{completely, for a normed space } X \text{, the following}",
+            color=BLACK
+        )
+        theorem_intro6 = MathTex(
+            r"\text{statements are equivalent:}",
+            color=BLACK
+        )
+
+        statement_a = MathTex(
+            r"\text{(a) } ", r"X \text{ is an inner product space}",
+            color=BLACK
+        )
+        statement_a.set_color_by_tex(r"X \text{ is an inner product space}", dark_red)
+
+        statement_b = MathTex(
+            r"\text{(b) for every } x, y \in X, \text{ if } ",
+            r"x \perp_p y", r"\text{, then } ", r"x \perp_i y",
+            color=BLACK
+        )
+        statement_b.set_color_by_tex(r"x \perp_p y", dark_red)
+        statement_b.set_color_by_tex(r"x \perp_i y", dark_red)
+
+        statement_c = MathTex(
+            r"\text{(c) for every } x, y \in X, \text{ if } ",
+            r"x \perp_i y", r"\text{, then } ", r"x \perp_p y",
+            color=BLACK
+        )
+        statement_c.set_color_by_tex(r"x \perp_i y", dark_red)
+        statement_c.set_color_by_tex(r"x \perp_p y", dark_red)
+
+        statement_d = MathTex(
+            r"\text{(d) for every } x, y \in X, \text{ if } ",
+            r"x \perp_p y", r"\text{, then } ", r"x \perp_{BJ} y",
+            color=BLACK
+        )
+        statement_d.set_color_by_tex(r"x \perp_p y", dark_red)
+        statement_d.set_color_by_tex(r"x \perp_{BJ} y", dark_red)
+
+        statement_e = MathTex(
+            r"\text{(e) for every } x, y \in X, \text{ if } ",
+            r"x \perp_{BJ} y", r"\text{, then } ", r"x \perp_p y",
+            color=BLACK
+        )
+        statement_e.set_color_by_tex(r"x \perp_{BJ} y", dark_red)
+        statement_e.set_color_by_tex(r"x \perp_p y", dark_red)
+
+        statement_f = MathTex(
+            r"\text{(f) for every } x, y \in X, \text{ if } ",
+            r"x \perp_i y", r"\text{, then } ", r"x \perp_{BJ} y",
+            color=BLACK
+        )
+        statement_f.set_color_by_tex(r"x \perp_i y", dark_red)
+        statement_f.set_color_by_tex(r"x \perp_{BJ} y", dark_red)
+
+        statement_g = MathTex(
+            r"\text{(g) for every } x, y \in X, \text{ if } ",
+            r"x \perp_{BJ} y", r"\text{, then } ", r"x \perp_i y",
+            color=BLACK
+        )
+        statement_g.set_color_by_tex(r"x \perp_{BJ} y", dark_red)
+        statement_g.set_color_by_tex(r"x \perp_i y", dark_red)
+
+        theorem_intro = VGroup(
+            theorem_intro1, theorem_intro2, theorem_intro3,
+            theorem_intro4, theorem_intro5, theorem_intro6,
+        ).arrange(DOWN, buff=0.15, aligned_edge=LEFT)
+
+        statements = VGroup(
+            statement_a, statement_b, statement_c,
+            statement_d, statement_e, statement_f, statement_g,
+        ).arrange(DOWN, buff=0.2, aligned_edge=LEFT)
+
+        theorem_text = VGroup(
+            theorem_intro,
+            statements,
+        ).arrange(DOWN, buff=0.35, aligned_edge=LEFT).scale(0.75).shift(0.5*UP)
+
+        box_theorem = SurroundingRectangle(
+            VGroup(theorem_title, theorem_text).arrange(DOWN, buff=0.2),
+            color=dark_blue,
+            fill_opacity=0.1,
+            buff=0.2,
+            corner_radius=0.1,
+        )
+
+        self.play(
+            Create(box_theorem),
+            Write(VGroup(theorem_title, theorem_text)),
+        )
+        self.wait(1)
+        self.play(
+            *[FadeOut(mob) for mob in self.mobjects]
+        )
+        self.wait(1)
+
     def scene8(self, title):
 
         ########## roberts
@@ -7388,9 +7503,11 @@ class TitleScene(ThreeDScene):   # Scene
 
         # self.scene8_SubScene13_0(title)
         # self.scene8_SubScene13_1(title)
-        self.scene8_SubScene13_2(title)
+        # self.scene8_SubScene13_2(title)
 
         # self.scene8_SubScene14(title)
+
+        self.scene8_SubScene15(title)
 
     def scene7_SubScene0(self, title):
         self.wait(1)
