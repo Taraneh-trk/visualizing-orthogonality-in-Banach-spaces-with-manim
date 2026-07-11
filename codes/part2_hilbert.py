@@ -3577,116 +3577,82 @@ class TitleScene(ThreeDScene):   # Scene
         )
         self.wait(1)
 
-    def scene8_SubScene13(self, title):
-        metric_circle = Ellipse(
-            width=14, height=8,
-            color=dark_pink,
-            stroke_width=4,
-            # fill_opacity = 0.01,
+    def scene8_SubScene13_0(self, title):
+        title_rel = Text(
+            "Relationships Between Orthogonality Types",
+            color=BLACK,
+        ).to_edge(UP)
+        pic1 = ImageMobject("images/rel.png").scale(5).shift(0.5*DOWN)
+
+        self.play(
+            FadeIn(pic1),
+            Write(title_rel),
         )
-        
-        norm_circle = Ellipse(
-            width=12, height=6,
-            color=dark_purple,
-            stroke_width=4,
-            # fill_opacity = 0.01,
-        ).shift(DOWN * 0.3)
-        
-        banach_circle = Ellipse(
-            width=7, height=4,
-            color=dark_terquise,
-            stroke_width=4,
-            # fill_opacity = 0.01,
-        ).shift(RIGHT * 1.8+0.8*DOWN)
-        
-        inner_circle = Ellipse(
-            width=7, height=4,
-            color=dark_orange,
-            stroke_width=4,
-            # fill_opacity = 0.01,
-        ).shift(LEFT * 1.8+0.8*DOWN)
-        
-        metric_text = Text(" Metric space ", font_size=60, color=dark_pink).move_to(UP * 3.2)
-        
-        norm_text = Text(" Normed space ", font_size=48, color=dark_purple).move_to(UP * 1.8)
-        
-        banach_text = Text(" Banach space ", font_size=36, color=dark_terquise).move_to(RIGHT * 3.5 + 0.8*DOWN)
-        
-        inner_text = Text(" Inner product\n       space ", font_size=36, color=dark_orange, line_spacing=0.8).move_to(LEFT * 3.5 + 0.8*DOWN)
-        
-        hilbert_text = Text(" Hilbert space ", font_size=36, color=dark_green).move_to(DOWN * 0.5)
-
-        intersection = Intersection(banach_circle, inner_circle, color=dark_green, fill_opacity=0.1)
-
-        diff_banach = Difference(banach_circle, inner_circle, color=dark_terquise, fill_opacity=0.1)
-        
-        diff_inner = Difference(inner_circle, banach_circle, color=dark_orange, fill_opacity=0.1)
-
-        all_shapes = VGroup(*[
-            metric_circle,
-            norm_circle,
-            banach_circle,
-            inner_circle,
-            metric_text,
-            norm_text,
-            banach_text,
-            inner_text,
-            hilbert_text,
-            intersection,
-        ]).scale(0.7).to_corner(DR)
-
         self.wait(0.5)
         self.play(
-            FadeIn(all_shapes),
+            FadeOut(title_rel),
+            FadeOut(pic1),
         )
         self.wait(1)
 
-        talk_circle = Ellipse(
-            width=7, height=4,
-            color=dark_red,
-            stroke_width=6,
-            fill_opacity = 0.1,
-        ).scale(0.7).move_to(inner_circle.get_center())
-
+    def scene8_SubScene13_1(self, title):
+        pic1 = ImageMobject("images/graduate_brain_img_mini.png").scale(2.5).to_corner(DL).shift(0.5*DOWN+0.5*LEFT)
+        theoream_title1 = Text("Inner product space", font_size=40, color=BLACK).scale(1.2).to_edge(UP)
         text1 = MathTex(
             r"x \perp_{P} y \Longleftrightarrow x \perp_{I} y \Longleftrightarrow x \perp_{BJ} y \Longleftrightarrow x \perp_{R} y \Longleftrightarrow \langle x , y \rangle = 0",
             color=dark_orange,
-        ).next_to(all_shapes,UP,buff=0.4).shift(2*LEFT)
+        ).next_to(theoream_title1, DOWN,buff=0.5)
+        text2 = Text(
+            r"All of them are equivalent.",
+            color=dark_red,
+        ).next_to(text1, DOWN,buff=0.5)
         
         self.play(
-            Create(talk_circle),
+            FadeIn(pic1),
+            Write(theoream_title1),
+        )
+        self.wait(0.5)
+        self.play(
             Write(text1),
         )
-
+        self.wait(0.5)
+        self.play(
+            Write(text2),
+        )
+        self.wait(1)
+        self.play(
+            *[FadeOut(mob) for mob in self.mobjects]
+        )
         self.wait(1)
 
-        text2 = MathTex(
-            r"x \perp_{R} y \Longrightarrow x \perp_{I} y",
-            color=dark_purple,
-        ).next_to(all_shapes,UP,buff=0.4).shift(2*LEFT)
-
-        talk_circle2 = Ellipse(
-            width=12, height=6,
+    def scene8_SubScene13_2(self, title):
+        pic1 = ImageMobject("images/graduate_brain_img_mini.png").scale(2.5).to_corner(DL).shift(0.5*DOWN+0.5*LEFT)
+        theoream_title1 = Text("Normed space", font_size=40, color=BLACK).scale(1.2).to_edge(UP)
+        text1 = MathTex(
+            r"x \perp_{P} y \Longleftrightarrow x \perp_{I} y \Longleftrightarrow x \perp_{BJ} y \Longleftrightarrow x \perp_{R} y \Longleftrightarrow \langle x , y \rangle = 0",
+            color=dark_orange,
+        ).next_to(theoream_title1, DOWN,buff=0.5)
+        text2 = Text(
+            r"All of them are equivalent.",
             color=dark_red,
-            stroke_width=4,
-            fill_opacity = 0.1,
-        ).scale(0.7).move_to(norm_circle.get_center())
-
-        self.play(
-            Transform(talk_circle, talk_circle2),
-            FadeTransform(text1, text2),
-        )
+        ).next_to(text1, DOWN,buff=0.5)
         
-        self.wait(1)
-
         self.play(
-            FadeOut(VGroup(*[
-                all_shapes,
-                talk_circle,
-                text2,
-            ]))
+            FadeIn(pic1),
+            Write(theoream_title1),
         )
-
+        self.wait(0.5)
+        self.play(
+            Write(text1),
+        )
+        self.wait(0.5)
+        self.play(
+            Write(text2),
+        )
+        self.wait(1)
+        self.play(
+            *[FadeOut(mob) for mob in self.mobjects]
+        )
         self.wait(1)
 
     def scene8_SubScene14(self, title):
@@ -6602,7 +6568,9 @@ class TitleScene(ThreeDScene):   # Scene
         # self.scene8_SubScene12_1(title)
         # self.scene8_SubScene12_2(title)
 
-        self.scene8_SubScene13(title)
+        # self.scene8_SubScene13_0(title)
+        # self.scene8_SubScene13_1(title)
+        self.scene8_SubScene13_2(title)
 
         # self.scene8_SubScene14(title)
 
