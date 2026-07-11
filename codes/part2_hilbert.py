@@ -3625,17 +3625,766 @@ class TitleScene(ThreeDScene):   # Scene
         )
         self.wait(1)
 
+    def robert_implies(self, title):
+        # 1
+        question1 = MathTex(
+            r"\mathrm{Can\ } \quad ",
+            r"x \perp_{R} y \quad ",
+            r"\ \mathrm{imply}\ \quad ",
+            r"x \perp_{BJ} y",
+            r"\ ?",
+            color=dark_green,
+        ).scale(1.1).move_to(title.get_center()+0.2*DOWN)
+
+        step1_1 = MathTex(
+            r"\text{Statement : } x \perp_{BJ} y \implies \| x\| \le  \| x + \lambda y\| \quad \forall \lambda \in \mathbb{K}",
+            color=BLACK,
+        )
+        step1_2 = MathTex(
+            r"2 \| x\| = \| x + (\lambda y) + x - (\lambda y) \| ",
+            r"\quad \text{(Triangle Inequality)}",
+            color=BLACK,
+        )
+        step1_3 = MathTex(
+            r"\le \| x + (\lambda y) \| + \| x - (\lambda y) \|",
+            r"\quad (x \perp_R y)",
+            color=BLACK,
+        )
+        step1_4 = MathTex(
+            r"= 2 \| x + (\lambda y) \|",
+            color=BLACK,
+        )
+        step1_5 = MathTex(
+            r"\| x\| \le \| x + (\lambda y) \|",
+            r"\quad .\blacksquare",
+            color=BLACK,
+        )
+
+        all_text_1 = VGroup(
+            step1_1,
+            step1_2,
+            step1_3,
+            step1_4,
+            step1_5,            
+        ).arrange(DOWN,buff=0.3, aligned_edge=LEFT).next_to(question1, DOWN, buff=0.5)
+
+        self.play(
+            Write(question1),
+        )
+        self.wait(0.5)
+        self.play(
+            Write(all_text_1),
+        )
+        self.wait(0.5)
+        self.play(
+            *[FadeOut(mob) for mob in self.mobjects]
+        )
+        self.wait(0.5)
+
+        # 2
+        question2 = MathTex(
+            r"\mathrm{Can\ } \quad",
+            r"x \perp_{R} y \quad",
+            r"\ \mathrm{imply}\ \quad",
+            r"x \perp_{I} y",
+            r"\ ?",
+            color=dark_green,
+        ).scale(1.1).move_to(title.get_center()+0.2*DOWN)
+
+        step1_1 = MathTex(
+            r"\text{Statement : } x \perp_{I} y \implies \| x + y\| = \| x - y\|",
+            color=BLACK,
+        )
+        step1_2 = MathTex(
+            r" x \perp_R y \implies  \| x + \lambda y\| = \| x - \lambda y\| \quad \forall \lambda \in \mathbb{K}",
+            color=BLACK,
+        )
+        step1_3 = MathTex(
+            r" \lambda = 1 \quad . \blacksquare",
+            color=BLACK,
+        )
+
+        all_text_1 = VGroup(
+            step1_1,
+            step1_2,
+            step1_3,
+        ).arrange(DOWN,buff=0.3, aligned_edge=LEFT).next_to(question2, DOWN, buff=0.5)
+
+        self.play(
+            Write(question2),
+        )
+        self.wait(0.5)
+        self.play(
+            Write(all_text_1),
+        )
+        self.wait(0.5)
+        self.play(
+            *[FadeOut(mob) for mob in self.mobjects]
+        )
+        self.wait(0.5)
+
+        # 3
+        question3 = MathTex(
+            r"\mathrm{Can\ } \quad",
+            r"x \perp_{R} y \quad",
+            r"\ \mathrm{imply}\ \quad",
+            r"x \perp_{P} y",
+            r"\ ?",
+            color=dark_red,
+        ).scale(1.1).move_to(title.get_center()+0.2*DOWN)
+
+        step1_1 = MathTex(
+            r"\text{Statement : } x \perp_{P} y \implies \| x + y\|^2 = \| x\|^2 + \|y\|^2",
+            color=BLACK,
+        )
+        step1_2 = MathTex(
+            r"\text{Space : } \mathbb{R}^2 , \Vert{}x\Vert{}_\infty = \max(\lvert x_1 \rvert, \lvert x_2 \rvert)",
+            color=BLACK,
+        )
+        step1_3 = MathTex(
+            r" x = (0,1) , y = (1,0)",
+            color=BLACK,
+        )
+        step1_40 = MathTex(
+            r"\text{Step 1 : }",
+            color=BLACK,
+        )
+        step1_41 = MathTex(
+            r"\Vert{}x + \lambda y\Vert{}_\infty = \max(1,|\lambda|) = \Vert{}x - \lambda y \Vert{}_\infty \implies x \perp_R y ",
+            color=BLACK,
+        )
+        step1_50 = MathTex(
+            r"\text{Step 2 : }",
+            color=BLACK,
+        )
+        step1_51 = MathTex(
+            r"\Vert{}x + y\Vert{}_\infty^2 = 1 \ne 2 = \Vert{}x\Vert{}_\infty^2 + \Vert{}y\Vert{}_\infty^2",
+            r"\implies x \not\perp_P y",
+            color=BLACK,
+        )
+
+        all_text_1 = VGroup(
+            step1_1,
+            step1_2,
+            step1_3,
+            step1_40,
+            step1_41,
+            step1_50,
+            step1_51,
+        ).arrange(DOWN,buff=0.3, aligned_edge=LEFT).next_to(question3, DOWN, buff=0.5)
+
+        self.play(
+            Write(question3),
+        )
+        self.wait(0.5)
+        self.play(
+            Write(all_text_1),
+        )
+        self.wait(0.5)
+        self.play(
+            *[FadeOut(mob) for mob in self.mobjects]
+        )
+        self.wait(0.5)
+
+        headers = [
+            (r"\text{Roberts}", dark_pink),
+            (r"\text{BJ}", dark_purple),
+            (r"\text{Isosceles}", dark_terquise),
+            (r"\text{Pythagorean}", dark_green),
+        ]
+
+        col_labels = [MathTex(h).set_color(color) for h, color in headers]
+        
+        row = [
+            MathTex(r"\Large \checkmark").set_color(GREEN),
+            MathTex(r"\Large \checkmark").set_color(GREEN),
+            MathTex(r"\Large \checkmark").set_color(GREEN),
+            MathTex(r"\Large \times").set_color(RED),
+        ]
+        
+        row_label = MathTex(r"\text{Roberts}", color=BLACK).scale(1)
+
+        table = MobjectTable(
+            [row],
+            row_labels=[row_label],
+            col_labels=col_labels,
+            include_outer_lines=True,
+            line_config={"stroke_width": 3, "color": GRAY},
+            h_buff=0.3,
+        )
+
+        table.scale(1).next_to(title,DOWN,buff=0.5)
+        pic1 = ImageMobject("images/graduate_brain_img_mini.png").scale(2.3).to_corner(DL).shift(0.5*DOWN+0.5*LEFT)
+        self.play(
+            FadeIn(pic1),
+        )
+        
+        self.play(
+            Create(table),
+            run_time = 3,
+        )
+
+        self.wait(1)
+        self.play(
+            *[FadeOut(mob) for mob in self.mobjects]
+        )
+        self.wait(1)
+
+    def BJ_implies(self, title):
+        # 1
+        # question1 = MathTex(
+        #     r"\mathrm{Can\ } \quad",
+        #     r"x \perp_{BJ} y \quad",
+        #     r"\ \mathrm{imply}\ \quad ",
+        #     r"x \perp_{R} y",
+        #     r"\ ?",
+        #     color=dark_red,
+        # ).scale(1.1).move_to(title.get_center()+0.2*DOWN)
+
+        # 2
+        question2 = MathTex(
+            r"\mathrm{Can\ } \quad",
+            r"x \perp_{BJ} y \quad",
+            r"\ \mathrm{imply}\ \quad ",
+            r"x \perp_{I} y",
+            r"\ ?",
+            color=dark_red,
+        ).scale(1.1).move_to(title.get_center()+0.2*DOWN)
+
+        step1_1 = MathTex(
+            r"\text{Statement : } x \perp_{I} y \implies \| x + y\| = \| x - y\|",
+            color=BLACK,
+        )
+        step1_2 = MathTex(
+            r"\text{Space : } \mathbb{R}^2 , \Vert{}x\Vert{}_1 = \lvert x_1 \rvert + \lvert x_2 \rvert",
+            color=BLACK,
+        )
+        step1_3 = MathTex(
+            r" x = (1,0) , y = (1,1)",
+            color=BLACK,
+        )
+        step1_40 = MathTex(
+            r"\text{Step 1 : }",
+            color=BLACK,
+        )
+        step1_41 = MathTex(
+            r"\Vert{}x + \lambda y\Vert{}_1 = |1+\lambda| + |\lambda| \ge 1 = \Vert{}x \Vert{}_1 \implies x \perp_{BJ} y ",
+            color=BLACK,
+        )
+        step1_50 = MathTex(
+            r"\text{Step 2 : }",
+            color=BLACK,
+        )
+        step1_51 = MathTex(
+            r"\Vert{}x + y\Vert{}_1 = 3 \ne 1 = \Vert{}x - y\Vert{}_1",
+            r"\implies x \not\perp_I y",
+            color=BLACK,
+        )
+
+        all_text_1 = VGroup(
+            step1_1,
+            step1_2,
+            step1_3,
+            step1_40,
+            step1_41,
+            step1_50,
+            step1_51,
+        ).arrange(DOWN,buff=0.3, aligned_edge=LEFT).next_to(question2, DOWN, buff=0.5)
+
+        self.play(
+            Write(question2),
+        )
+        self.wait(0.5)
+        self.play(
+            Write(all_text_1),
+        )
+        self.wait(0.5)
+        self.play(
+            *[FadeOut(mob) for mob in self.mobjects]
+        )
+        self.wait(0.5)
+
+        # 3
+        question3 = MathTex(
+            r"\mathrm{Can\ } \quad",
+            r"x \perp_{BJ} y \quad",
+            r"\ \mathrm{imply}\ \quad ",
+            r"x \perp_{P} y",
+            r"\ ?",
+            color=dark_red,
+        ).scale(1.1).move_to(title.get_center()+0.2*DOWN)
+
+        step1_1 = MathTex(
+            r"\text{Statement : } x \perp_{P} y \implies \| x + y\|^2 = \| x \|^2 + \|y\|^2",
+            color=BLACK,
+        )
+        step1_2 = MathTex(
+            r"\text{Space : } \mathbb{R}^2 , \Vert{}x\Vert{}_1 = \lvert x_1 \rvert + \lvert x_2 \rvert",
+            color=BLACK,
+        )
+        step1_3 = MathTex(
+            r" x = (1,0) , y = (1,1)",
+            color=BLACK,
+        )
+        step1_40 = MathTex(
+            r"\text{Step 1 : }",
+            color=BLACK,
+        )
+        step1_41 = MathTex(
+            r"\Vert{}x + \lambda y\Vert{}_1 = |1+\lambda| + |\lambda| \ge 1 = \Vert{}x \Vert{}_1 \implies x \perp_{BJ} y ",
+            color=BLACK,
+        )
+        step1_50 = MathTex(
+            r"\text{Step 2 : }",
+            color=BLACK,
+        )
+        step1_51 = MathTex(
+            r"\Vert{}x + y\Vert{}_1^2 = 9 \ne 5 = \Vert{}x\Vert{}_1^2 + \Vert{}y\Vert{}_1^2",
+            r"\implies x \not\perp_P y",
+            color=BLACK,
+        )
+
+        all_text_1 = VGroup(
+            step1_1,
+            step1_2,
+            step1_3,
+            step1_40,
+            step1_41,
+            step1_50,
+            step1_51,
+        ).arrange(DOWN,buff=0.3, aligned_edge=LEFT).next_to(question3, DOWN, buff=0.5)
+
+        self.play(
+            Write(question3),
+        )
+        self.wait(0.5)
+        self.play(
+            Write(all_text_1),
+        )
+        self.wait(0.5)
+        self.play(
+            *[FadeOut(mob) for mob in self.mobjects]
+        )
+        self.wait(0.5)
+
+
+        headers = [
+            (r"\text{Roberts}", dark_pink),
+            (r"\text{BJ}", dark_purple),
+            (r"\text{Isosceles}", dark_terquise),
+            (r"\text{Pythagorean}", dark_green),
+        ]
+
+        col_labels = [MathTex(h).set_color(color) for h, color in headers]
+        
+        row = [
+            MathTex(r"\Large \times").set_color(RED),
+            MathTex(r"\Large \checkmark").set_color(GREEN),
+            MathTex(r"\Large \times").set_color(RED),
+            MathTex(r"\Large \times").set_color(RED),
+        ]
+        
+        row_label = MathTex(r"\text{BJ}", color=BLACK).scale(0.6)
+
+        table = MobjectTable(
+            [row],
+            row_labels=[row_label],
+            col_labels=col_labels,
+            include_outer_lines=True,
+            line_config={"stroke_width": 3, "color": GRAY},
+            h_buff=0.3,
+        )
+
+        table.scale(1).next_to(title,DOWN,buff=0.5)
+        pic1 = ImageMobject("images/graduate_brain_img_mini.png").scale(2.3).to_corner(DL).shift(0.5*DOWN+0.5*LEFT)
+        self.play(
+            FadeIn(pic1),
+        )
+
+        self.play(
+            Create(table),
+            run_time = 3,
+        )
+
+        self.wait(1)
+        self.play(
+            *[FadeOut(mob) for mob in self.mobjects]
+        )
+        self.wait(1)
+
+    def I_implies(self, title):
+        # 1
+        # question1 = MathTex(
+        #     r"\mathrm{Can\ }",
+        #     r"x \perp_{I} y",
+        #     r"\ \mathrm{imply}\ ",
+        #     r"x \perp_{R} y",
+        #     r"\ ?",
+        #     color=dark_red,
+        # ).scale(1.1).move_to(title.get_center()+0.2*DOWN)
+
+        # 2
+        question2 = MathTex(
+            r"\mathrm{Can\ } \quad",
+            r"x \perp_{I} y \quad",
+            r"\ \mathrm{imply}\ \quad ",
+            r"x \perp_{BJ} y",
+            r"\ ?",
+            color=dark_red,
+        ).scale(1.1).move_to(title.get_center()+0.2*DOWN)
+
+        step1_1 = MathTex(
+            r"\text{Statement : } x \perp_{BJ} y \implies \| x + \lambda y\| \ge \| x\| \quad \forall \lambda \in \mathbb{K}",
+            color=BLACK,
+        )
+        step1_2 = MathTex(
+            r"\text{Space : } \mathbb{R}^2 , \Vert{}x\Vert{}_\infty = \max(\lvert x_1 \rvert, \lvert x_2 \rvert)",
+            color=BLACK,
+        )
+        step1_3 = MathTex(
+            r" x = (1,0) , y = (1,3)",
+            color=BLACK,
+        )
+        step1_40 = MathTex(
+            r"\text{Step 1 : }",
+            color=BLACK,
+        )
+        step1_41 = MathTex(
+            r"\Vert{}x + y\Vert{}_\infty = 3 = \Vert{}x - y \Vert{}_\infty \implies x \perp_I y ",
+            color=BLACK,
+        )
+        step1_50 = MathTex(
+            r"\text{Step 2 : } ( \lambda = -\frac{1}{4} )",
+            color=BLACK,
+        ).scale(0.9)
+        step1_51 = MathTex(
+            r"\Vert{}x - \frac{1}{4} y\Vert{}_\infty = \frac{3}{4} \le 1 = \Vert{}x\Vert{}_\infty",
+            r"\implies x \not\perp_{BJ} y",
+            color=BLACK,
+        ).scale(0.9)
+
+        all_text_1 = VGroup(
+            step1_1,
+            step1_2,
+            step1_3,
+            step1_40,
+            step1_41,
+            step1_50,
+            step1_51,
+        ).arrange(DOWN,buff=0.3, aligned_edge=LEFT).next_to(question2, DOWN, buff=0.5)
+
+        self.play(
+            Write(question2),
+        )
+        self.wait(0.5)
+        self.play(
+            Write(all_text_1),
+        )
+        self.wait(0.5)
+        self.play(
+            *[FadeOut(mob) for mob in self.mobjects]
+        )
+        self.wait(0.5)
+
+        # 3
+        question3 = MathTex(
+            r"\mathrm{Can\ } \quad",
+            r"x \perp_{I} y \quad",
+            r"\ \mathrm{imply}\ \quad ",
+            r"x \perp_{P} y",
+            r"\ ?",
+            color=dark_red,
+        ).scale(1.1).move_to(title.get_center()+0.2*DOWN)
+
+        step1_1 = MathTex(
+            r"\text{Statement : } x \perp_{P} y \implies \| x + y\|^2 = \| x \|^2 + \|y\|^2",
+            color=BLACK,
+        )
+        step1_2 = MathTex(
+            r"\text{Space : } \mathbb{R}^2 , \Vert{}x\Vert{}_1 = \lvert x_1 \rvert + \lvert x_2 \rvert",
+            color=BLACK,
+        )
+        step1_3 = MathTex(
+            r" x = (1,0) , y = (0,1)",
+            color=BLACK,
+        )
+        step1_40 = MathTex(
+            r"\text{Step 1 : }",
+            color=BLACK,
+        )
+        step1_41 = MathTex(
+            r"\Vert{}x +  y\Vert{}_1 = 2 = \Vert{}x - y\Vert{}_1 \implies x \perp_{I} y ",
+            color=BLACK,
+        )
+        step1_50 = MathTex(
+            r"\text{Step 2 : }",
+            color=BLACK,
+        )
+        step1_51 = MathTex(
+            r"\Vert{}x + y\Vert{}_1^2 = 4 \ne 2 = \Vert{}x\Vert{}_1^2 + \Vert{}y\Vert{}_1^2",
+            r"\implies x \not\perp_P y",
+            color=BLACK,
+        )
+
+        all_text_1 = VGroup(
+            step1_1,
+            step1_2,
+            step1_3,
+            step1_40,
+            step1_41,
+            step1_50,
+            step1_51,
+        ).arrange(DOWN,buff=0.3, aligned_edge=LEFT).next_to(question3, DOWN, buff=0.5)
+
+        self.play(
+            Write(question3),
+        )
+        self.wait(0.5)
+        self.play(
+            Write(all_text_1),
+        )
+        self.wait(0.5)
+        self.play(
+            *[FadeOut(mob) for mob in self.mobjects]
+        )
+        self.wait(0.5)
+
+        headers = [
+            (r"\text{Roberts}", dark_pink),
+            (r"\text{BJ}", dark_purple),
+            (r"\text{Isosceles}", dark_terquise),
+            (r"\text{Pythagorean}", dark_green),
+        ]
+
+        col_labels = [MathTex(h).set_color(color) for h, color in headers]
+        
+        row = [
+            MathTex(r"\Large \times").set_color(RED),
+            MathTex(r"\Large \times").set_color(RED),
+            MathTex(r"\Large \checkmark").set_color(GREEN),
+            MathTex(r"\Large \times").set_color(RED),
+        ]
+        
+        row_label = MathTex(r"\text{Isosceles}", color=BLACK).scale(0.6)
+
+        table = MobjectTable(
+            [row],
+            row_labels=[row_label],
+            col_labels=col_labels,
+            include_outer_lines=True,
+            line_config={"stroke_width": 3, "color": GRAY},
+            h_buff=0.3,
+        )
+
+        table.scale(1).next_to(title,DOWN,buff=0.5)
+        pic1 = ImageMobject("images/graduate_brain_img_mini.png").scale(2.3).to_corner(DL).shift(0.5*DOWN+0.5*LEFT)
+        self.play(
+            FadeIn(pic1),
+        )
+
+        self.play(
+            Create(table),
+            run_time = 3,
+        )
+
+        self.wait(1)
+        self.play(
+            *[FadeOut(mob) for mob in self.mobjects]
+        )
+        self.wait(1)
+
+    def P_implies(self, title):
+        # 1
+        # question1 = MathTex(
+        #     r"\mathrm{Can\ }",
+        #     r"x \perp_{P} y",
+        #     r"\ \mathrm{imply}\ ",
+        #     r"x \perp_{R} y",
+        #     r"\ ?",
+        #     color=dark_red,
+        # ).scale(1.1).move_to(title.get_center()+0.2*DOWN)
+
+        # 2
+        question2 = MathTex(
+            r"\mathrm{Can\ } \quad",
+            r"x \perp_{P} y \quad",
+            r"\ \mathrm{imply}\ \quad ",
+            r"x \perp_{BJ} y",
+            r"\ ?",
+            color=dark_red,
+        ).scale(1.1).move_to(title.get_center()+0.2*DOWN)
+
+        step1_1 = MathTex(
+            r"\text{Statement : } x \perp_{BJ} y \implies \| x + \lambda y\| \ge \| x\| \quad \forall \lambda \in \mathbb{K}",
+            color=BLACK,
+        )
+        step1_2 = MathTex(
+            r"\text{Space : } \mathbb{R}^2 , \Vert{}x\Vert{}_\infty = \max(\lvert x_1 \rvert, \lvert x_2 \rvert)",
+            color=BLACK,
+        )
+        step1_3 = MathTex(
+            r" x = (1,0) , y = (\sqrt{5} - 1,2)",
+            color=BLACK,
+        )
+        step1_40 = MathTex(
+            r"\text{Step 1 : }",
+            color=BLACK,
+        )
+        step1_41 = MathTex(
+            r"\Vert{}x + y\Vert{}_\infty^2 = 5 = \Vert{}x\Vert{}_\infty^2 + \Vert{}y\Vert{}_\infty^2 \implies x \perp_P y ",
+            color=BLACK,
+        )
+        step1_50 = MathTex(
+            r"\text{Step 2 : } ( \lambda = -0.2 )",
+            color=BLACK,
+        )
+        step1_51 = MathTex(
+            r"\Vert{}x - 0.2 y\Vert{}_\infty \approx 0.75 \le 1 = \Vert{}x\Vert{}_\infty",
+            r"\implies x \not\perp_{BJ} y",
+            color=BLACK,
+        )
+
+        all_text_1 = VGroup(
+            step1_1,
+            step1_2,
+            step1_3,
+            step1_40,
+            step1_41,
+            step1_50,
+            step1_51,
+        ).arrange(DOWN,buff=0.3, aligned_edge=LEFT).next_to(question2, DOWN, buff=0.5)
+
+        self.play(
+            Write(question2),
+        )
+        self.wait(0.5)
+        self.play(
+            Write(all_text_1),
+        )
+        self.wait(0.5)
+        self.play(
+            *[FadeOut(mob) for mob in self.mobjects]
+        )
+        self.wait(0.5)
+
+        # 3
+        question3 = MathTex(
+            r"\mathrm{Can\ } \quad",
+            r"x \perp_{P} y \quad",
+            r"\ \mathrm{imply}\ \quad ",
+            r"x \perp_{I} y",
+            r"\ ?",
+            color=dark_red,
+        ).scale(1.1).move_to(title.get_center()+0.2*DOWN)
+
+        step1_1 = MathTex(
+            r"\text{Statement : } x \perp_{I} y \implies \| x + y\| = \| x - y\|",
+            color=BLACK,
+        )
+        step1_2 = MathTex(
+            r"\text{Space : } \mathbb{R}^2 , \Vert{}x\Vert{}_\infty = \max(\lvert x_1 \rvert, \lvert x_2 \rvert)",
+            color=BLACK,
+        )
+        step1_3 = MathTex(
+            r" x = (1,0) , y = (\sqrt{5} - 1,2)",
+            color=BLACK,
+        )
+        step1_40 = MathTex(
+            r"\text{Step 1 : }",
+            color=BLACK,
+        )
+        step1_41 = MathTex(
+            r"\Vert{}x + y\Vert{}_\infty^2 = 5 = \Vert{}x\Vert{}_\infty^2 + \Vert{}y\Vert{}_\infty^2 \implies x \perp_P y ",
+            color=BLACK,
+        )
+        step1_50 = MathTex(
+            r"\text{Step 2 : }",
+            color=BLACK,
+        )
+        step1_51 = MathTex(
+            r"\Vert{}x - y\Vert{}_\infty = \sqrt{5} \ne 2 = \Vert{}x - y\Vert{}_\infty",
+            r"\implies x \not\perp_{I} y",
+            color=BLACK,
+        )
+
+        all_text_1 = VGroup(
+            step1_1,
+            step1_2,
+            step1_3,
+            step1_40,
+            step1_41,
+            step1_50,
+            step1_51,
+        ).arrange(DOWN,buff=0.3, aligned_edge=LEFT).next_to(question3, DOWN, buff=0.5)
+
+        self.play(
+            Write(question3),
+        )
+        self.wait(0.5)
+        self.play(
+            Write(all_text_1),
+        )
+        self.wait(0.5)
+        self.play(
+            *[FadeOut(mob) for mob in self.mobjects]
+        )
+        self.wait(0.5)
+
+        headers = [
+            (r"\text{Roberts}", dark_pink),
+            (r"\text{BJ}", dark_purple),
+            (r"\text{Isosceles}", dark_terquise),
+            (r"\text{Pythagorean}", dark_green),
+        ]
+
+        col_labels = [MathTex(h).set_color(color) for h, color in headers]
+        
+        row = [
+            MathTex(r"\Large \times").set_color(RED),
+            MathTex(r"\Large \times").set_color(RED),
+            MathTex(r"\Large \times").set_color(RED),
+            MathTex(r"\Large \checkmark").set_color(GREEN),
+        ]
+        
+        row_label = MathTex(r"\text{Pythagorean}", color=BLACK).scale(0.6)
+
+        table = MobjectTable(
+            [row],
+            row_labels=[row_label],
+            col_labels=col_labels,
+            include_outer_lines=True,
+            line_config={"stroke_width": 3, "color": GRAY},
+            h_buff=0.3,
+        )
+
+        table.scale(1).next_to(title,DOWN,buff=0.5)
+        pic1 = ImageMobject("images/graduate_brain_img_mini.png").scale(2.3).to_corner(DL).shift(0.5*DOWN+0.5*LEFT)
+        self.play(
+            FadeIn(pic1),
+        )
+
+        self.play(
+            Create(table),
+            run_time = 3,
+        )
+
+        self.wait(1)
+        self.play(
+            *[FadeOut(mob) for mob in self.mobjects]
+        )
+        self.wait(1)
+
     def scene8_SubScene13_2(self, title):
         pic1 = ImageMobject("images/graduate_brain_img_mini.png").scale(2.5).to_corner(DL).shift(0.5*DOWN+0.5*LEFT)
         theoream_title1 = Text("Normed space", font_size=40, color=BLACK).scale(1.2).to_edge(UP)
-        text1 = MathTex(
-            r"x \perp_{P} y \Longleftrightarrow x \perp_{I} y \Longleftrightarrow x \perp_{BJ} y \Longleftrightarrow x \perp_{R} y \Longleftrightarrow \langle x , y \rangle = 0",
-            color=dark_orange,
-        ).next_to(theoream_title1, DOWN,buff=0.5)
-        text2 = Text(
-            r"All of them are equivalent.",
-            color=dark_red,
-        ).next_to(text1, DOWN,buff=0.5)
+        text = MathTex(
+            r"\mathrm{Can\ }",
+            r"x \perp_{\square} y",
+            r"\ \mathrm{imply}\ ",
+            r"x \perp_{\blacksquare} y",
+            r"\ ?",
+            color=BLACK,
+        ).scale(2).next_to(theoream_title1, DOWN,buff=0.5)
         
         self.play(
             FadeIn(pic1),
@@ -3643,12 +4392,81 @@ class TitleScene(ThreeDScene):   # Scene
         )
         self.wait(0.5)
         self.play(
-            Write(text1),
+            Write(text),
         )
         self.wait(0.5)
         self.play(
-            Write(text2),
+            FadeOut(pic1),
+            FadeOut(theoream_title1),
+            FadeOut(text),
         )
+        self.wait(0.5)
+
+        self.robert_implies(theoream_title1)
+        self.BJ_implies(theoream_title1)
+        self.I_implies(theoream_title1)
+        self.P_implies(theoream_title1)
+
+        headers = [
+            (r"\text{Roberts}", dark_pink),
+            (r"\text{BJ}", dark_purple),
+            (r"\text{Isosceles}", dark_terquise),
+            (r"\text{Pythagorean}", dark_green),
+        ]
+
+        col_labels = [MathTex(h).set_color(color) for h, color in headers]
+
+        
+        row_Pythagorean = [
+            MathTex(r"\Large \times").set_color(RED),
+            MathTex(r"\Large \times").set_color(RED),
+            MathTex(r"\Large \times").set_color(RED),
+            MathTex(r"\Large \checkmark").set_color(GREEN),
+        ]
+
+        row_Isosceles = [
+            MathTex(r"\Large \times").set_color(RED),
+            MathTex(r"\Large \times").set_color(RED),
+            MathTex(r"\Large \checkmark").set_color(GREEN),
+            MathTex(r"\Large \times").set_color(RED),
+        ]
+
+        row_BJ = [
+            MathTex(r"\Large \times").set_color(RED),
+            MathTex(r"\Large \checkmark").set_color(GREEN),
+            MathTex(r"\Large \times").set_color(RED),
+            MathTex(r"\Large \times").set_color(RED),
+        ]
+
+        row_Roberts = [
+            MathTex(r"\Large \checkmark").set_color(GREEN),
+            MathTex(r"\Large \checkmark").set_color(GREEN),
+            MathTex(r"\Large \checkmark").set_color(GREEN),
+            MathTex(r"\Large \times").set_color(RED),
+        ]
+        
+        row_label_roberts = MathTex(r"\text{Roberts}", color=BLACK).scale(0.6)
+        row_label_BJ = MathTex(r"\text{BJ}", color=BLACK).scale(0.6)
+        row_label_Isosceles = MathTex(r"\text{Isosceles}", color=BLACK).scale(0.6)
+        row_label_Pythagorean = MathTex(r"\text{Pythagorean}", color=BLACK).scale(0.6)
+
+        table = MobjectTable(
+            [row_Roberts, row_BJ, row_Isosceles, row_Pythagorean],
+            row_labels=[row_label_roberts, row_label_BJ, row_label_Isosceles, row_label_Pythagorean],
+            col_labels=col_labels,
+            include_outer_lines=True,
+            line_config={"stroke_width": 3, "color": GRAY},
+            h_buff=0.3,
+        ).shift(0.5*DOWN)
+
+        title_Summary = Text("Summary",color=BLACK,font_size=50).to_edge(UP).shift(0.3*UP)
+        self.play(Write(title_Summary))
+
+        self.play(
+            Create(table),
+            run_time = 3,
+        )
+
         self.wait(1)
         self.play(
             *[FadeOut(mob) for mob in self.mobjects]
