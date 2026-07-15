@@ -19,7 +19,7 @@ light_purple = "#5702A68C"
 dark_terquise = "#02A6A1"
 dark_not_green = "#46A602"
 axes_background_color = "#D3D3D3"
-topics_backGround_color = "#0D113EFF"
+topics_backGround_color = "#020416"
 
 class Part1_Scene(MovingCameraScene):
     #  Norm → Metric → Cauchy → Completeness → Banach
@@ -278,16 +278,16 @@ class Part1_Scene(MovingCameraScene):
         # self.scene2()
 
         # the birth of norms
-        # topic_number = 0
-        # title = self.scene3(topic_number,False)
+        topic_number = 0
+        title = self.scene3(topic_number,True)
 
         # self.scene4(title)
 
         # from norm to metrics
-        topic_number = 1
-        title = self.scene3(topic_number,False)
+        # topic_number = 1
+        # title = self.scene3(topic_number,False)
 
-        self.scene5(title)
+        # self.scene5(title)
 
         # Cauchy Sequences : The Mystery of Nearness
         # topic_number = 2
@@ -4820,30 +4820,30 @@ class Part1_Scene(MovingCameraScene):
                 fill_color=topics_backGround_color, 
                 fill_opacity=1
             )
-            self.add(bg_rect)
-            self.play(
-                FadeIn(bg_rect, run_time=0.5),
-            )
+            # self.add(bg_rect)
+            # self.play(
+            #     FadeIn(bg_rect, run_time=0.5),
+            # )
 
-            self.play(
-                Write(title),
-            )
+            # self.play(
+            #     Write(title),
+            # )
             
             img = ImageMobject("images/topics.png")
-            img.scale(2.65)
+            img.scale(1.1)
 
             self.play(
+                FadeIn(bg_rect, run_time=0.5),
                 FadeIn(img), 
-                run_time=1
             )
 
             self.camera.frame.save_state()
 
 
-            rect_1 = Rectangle(width=3, height=5).move_to(img.get_left() + RIGHT * 1.4 +0.6*UP).round_corners(radius=0.3)
-            rect_2 = Rectangle(width=3, height=5).move_to(img.get_left() + RIGHT * 4.3 +0.6*UP).round_corners(radius=0.3)
-            rect_3 = Rectangle(width=5, height=5).move_to(img.get_left() + RIGHT * 8 +0.6*UP).round_corners(radius=0.3)
-            rect_4 = Rectangle(width=4, height=5).move_to(img.get_left() + RIGHT * 12.5 +0.6*UP).round_corners(radius=0.3)
+            rect_1 = Rectangle(width=3.2, height=6.8).move_to(img.get_left() + RIGHT * 1.5 +0.2*UP).round_corners(radius=0.3)
+            rect_2 = Rectangle(width=3, height=6.8).move_to(img.get_left() + RIGHT * 4.7 +0.2*UP).round_corners(radius=0.3)
+            rect_3 = Rectangle(width=3, height=6.8).move_to(img.get_left() + RIGHT * 8.1 +0.2*UP).round_corners(radius=0.3)
+            rect_4 = Rectangle(width=4.5, height=6.8).move_to(img.get_left() + RIGHT * 12.2 +0.2*UP).round_corners(radius=0.3)
 
             zoom_rects = [rect_1, rect_2, rect_3, rect_4]
 
@@ -4852,6 +4852,9 @@ class Part1_Scene(MovingCameraScene):
                 rect.set_stroke(GOLD_A, 3)
 
                 self.play(Create(rect), run_time=0.3)
+
+
+                # self.wait(wait_list[])
 
                 self.play(
                     self.camera.frame.animate
@@ -4873,7 +4876,7 @@ class Part1_Scene(MovingCameraScene):
 
             self.play(
                 FadeOut(img), 
-                FadeOut(title),
+                # FadeOut(title),
             )
             self.play(
                 FadeOut(bg_rect,run_time=0.5),
