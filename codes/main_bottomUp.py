@@ -2,7 +2,7 @@ from manim import *
 import numpy as np
 from math import *
 
-config.background_color = "#020416" #WHITE
+config.background_color =  "#020416" #WHITE  
 dark_red = "#9A0000"
 light_red = "#9A000045"
 dark_pink = "#9C1568"
@@ -2535,7 +2535,7 @@ class Part1_Scene(MovingCameraScene):
         self.wait(1)
 
         norm2_2d = MathTex(
-            r"\text{length }",r"= ",r"\sqrt{x^2 + y^2}",color=BLACK
+            r"\text{Vector length }",r" \text{is } ",r"\sqrt{x^2 + y^2}",color=BLACK
         ).move_to(axes.get_center()+1*DOWN)
         # draw vector in (0,0)
         vector = Arrow(
@@ -2707,9 +2707,12 @@ class Part1_Scene(MovingCameraScene):
         )
 
         # 2
-        text_2 = MathTex(r"\text{vector = }",r"\vec{0}=(0,0)\\",r"\text{length = }",r"0",color=dark_pink
-        ).scale(1.3).to_edge(LEFT).shift(RIGHT+UP)
-        text_2[2:].shift(1*LEFT)
+        text_2_part1 = MathTex(r"\text{Vector is }",r"\vec{0}",color=dark_pink
+        ).scale(1.3)
+        text_2_part2 = MathTex(r"\text{Vector length is }",r"0",color=dark_pink
+        ).scale(1.3)
+        text_2 = VGroup(text_2_part1, text_2_part2).arrange(DOWN,buff=0.5).to_edge(LEFT).shift(RIGHT+UP)
+        # text_2[2:].shift(1*LEFT)
         arrow_0_0_down = CurvedArrow(
             start_point=text_2.get_corner(UR)+0.2*DOWN+0.3*RIGHT,
             end_point=text_2.get_corner(DR)+0.2*UP+0.3*RIGHT,
@@ -2763,9 +2766,9 @@ class Part1_Scene(MovingCameraScene):
 
         # 3
 
-        text_3_part1 = MathTex(r"t \cdot ",r"\text{vector}\\",color=dark_pink
-        ).scale(1.3).to_edge(LEFT).shift(RIGHT+UP)
-        text_3_part2 = MathTex(r"t \cdot ",r"\text{length}",color=dark_pink
+        text_3_part1 = MathTex(r"t \cdot ",r"\text{Vector}",color=dark_pink
+        ).scale(1.3).to_edge(LEFT).shift(2*RIGHT+UP)
+        text_3_part2 = MathTex(r"t \cdot ",r"\text{Vector length}",color=dark_pink
         ).scale(1.3).to_edge(LEFT).shift(RIGHT+0.9*DOWN)
         self.play(
             Write(text_3_part1),
@@ -2876,7 +2879,7 @@ class Part1_Scene(MovingCameraScene):
             TransformMatchingTex(reordered, final)
         )
         final[1].set_color(light_orange)
-        length_text = MathTex(r"\text{length}",color=light_orange
+        length_text = MathTex(r"\text{Vector length}",color=light_orange
         ).next_to(final[0],RIGHT)
         self.play(
             ReplacementTransform(final[1],length_text)
@@ -2888,7 +2891,7 @@ class Part1_Scene(MovingCameraScene):
             angle=-PI/2,
             color=light_pink,
         )
-        text_3_part2_2 = MathTex(r"|t| \cdot ",r"\text{length}",color=dark_pink
+        text_3_part2_2 = MathTex(r"|t| \cdot ",r"\text{Vector length}",color=dark_pink
         ).scale(1.3).to_edge(LEFT).shift(RIGHT+0.6*DOWN)
         self.play(
             Create(arrow_0_0_up),
@@ -2899,6 +2902,7 @@ class Part1_Scene(MovingCameraScene):
         self.play(
             FadeOut(final[:2]),
             FadeOut(length_text),
+            FadeOut(norm2_2d),
             # FadeOut(note_text),
         )
 
@@ -2990,6 +2994,7 @@ class Part1_Scene(MovingCameraScene):
 
         self.play(
             Write(text_4),
+            # FadeOut(norm2_2d),
         )
         self.wait(1)
 
@@ -3121,7 +3126,7 @@ class Part1_Scene(MovingCameraScene):
         vector.set_color(BLACK)
         self.play(
             FadeOut(plane),
-            FadeOut(norm2_2d),
+            # FadeOut(norm2_2d),
             FadeOut(text_2),
             FadeOut(text_1),
             FadeOut(vector_rule3_3),
@@ -4840,20 +4845,20 @@ class Part1_Scene(MovingCameraScene):
             self.camera.frame.save_state()
 
 
-            rect_1 = Rectangle(width=3.2, height=6.8).move_to(img.get_left() + RIGHT * 1.5 +0.2*UP).round_corners(radius=0.3)
-            rect_2 = Rectangle(width=3, height=6.8).move_to(img.get_left() + RIGHT * 4.7 +0.2*UP).round_corners(radius=0.3)
-            rect_3 = Rectangle(width=3, height=6.8).move_to(img.get_left() + RIGHT * 8.1 +0.2*UP).round_corners(radius=0.3)
-            rect_4 = Rectangle(width=4.5, height=6.8).move_to(img.get_left() + RIGHT * 12.2 +0.2*UP).round_corners(radius=0.3)
-
             # rect_1 = Rectangle(width=3.2, height=6.8).move_to(img.get_left() + RIGHT * 1.5 +0.2*UP).round_corners(radius=0.3)
-            # rect_2 = Rectangle(width=3, height=6.8).move_to(img.get_left() + RIGHT * 4.55 +0.2*UP).round_corners(radius=0.3)
-            # rect_3 = Rectangle(width=5, height=6.8).move_to(img.get_left() + RIGHT * 8.1 +0.2*UP).round_corners(radius=0.3)
-            # rect_4 = Rectangle(width=3.5, height=6.8).move_to(img.get_left() + RIGHT * 12.1 +0.2*UP).round_corners(radius=0.3)
+            # rect_2 = Rectangle(width=3, height=6.8).move_to(img.get_left() + RIGHT * 4.7 +0.2*UP).round_corners(radius=0.3)
+            # rect_3 = Rectangle(width=3, height=6.8).move_to(img.get_left() + RIGHT * 8.1 +0.2*UP).round_corners(radius=0.3)
+            # rect_4 = Rectangle(width=4.5, height=6.8).move_to(img.get_left() + RIGHT * 12.2 +0.2*UP).round_corners(radius=0.3)
+
+            rect_1 = Rectangle(width=3.2, height=6.8).move_to(img.get_left() + RIGHT * 1.5 +0.2*UP).round_corners(radius=0.3)
+            rect_2 = Rectangle(width=3, height=6.8).move_to(img.get_left() + RIGHT * 4.55 +0.2*UP).round_corners(radius=0.3)
+            rect_3 = Rectangle(width=5, height=6.8).move_to(img.get_left() + RIGHT * 8.1 +0.2*UP).round_corners(radius=0.3)
+            rect_4 = Rectangle(width=3.5, height=6.8).move_to(img.get_left() + RIGHT * 12.1 +0.2*UP).round_corners(radius=0.3)
 
 
             zoom_rects = [rect_1, rect_2, rect_3, rect_4]
-            # wait_list = [ 7.7 , 6.1 , 6.7 , 8.1 ]
-            wait_list = [ 3.7 , 3.3 , 5.3 , 15.7 ]
+            wait_list = [ 7.7 , 6.1 , 6.7 , 8.1 ]
+            # wait_list = [ 3.7 , 3.3 , 5.3 , 15.7 ]
             index_time = 0
 
             for rect in zoom_rects:
