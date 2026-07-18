@@ -2,7 +2,7 @@ from manim import *
 import numpy as np
 from math import *
 
-config.background_color = WHITE
+config.background_color = "#020416" #WHITE
 dark_red = "#9A0000"
 light_red = "#9A000045"
 dark_pink = "#9C1568"
@@ -279,9 +279,9 @@ class Part1_Scene(MovingCameraScene):
 
         # the birth of norms
         topic_number = 0
-        title = self.scene3(topic_number,True)
+        title = self.scene3(topic_number,False)
 
-        # self.scene4(title)
+        self.scene4(title)
 
         # from norm to metrics
         # topic_number = 1
@@ -4775,7 +4775,7 @@ class Part1_Scene(MovingCameraScene):
         # self.wait(1)
 
         # From Intuition to Mathematics
-        # plane,axes = self.scene4_subScene0(title)
+        plane,axes = self.scene4_subScene0(title)
 
         # self.wait(1)
 
@@ -4794,7 +4794,7 @@ class Part1_Scene(MovingCameraScene):
         # self.scene4_subScene3(title)
 
         # prove and show ||x||>=0
-        self.scene4_subScene4(title)
+        # self.scene4_subScene4(title)
 
         # examples of norm
         # self.scene4_subScene5(title)
@@ -4845,16 +4845,22 @@ class Part1_Scene(MovingCameraScene):
             rect_3 = Rectangle(width=3, height=6.8).move_to(img.get_left() + RIGHT * 8.1 +0.2*UP).round_corners(radius=0.3)
             rect_4 = Rectangle(width=4.5, height=6.8).move_to(img.get_left() + RIGHT * 12.2 +0.2*UP).round_corners(radius=0.3)
 
+            # rect_1 = Rectangle(width=3.2, height=6.8).move_to(img.get_left() + RIGHT * 1.5 +0.2*UP).round_corners(radius=0.3)
+            # rect_2 = Rectangle(width=3, height=6.8).move_to(img.get_left() + RIGHT * 4.55 +0.2*UP).round_corners(radius=0.3)
+            # rect_3 = Rectangle(width=5, height=6.8).move_to(img.get_left() + RIGHT * 8.1 +0.2*UP).round_corners(radius=0.3)
+            # rect_4 = Rectangle(width=3.5, height=6.8).move_to(img.get_left() + RIGHT * 12.1 +0.2*UP).round_corners(radius=0.3)
+
+
             zoom_rects = [rect_1, rect_2, rect_3, rect_4]
+            # wait_list = [ 7.7 , 6.1 , 6.7 , 8.1 ]
+            wait_list = [ 3.7 , 3.3 , 5.3 , 15.7 ]
+            index_time = 0
 
             for rect in zoom_rects:
 
                 rect.set_stroke(GOLD_A, 3)
 
                 self.play(Create(rect), run_time=0.3)
-
-
-                # self.wait(wait_list[])
 
                 self.play(
                     self.camera.frame.animate
@@ -4863,6 +4869,9 @@ class Part1_Scene(MovingCameraScene):
                     run_time=1,
                     rate_func=smooth
                 )
+
+                self.wait(wait_list[index_time])
+                index_time+=1
 
                 self.play(FadeOut(rect))
 
