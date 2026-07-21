@@ -3369,17 +3369,18 @@ class Part1_Scene(MovingCameraScene):
     def scene4_subScene2(self,title):
         "scene4 : subScene2 : norm definition"
         
-        question_tex = MathTex("\\text{ What happens if we try to generalize this ? }").set_color(BLACK)
+        question_tex = MathTex("\\text{ What happens if we try to generalize this? }").set_color(BLACK)
         question_group, question_box, image_1, image_2 = self.ask_question(question_tex,True,True)
 
         group_GroupBoxQuetion = VGroup(question_group,question_box)
         group_GroupBoxQuetion.shift(1.5*UP)
         image_1.scale(1.2).shift(3.5*DOWN)
-        self.add(image_1)
+        # self.add()
         self.play(
+            FadeIn(image_1),
             FadeIn(group_GroupBoxQuetion)
         )
-        self.wait(1)
+        self.wait(11)
 
         def_norm_line1 = MathTex(
             r"\text{A norm on } X \text{ is a function }",
@@ -3430,7 +3431,7 @@ class Part1_Scene(MovingCameraScene):
         image_2.shift(9*LEFT)
         self.add(image_2)
 
-        self.wait(1)
+        self.wait(4)
         for line in [line1_3, line2_3, line3_3]:
             rect = SurroundingRectangle(
                 line,
@@ -3443,12 +3444,12 @@ class Part1_Scene(MovingCameraScene):
             self.play(
                 Create(rect), 
             )
-            self.wait(1)
+            self.wait(1.5)
             self.play(
                 Uncreate(rect), 
             )
 
-        self.wait(1)
+        self.wait(2)
         
         self.play(
             Uncreate(norm_box),
@@ -3549,11 +3550,24 @@ class Part1_Scene(MovingCameraScene):
         normp.set_color_by_tex("+", common_color)
         normp.set_color_by_tex("(", common_color)
         normp.set_color_by_tex(")", common_color)
+
+        p_ge_1 = MathTex(r"p \ge 1",color=BLACK)
+        text_group,box = self.show_minorPoint(p_ge_1,True)
+        text_group.move_to(normp.get_center()+2*DOWN+RIGHT)
+        box.move_to(text_group.get_center())
+
+        VGroup(point_text,norm1,norm2, VGroup(normp, VGroup(text_group, box)).arrange(RIGHT,buff=0.3)).arrange(DOWN,buff=0.4).shift(0.7*UP)
+        norm1_2.move_to(norm1.get_center())
+        norm1_3.move_to(norm1.get_center())
+        norm1_3_compare.move_to(norm1_3.get_center())
+        norm2_2.move_to(norm2.get_center())
+        norm2_3.move_to(norm2.get_center())
+        norm2_3_compare.move_to(norm2_3.get_center())
         
         self.play(
             Write(point_text),
         )
-        self.wait(0.5)
+        self.wait(5)
         self.play(
             Write(norm1),
         )
@@ -3563,7 +3577,7 @@ class Part1_Scene(MovingCameraScene):
         self.play(
             TransformMatchingTex(norm1_2,norm1_3),
         )
-        self.wait(1)
+        self.wait(5)
 
         self.play(
             Write(norm2),
@@ -3574,59 +3588,59 @@ class Part1_Scene(MovingCameraScene):
         self.play(
             TransformMatchingTex(norm2_2,norm2_3),
         )
-        self.wait(1)
+        self.wait(8)
 
         self.play(
             TransformMatchingTex(norm1_3,norm1_3_compare),
             TransformMatchingTex(norm2_3,norm2_3_compare),
         )
 
-        image_think = ImageMobject("images/think_img.png").scale(2).to_edge(DL).shift(3.5*LEFT+1.1*DOWN)
-        self.add(image_think)
-        self.wait(1)
+        # image_think = ImageMobject("images/think_img.png").scale(2).to_edge(DL).shift(3.5*LEFT+1.1*DOWN)
+        # self.add(image_think)
+        self.wait(14)
 
-        self.play(
-            Write(norm3),
-        )
-        self.wait(1)
-        self.play(
-            TransformMatchingTex(norm3,norm4),
-        )
-        self.wait(1)
+        # self.play(
+        #     Write(norm3),
+        # )
+        # self.wait(1)
+        # self.play(
+        #     TransformMatchingTex(norm3,norm4),
+        # )
+        # self.wait(1)
 
-        find_img = ImageMobject("images/find_img.png").scale(2).to_edge(DL).shift(3.5*LEFT+1.4*DOWN)
-        self.play(
-            FadeOut(image_think),
-        )
-        self.add(find_img)
+        # find_img = ImageMobject("images/find_img.png").scale(2).to_edge(DL).shift(3.5*LEFT+1.4*DOWN)
+        # self.play(
+        #     FadeOut(image_think),
+        # )
+        # self.add(find_img)
 
         self.play(
             # find_img.animate.scale(0.7).shift(0.5*DOWN),
-            TransformMatchingTex(norm4,normp),
+            # TransformMatchingTex(norm4,normp),
+            Write(normp),
             run_time=1
         )
         self.wait(1)
 
-        p_ge_1 = MathTex(r"p \ge 1",color=BLACK)
-        text_group,box = self.show_minorPoint(p_ge_1,True)
-        text_group.move_to(normp.get_center()+2*DOWN+RIGHT)
-        box.move_to(text_group.get_center())
+        
         self.play(
             Create(box),
             Write(text_group),
         )
-        self.wait(1)
+        self.wait(17)
 
         self.play(
             FadeOut(text_group),
             FadeOut(box),
-            FadeOut(find_img),
+            # FadeOut(find_img),
             FadeOut(normp),
             FadeOut(norm1_3_compare),
             FadeOut(norm2_3_compare),
             FadeOut(point_text),
             # FadeOut(),
         )
+
+        self.wait(1)
 
     def scene4_subScene3(self, title):
         # draw number plane as background
@@ -4804,11 +4818,11 @@ class Part1_Scene(MovingCameraScene):
         # self.wait(1)
 
         # From Intuition to Mathematics
-        plane,axes = self.scene4_subScene0(title)
+        # plane,axes = self.scene4_subScene0(title)
 
         # self.wait(1)
 
-        self.scene4_subScene1(title,plane,axes)
+        # self.scene4_subScene1(title,plane,axes)
 
         # self.wait(1)
 
@@ -4826,7 +4840,7 @@ class Part1_Scene(MovingCameraScene):
         # self.scene4_subScene4(title)
 
         # examples of norm
-        # self.scene4_subScene5(title)
+        self.scene4_subScene5(title)
 
         # normed space
         # self.scene4_subScene6(title)
