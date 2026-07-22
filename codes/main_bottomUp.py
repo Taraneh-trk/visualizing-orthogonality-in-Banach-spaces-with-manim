@@ -3374,13 +3374,17 @@ class Part1_Scene(MovingCameraScene):
 
         group_GroupBoxQuetion = VGroup(question_group,question_box)
         group_GroupBoxQuetion.shift(1.5*UP)
-        image_1.scale(1.2).shift(3.5*DOWN)
+        # image_1.scale(1.2).shift(3.5*DOWN)
         # self.add()
         self.play(
-            FadeIn(image_1),
+            # FadeIn(image_1),
             FadeIn(group_GroupBoxQuetion)
         )
         self.wait(11)
+        # self.play(
+        #     FadeOut(group_GroupBoxQuetion),
+        # )
+        # self.wait(0.5)
 
         def_norm_line1 = MathTex(
             r"\text{A norm on } X \text{ is a function }",
@@ -4168,7 +4172,7 @@ class Part1_Scene(MovingCameraScene):
         # nothing for now
 
         brain_img = ImageMobject("images/graduate_brain_img_mini.png").scale(2).to_corner(DL)
-        self.add(brain_img)
+        # self.add(brain_img)
 
         # draw number plane as background
         plane = NumberPlane(
@@ -4303,10 +4307,11 @@ class Part1_Scene(MovingCameraScene):
         ).next_to(normp_title,RIGHT).shift(2.7*LEFT+0.3*UP).scale(1.2)
 
         # vector name 
+        self.wait(5)
         self.play(
             Write(vector_def)
         )
-        self.wait(1)
+        self.wait(3)
 
         # norm p
         # self.play(
@@ -4319,22 +4324,22 @@ class Part1_Scene(MovingCameraScene):
         self.play(
             Write(normp_short_form),
         )
-        self.wait(0.5)
+        self.wait(12)
         self.play(
             Unwrite(normp_short_form),
         )
-        self.wait(0.5)
+        self.wait(1)
 
         # norm 1
         self.play(
             Create(rect_1),
             Write(condition_1),
         )
-        self.wait(0.5)
+        self.wait(2)
         self.play(
             TransformMatchingShapes(normp_full_form, norm1_full_form)
         )
-        # self.wait(2)
+        self.wait(1)
 
         # # create grid
         self.play(Create(plane))
@@ -4448,11 +4453,12 @@ class Part1_Scene(MovingCameraScene):
         )
 
         # norm 2
+        self.wait(2)
         self.play(
             TransformMatchingShapes(rect_1, rect_2),
             FadeTransform(condition_1, condition_2),
         )
-        self.wait(0.5)
+        self.wait(2)
         self.play(
             TransformMatchingShapes(norm1_full_form, norm2_full_form)
         )
@@ -4513,15 +4519,15 @@ class Part1_Scene(MovingCameraScene):
             TransformMatchingShapes(rect_2, rect_oo),
             FadeTransform(condition_2, condition_oo),
         )
-        self.wait(0.5)
+        self.wait(1)
         self.play(
             TransformMatchingShapes(norm2_full_form, normoo_limit),
         )
-        self.wait(1)
+        self.wait(2)
         self.play(
             TransformMatchingShapes(normoo_limit, norm_oo_short_form),
         )
-        self.wait(1)
+        self.wait(2)
 
         # norm inf grid
 
@@ -4585,7 +4591,7 @@ class Part1_Scene(MovingCameraScene):
             Create(squre),
             # FadeOut(VGroup(*[vector_1, vector_2, vector_3, vector_4])),
         )
-        self.wait(1)
+        self.wait(2)
 
         self.play(
             FadeOut(squre),
@@ -4595,8 +4601,8 @@ class Part1_Scene(MovingCameraScene):
         )
 
         plane2 = NumberPlane(
-            y_range=[-6, 5, 1],
-            x_range=[-5, 6, 1],
+            y_range=[-6, 5, 3],
+            x_range=[-5, 6, 3],
             background_line_style={"stroke_color": axes_background_color, "stroke_opacity": 0.5},
             y_length=7,
             x_length=7,
@@ -4604,17 +4610,18 @@ class Part1_Scene(MovingCameraScene):
 
         # draw axes on top
         axes2 = Axes(  # NumberLine
-            y_range=[-6, 5, 1],
+            y_range=[-6, 5, 3],
             y_length=7,
-            x_range=[-5, 6, 1],
+            x_range=[-5, 6, 3],
             x_length=7,
             axis_config={"color": dark_blue, "include_ticks": False, "tip_length":0.25, "tip_shape":StealthTip} # "tip_shape":ArrowTip.TIP_STYLE_ROUND
         ).move_to([0, 0, 0]+2*RIGHT)
 
         self.play(
-            FadeTransform(VGroup(plane, axes), VGroup(plane2, axes2)),
+            TransformMatchingShapes(VGroup(plane, axes), VGroup(plane2, axes2)),
             run_time=1
         )
+        self.play(2)
 
         circle_static = Circle(radius=axes2.x_axis.unit_size * 3,color=dark_terquise).move_to(axes2.c2p(0,0))
 
@@ -4664,7 +4671,7 @@ class Part1_Scene(MovingCameraScene):
             Write(text_p1),
             Create(rect_p1),
         )
-        self.wait(0.5)
+        self.wait(1)
         norm1_name_text = MathTex(r"\text{Taxi Cab Norm}",color=dark_red).scale(1.5).next_to(rect_p1,UP).shift(0.7*RIGHT)
         norm2_name_text = MathTex(r"\text{Euclidean Norm}",color=dark_red).scale(1.5).next_to(rect_p1,UP).shift(0.8*RIGHT)
         normoo_name_text = MathTex(r"\text{Chebyshev Norm}",color=dark_red).scale(1.5).next_to(rect_p1,UP).shift(1*RIGHT)
@@ -4673,19 +4680,19 @@ class Part1_Scene(MovingCameraScene):
             Create(shape),
             Write(norm1_name_text),
         )
-        self.wait(1)
+        self.wait(2)
 
         # circle_static.shift(1.5*UP+1*LEFT)
         self.play(
             TransformMatchingTex(text_p1, text_p2),
             TransformMatchingShapes(rect_p1, rect_p2),
         )
-        self.wait(0.5)
+        self.wait(1)
         self.play(
             Transform(shape, circle_static),
             TransformMatchingTex(norm1_name_text, norm2_name_text),
         )
-        self.wait(1)
+        self.wait(2)
 
         squre = Polygon(
             *[axes2.c2p(3,-3), axes2.c2p(3,3), axes2.c2p(-3,3), axes2.c2p(-3,-3)],
@@ -4697,12 +4704,12 @@ class Part1_Scene(MovingCameraScene):
             TransformMatchingTex(text_p2, text_pinf),
             TransformMatchingShapes(rect_p2, rect_pinf),
         )
-        self.wait(0.5)
+        self.wait(1)
         self.play(
             Transform(shape, squre),
             TransformMatchingTex(norm2_name_text, normoo_name_text),
         )
-        self.wait(1)
+        self.wait(2)
 
         self.play(
             FadeOut(rect_pinf),
@@ -4711,9 +4718,9 @@ class Part1_Scene(MovingCameraScene):
             FadeOut(normoo_name_text),
             FadeOut(axes2),
             FadeOut(plane2),
-            FadeOut(brain_img),
+            # FadeOut(brain_img),
         )
-        self.wait(1)
+        self.wait(2)
 
     def scene4_subScene6(self, title):
         """ A normed space X is a vector space with a norm defined on it """
@@ -4775,11 +4782,11 @@ class Part1_Scene(MovingCameraScene):
         self.play(
             Write(text_normed_space),
         )
-        self.wait(1)
+        self.wait(2)
         self.play(
             Write(text_normed_space_parts[::2]),
         )
-        self.wait(1)
+        self.wait(2)
         self.play(
             Write(text_normed_space_parts[1]),
             Create(rect_x),
@@ -4787,7 +4794,7 @@ class Part1_Scene(MovingCameraScene):
             Create(rect_vec_x),
             Write(text_vector_space),
         )
-        self.wait(1)
+        self.wait(2)
         self.play(
             Write(text_normed_space_parts[3]),
             Create(rect_d),
@@ -4795,7 +4802,7 @@ class Part1_Scene(MovingCameraScene):
             Create(rect_distance),
             Write(text_distance),
         )
-        self.wait(1)
+        self.wait(2)
 
         fade_out_list = [text_normed_space, text_normed_space_parts, rect_x, 
                          arrow_x, rect_vec_x, text_vector_space,
@@ -4840,10 +4847,10 @@ class Part1_Scene(MovingCameraScene):
         # self.scene4_subScene4(title)
 
         # examples of norm
-        self.scene4_subScene5(title)
+        # self.scene4_subScene5(title)
 
         # normed space
-        # self.scene4_subScene6(title)
+        self.scene4_subScene6(title)
 
 
     def scene3(self,topic_number,first_time=False):
