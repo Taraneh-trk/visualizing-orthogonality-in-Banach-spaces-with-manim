@@ -278,16 +278,16 @@ class Part1_Scene(MovingCameraScene):
         # self.scene2()
 
         # the birth of norms
-        topic_number = 0
-        title = self.scene3(topic_number,False)
-
-        self.scene4(title)
-
-        # from norm to metrics
-        # topic_number = 1
+        # topic_number = 0
         # title = self.scene3(topic_number,False)
 
-        # self.scene5(title)
+        # self.scene4(title)
+
+        # from norm to metrics
+        topic_number = 1
+        title = self.scene3(topic_number,False)
+
+        self.scene5(title)
 
         # Cauchy Sequences : The Mystery of Nearness
         # topic_number = 2
@@ -2438,64 +2438,64 @@ class Part1_Scene(MovingCameraScene):
         # self.wait(0.5)
 
         # constructing metrics with norms
-        # self.scene5_subScene0(title)
+        self.scene5_subScene0(title)
 
-        # proof needed things
-        distance = MathTex(r"d(x,y) ",r" = ",r"\|x-y\|",color=BLACK).scale(2).move_to(title.get_center()+0.2*DOWN)
-        rect_distance = SurroundingRectangle(
-            distance,
-            color=dark_blue,        
-            buff=0.3,          
-            fill_opacity=0.1,    
-            stroke_width=5,    
-            corner_radius=0.15 
-        )
-
-        # self.play(
-        #     Create(rect_distance),
-        #     Write(distance),
+        # # proof needed things
+        # distance = MathTex(r"d(x,y) ",r" = ",r"\|x-y\|",color=BLACK).scale(2).move_to(title.get_center()+0.2*DOWN)
+        # rect_distance = SurroundingRectangle(
+        #     distance,
+        #     color=dark_blue,        
+        #     buff=0.3,          
+        #     fill_opacity=0.1,    
+        #     stroke_width=5,    
+        #     corner_radius=0.15 
         # )
-        # self.wait(1)
 
-        text_claim = MathTex(r"\text{Claim : } \\ d \text{ is a } " ,r"\text{metric}",color=BLACK).scale(1.1)
-        text_claim.set_color_by_tex(r"\text{metric}",color=dark_blue)
+        # # self.play(
+        # #     Create(rect_distance),
+        # #     Write(distance),
+        # # )
+        # # self.wait(1)
 
+        # text_claim = MathTex(r"\text{Claim : } \\ d \text{ is a } " ,r"\text{metric}",color=BLACK).scale(1.1)
+        # text_claim.set_color_by_tex(r"\text{metric}",color=dark_blue)
+
+        # # self.play(
+        # #     VGroup(distance,rect_distance).scale(1).animate.to_edge(UL),
+        # #     Write(text_claim.move_to(rect_distance.get_right()+0.5*RIGHT+0.2*DOWN)),
+        # # )
+        # # self.wait(1)
+
+        # # prove part 1
+        # prove_1 = MathTex(r"\quad",r"d(x,y) = 0",r"\iff",r"x = y",color=BLACK).scale(1.5).move_to(title.get_center()+2*DOWN)
+        # # proof_1_needed = [
+        # #     prove_1, distance
+        # # ]
+        # # self.scene5_subScene1(title, *proof_1_needed)
+
+        # # prove part 2
+        # prove_2 = MathTex(r"\quad",r"d(x,y)",r" = ",r"d(y,x)",color=BLACK).scale(1.5).move_to(title.get_center()+2*DOWN)
+        # # proof_2_needed = [
+        # #     prove_1, prove_2, distance
+        # # ]
+        # VGroup(distance,rect_distance).to_edge(UL)
+        # text_claim.move_to(rect_distance.get_right()+3.5*RIGHT)
+        # self.add(prove_2, distance, rect_distance, text_claim)
+        # # self.scene5_subScene2(title,*proof_2_needed)
+
+        # # # prove part 3
+        # prove_3 = MathTex(r"\quad",r"d(x,y)",r" \le ",r"d(x,z)",r" + ",r"d(z,y)",color=BLACK).scale(1.5).move_to(title.get_center()+2*DOWN)
+        # proof_3_needed = [
+        #     prove_2, prove_3, distance
+        # ]
+        # self.scene5_subScene3(title, *proof_3_needed)
+
+        # fade_out_list = [
+        #     distance, rect_distance, text_claim, prove_3
+        # ]
         # self.play(
-        #     VGroup(distance,rect_distance).scale(1).animate.to_edge(UL),
-        #     Write(text_claim.move_to(rect_distance.get_right()+0.5*RIGHT+0.2*DOWN)),
+        #     FadeOut(VGroup(*fade_out_list)),
         # )
-        # self.wait(1)
-
-        # prove part 1
-        prove_1 = MathTex(r"\quad",r"d(x,y) = 0",r"\iff",r"x = y",color=BLACK).scale(1.5).move_to(title.get_center()+2*DOWN)
-        # proof_1_needed = [
-        #     prove_1, distance
-        # ]
-        # self.scene5_subScene1(title, *proof_1_needed)
-
-        # prove part 2
-        prove_2 = MathTex(r"\quad",r"d(x,y)",r" = ",r"d(y,x)",color=BLACK).scale(1.5).move_to(title.get_center()+2*DOWN)
-        # proof_2_needed = [
-        #     prove_1, prove_2, distance
-        # ]
-        VGroup(distance,rect_distance).to_edge(UL)
-        text_claim.move_to(rect_distance.get_right()+3.5*RIGHT)
-        self.add(prove_2, distance, rect_distance, text_claim)
-        # self.scene5_subScene2(title,*proof_2_needed)
-
-        # # prove part 3
-        prove_3 = MathTex(r"\quad",r"d(x,y)",r" \le ",r"d(x,z)",r" + ",r"d(z,y)",color=BLACK).scale(1.5).move_to(title.get_center()+2*DOWN)
-        proof_3_needed = [
-            prove_2, prove_3, distance
-        ]
-        self.scene5_subScene3(title, *proof_3_needed)
-
-        fade_out_list = [
-            distance, rect_distance, text_claim, prove_3
-        ]
-        self.play(
-            FadeOut(VGroup(*fade_out_list)),
-        )
 
         # normed space
         # self.scene5_subScene4(title)
